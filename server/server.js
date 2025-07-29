@@ -285,6 +285,18 @@ app.get("/anmelden", async (req, res) => {
 // ---API ADD LEADS---
 //region
 // Neuen Lead anlegen
+// PLZ-Anfangsziffer zu Bundesland-Kürzel
+const plzToBl = {
+    "1": "W",    // Wien
+    "2": "NÖ",   // Niederösterreich
+    "3": "NÖ",   // Niederösterreich
+    "4": "OÖ",   // Oberösterreich
+    "5": "S",    // Salzburg
+    "6": "T",    // Tirol
+    "7": "V",    // Vorarlberg
+    "8": "ST",   // Steiermark
+    "9": "K"     // Kärnten
+};
 app.post('/api/leads/add', async (req, res) => {
     try {
         const {
@@ -299,21 +311,29 @@ app.post('/api/leads/add', async (req, res) => {
             status
         } = req.body;
 
-        // Minimale Validierung
+        // Pflichtfelder prüfen
         if (!vorname || !nachname || !telefon || !plz || !ort || !strasse) {
             return res.status(400).json({ error: 'Pflichtfelder fehlen' });
         }
 
+        // Nur die erste Ziffer der PLZ nehmen
+        const plzStr = String(plz).padStart(4, "0");
+        const bl = plzToBl[plzStr.charAt(0)] || "unbekannt";
+
+        // Telefonnummer bereinigen (z. B. nur Ziffern und +)
+        const cleanTelefon = String(telefon).replace(/[^\d+]/g, '') || "0";
+
         const leadId = await addLead({
             vorname,
             nachname,
-            telefon,
-            plz,
+            telefon: cleanTelefon,
+            plz: plzStr,
             ort,
             strasse,
             kampagne,
             partner,
-            status
+            status: status || "offen",
+            bl
         });
 
         res.status(201).json({ success: true, leadId });
@@ -322,7 +342,6 @@ app.post('/api/leads/add', async (req, res) => {
         res.status(500).json({ error: 'Lead konnte nicht angelegt werden' });
     }
 });
-
 //endregion
 
 
