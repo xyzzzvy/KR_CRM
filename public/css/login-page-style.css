@@ -1,0 +1,149 @@
+/* style.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1b1b1b;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+}
+
+/* Container für das Login */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.login-box {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 30px 50px 40px 50px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+/* Titel und Untertitel */
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4A90E2; /* Helleres Blau */
+    margin-bottom: 10px;
+    white-space: nowrap; /* Verhindert den Umbruch */
+    overflow: visible;   /* Verhindert das Abhacken */
+    text-overflow: unset; /* Deaktiviert den Ellipsis */
+    word-wrap: break-word; /* Verhindert das Überlaufen */
+}
+.password-reset-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4A90E2; /* Helleres Blau */
+    margin: 20px 30px 20px 30px;
+    white-space: nowrap; /* Verhindert den Umbruch */
+    overflow: visible;   /* Verhindert das Abhacken */
+    text-overflow: unset; /* Deaktiviert den Ellipsis */
+    word-wrap: break-word; /* Verhindert das Überlaufen */
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+/* Formular */
+.form-container .form-row {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.form-container label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.form-container input {
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #555;
+    border-radius: 10px;
+    background-color: #333;
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+}
+ button{
+     background-color: #4A90E2;  /* Helleres Blau */
+     color: #fff;
+     font-size: 18px;
+     padding: 12px;
+     border: none;
+     border-radius: 10px;
+     width: 100%;
+     cursor: pointer;
+     transition: background-color 0.3s ease;
+     margin-top: 20px;
+ }
+
+.password-reset {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vh;
+    text-underline: none;
+}
+a {
+    text-decoration: none;
+    color: #4A90E2;
+}
+
+a:hover {
+    color: #357ABD;
+}
+
+.password-reset-box {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 30px 50px 40px 50px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+/* Animation für das Einblenden */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+iframe.goog-te-banner-frame {
+    display: none !important;
+}
+
+body {
+    top: 0px !important;
+}
+

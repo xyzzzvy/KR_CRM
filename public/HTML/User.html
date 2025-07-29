@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CRM BY BIRJI</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>User</h1>
+    <div class="buttons-container">
+      <button class="button" id="logout">Logout</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="leads-filter">
+    <div class="form-group">
+      <label for="filterCampaign">Kampagne:</label>
+      <select id="filterCampaign">
+        <option value="alle">Alle</option>
+        <option value="BK">Betriebskosten</option>
+        <option value="SK">Strom</option>
+        <option value="Flughafen">Flughafen</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="filterPLZ">PLZ:</label>
+      <input id="filterPLZ" type="number"/>
+    </div>
+
+    <div class="form-group">
+      <label for="Status">Status:</label>
+      <select id="Status">
+        <option value="alle">alle</option>
+        <option value="offen">offen</option>
+        <option value="n.err">n.err</option>
+        <option value="erreicht">erreicht</option>
+        <option value="fixiert">fixiert</option>
+        <option value="erledigt">erledigt</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="BL">BL:</label>
+      <select id="BL">
+        <option value="">Alle</option>
+        <option value="W">Wien</option>
+        <option value="B">Burgenland</option>
+        <option value="NÖ">Niederösterreich</option> <!-- statt N -->
+        <option value="OÖ">Oberösterreich</option> <!-- statt OE -->
+        <option value="S">Salzburg</option>   <!-- statt SZ -->
+        <option value="ST">Steiermark</option>
+        <option value="T">Tirol</option>
+        <option value="V">Voralberg</option>
+        <option value="K">Kärnten</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="nameFilter">Name oder Nummer enthalten:</label>
+      <input type="text" id="nameFilter" placeholder="Max oder 671">
+    </div>
+
+    <div class="form-group filter-button-wrapper">
+      <label>&nbsp;</label>
+      <button id="applyFilter" class="button">Filtern</button>
+    </div>
+  </div>
+
+  <section class="leads-box-wrapper">
+    <div class="leads-count">
+      <p><strong>Aktuell verfügbare Leads:</strong> <span id="remainingLeads">0</span></p>
+      <div id="saveHint" style="display:none; color: red; font-weight: bold; margin-bottom: 10px;">
+        <button id="savebutton">Bitte speichern</button>
+      </div>
+    </div>
+
+    <div class="leads-table-wrapper">
+      <table class="leads-table">
+
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Datum</th>
+          <th>Kampagne</th>
+          <th>Name</th>
+          <th>BL</th>
+          <th>PLZ</th>
+          <th>Partner</th>
+          <th>Status</th>
+        </tr>
+        </thead>
+        <tbody id="leadsTableBody">
+        <!-- Dynamisch befüllt durch leads.js -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container buttons-container">
+    <button class="button" id="support">Support</button>
+  </div>
+</footer>
+
+<script src="../JS/apply_filters.js"></script>
+<script src="../JS/savebuttonlogic.js"></script>
+
+</body>
+</html>
