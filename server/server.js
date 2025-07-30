@@ -297,6 +297,7 @@ const plzToBl = {
     "8": "ST",   // Steiermark
     "9": "K"     // Kärnten
 };
+
 app.post('/api/leads/add', async (req, res) => {
     try {
         const {
@@ -304,7 +305,6 @@ app.post('/api/leads/add', async (req, res) => {
             nachname,
             telefon,
             plz,
-            ort,
             strasse,
             kampagne,
             partner,
@@ -312,15 +312,17 @@ app.post('/api/leads/add', async (req, res) => {
         } = req.body;
 
         // Pflichtfelder prüfen
-        if (!vorname || !nachname || !telefon || !plz || !ort || !strasse) {
+        if (!vorname || !nachname || !telefon || !plz || !strasse) {
             return res.status(400).json({ error: 'Pflichtfelder fehlen' });
         }
 
-        // Nur die erste Ziffer der PLZ nehmen
+        // PLZ auf 4 Stellen formatieren
         const plzStr = String(plz).padStart(4, "0");
-        const bl = plzToBl[plzStr.charAt(0)] || "unbekannt";
 
-        // Telefonnummer bereinigen (z. B. nur Ziffern und +)
+        // Ort durch BL ersetzen
+        const ort = plzToBl[plzStr.charAt(0)] || "unbekannt";
+
+        // Telefonnummer bereinigen
         const cleanTelefon = String(telefon).replace(/[^\d+]/g, '') || "0";
 
         const leadId = await addLead({
@@ -328,12 +330,11 @@ app.post('/api/leads/add', async (req, res) => {
             nachname,
             telefon: cleanTelefon,
             plz: plzStr,
-            ort,
+            ort, // <- hier steht nun das Bundesland
             strasse,
-            kampagne,
-            partner,
-            status: status || "offen",
-            bl
+            kampagne: kampagne || "BK",
+            partner: partner || 0,
+            status: status || "offen"
         });
 
         res.status(201).json({ success: true, leadId });
@@ -342,6 +343,7 @@ app.post('/api/leads/add', async (req, res) => {
         res.status(500).json({ error: 'Lead konnte nicht angelegt werden' });
     }
 });
+
 //endregion
 
 

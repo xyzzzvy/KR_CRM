@@ -184,7 +184,7 @@ export async function addLead({vorname, nachname, telefon, plz, ort, strasse, ka
     const name = `${vorname} ${nachname}`.trim();
     const adresse = `${strasse}, ${plz} ${ort}`.trim();
     const datum = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const bl = getBundeslandFromPLZ(plz); // oder '' wenn du es nicht brauchst
+    const bl = ort; // oder '' wenn du es nicht brauchst
 
     try {
         const [result] = await pool.query(
