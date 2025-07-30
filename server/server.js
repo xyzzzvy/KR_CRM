@@ -300,11 +300,12 @@ const plzToBl = {
 
 app.post('/api/leads/add', async (req, res) => {
     try {
-        const {
+        let {
             vorname,
             nachname,
             telefon,
             plz,
+            ort,
             strasse,
             kampagne,
             partner,
@@ -316,11 +317,14 @@ app.post('/api/leads/add', async (req, res) => {
             return res.status(400).json({ error: 'Pflichtfelder fehlen' });
         }
 
+        strasse+=" "+ort;
+
+
         // PLZ auf 4 Stellen formatieren
         const plzStr = String(plz).padStart(4, "0");
 
         // Ort durch BL ersetzen
-        const ort = plzToBl[plzStr.charAt(0)] || "unbekannt";
+        let bl= plzToBl[plzStr.charAt(0)] || "unbekannt";
 
         // Telefonnummer bereinigen
         const cleanTelefon = String(telefon).replace(/[^\d+]/g, '') || "0";
@@ -330,7 +334,7 @@ app.post('/api/leads/add', async (req, res) => {
             nachname,
             telefon: cleanTelefon,
             plz: plzStr,
-            ort, // <- hier steht nun das Bundesland
+            ort:bl, // <- hier steht nun das Bundesland
             strasse,
             kampagne: kampagne || "BK",
             partner: partner || 0,
