@@ -1,4 +1,4 @@
-/* style.css */
+/* === Global Reset & Base Styles === */
 * {
     margin: 0;
     padding: 0;
@@ -6,16 +6,18 @@
 }
 
 body {
-    background-color: #1b1b1b;
+    background-color: #ffffff;
     font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: #fff;
+    color: #0b0b1a;
+    position: relative;
+    top: 0 !important;
 }
 
-/* Container für das Login */
+/* === Form Container === */
 .form-container {
     display: flex;
     justify-content: center;
@@ -24,9 +26,10 @@ body {
     height: 100%;
 }
 
+/* === Login Box === */
 .login-box {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 30px 50px 40px 50px;
+    background: #ffffff;
+    padding: 30px 50px 40px;
     border-radius: 15px;
     width: 100%;
     max-width: 400px;
@@ -35,79 +38,101 @@ body {
     animation: fadeIn 1s ease-out;
 }
 
-/* Titel und Untertitel */
-.title {
-    font-size: 32px;
-    font-weight: bold;
-    color: #4A90E2; /* Helleres Blau */
-    margin-bottom: 10px;
-    white-space: nowrap; /* Verhindert den Umbruch */
-    overflow: visible;   /* Verhindert das Abhacken */
-    text-overflow: unset; /* Deaktiviert den Ellipsis */
-    word-wrap: break-word; /* Verhindert das Überlaufen */
+/* === Header Image === */
+.header-image {
+    display: block;
+    margin: 0 auto 20px;
+    max-height: 60px;
+    height: auto;
+    width: auto;
 }
-.password-reset-title {
+
+/* === Titles === */
+.title, .password-reset-title {
     font-size: 32px;
     font-weight: bold;
-    color: #4A90E2; /* Helleres Blau */
-    margin: 20px 30px 20px 30px;
-    white-space: nowrap; /* Verhindert den Umbruch */
-    overflow: visible;   /* Verhindert das Abhacken */
-    text-overflow: unset; /* Deaktiviert den Ellipsis */
-    word-wrap: break-word; /* Verhindert das Überlaufen */
+    color: #0b0b1a;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: unset;
+    word-wrap: break-word;
+}
+
+.password-reset-title {
+    margin: 20px 30px;
 }
 
 .subtitle {
     font-size: 16px;
-    color: #fff;
+    color: #0b0b1a;
     margin-bottom: 30px;
     font-weight: 300;
 }
 
-/* Formular */
-.form-container .form-row {
+/* === Form Layout === */
+.form-row {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     text-align: left;
 }
 
-.form-container label {
+label {
     font-size: 14px;
     margin-bottom: 5px;
-    color: #fff;
+    color: #0b0b1a;
 }
 
-.form-container input {
+input {
     padding: 12px;
     font-size: 16px;
-    border: 2px solid #555;
+    border: 2px solid #0b0b1a;
     border-radius: 10px;
-    background-color: #333;
-    color: #fff;
+    background-color: #ffffff;
+    color: #0b0b1a;
     outline: none;
     transition: all 0.3s ease;
 }
- button{
-     background-color: #4A90E2;  /* Helleres Blau */
-     color: #fff;
-     font-size: 18px;
-     padding: 12px;
-     border: none;
-     border-radius: 10px;
-     width: 100%;
-     cursor: pointer;
-     transition: background-color 0.3s ease;
-     margin-top: 20px;
- }
 
+/* === Buttons === */
+button {
+    background-color: #4A90E2;
+    color: #fff;
+    font-size: 18px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #357ABD;
+}
+
+/* === Password Reset Section === */
 .password-reset {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 2vh;
-    text-underline: none;
 }
+
+.password-reset-box {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 30px 50px 40px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+/* === Links === */
 a {
     text-decoration: none;
     color: #4A90E2;
@@ -117,18 +142,7 @@ a:hover {
     color: #357ABD;
 }
 
-.password-reset-box {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 30px 50px 40px 50px;
-    border-radius: 15px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    animation: fadeIn 1s ease-out;
-}
-
-/* Animation für das Einblenden */
+/* === Animations === */
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -139,11 +153,21 @@ a:hover {
         transform: translateY(0);
     }
 }
+
+/* === Google Translate Banner entfernen (falls aktiv) === */
 iframe.goog-te-banner-frame {
     display: none !important;
 }
 
-body {
-    top: 0px !important;
+/* === Responsive Design === */
+@media (max-width: 768px) {
+    .header-image {
+        max-height: 50px;
+    }
 }
 
+@media (max-width: 480px) {
+    .header-image {
+        max-height: 40px;
+    }
+}

@@ -1,38 +1,49 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRM BY BIRJI</title>
-  <link rel="stylesheet" href="../css/login-page-style.css">
-
-
-   <title>Login-Seite</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRM BY BIRJI - Login</title>
+  <link rel="stylesheet" href="../css/login-page-style.css" />
 </head>
 <body>
-<div class="form-container">
 
+<div class="form-container">
   <form id="loginForm">
     <div class="login-box">
+
+      <!-- ✅ Logo oben in der Box -->
+      <img
+              src="../Bilder/Konsumentenretter-logoPNG1-262x53-1.png"
+              alt="Konsumentenretter Logo"
+              class="header-image"
+      />
+
       <h1 class="title">Willkommen zurück!</h1>
       <p class="subtitle">Melde dich an, um fortzufahren</p>
 
       <div class="form-row">
         <label for="username">Benutzername:</label>
-        <input type="text" id="username" placeholder="Benutzername" name="username" required>
+        <input type="text" id="username" name="username" placeholder="Benutzername" required />
       </div>
+
       <div class="form-row">
         <label for="login_password">Passwort:</label>
-        <input type="password" id="login_password" placeholder="Passwort" name="password" required>
+        <input type="password" id="login_password" name="password" placeholder="Passwort" required />
       </div>
 
-
       <button type="submit" id="submit_login_btn">Einloggen</button>
+
+      <!-- Optional: Passwort zurücksetzen -->
+      <div class="password-reset">
+        <a href="#">Passwort vergessen?</a>
+      </div>
 
     </div>
   </form>
 </div>
-</body>
 
+<!-- JavaScript (falls benötigt) -->
 <script src="../JS/buttonoflogin.js"></script>
+</body>
 </html>
