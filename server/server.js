@@ -318,7 +318,7 @@ app.post('/api/leads/add', async (req, res) => {
         }
 
         //ok
-        strasse+=" "+ort;
+        strasse+=""+" "+ort;
 
 
         // PLZ auf 4 Stellen formatieren
