@@ -15,9 +15,30 @@ CREATE TABLE mitarbeiter (
 );
 
 
+CREATE TABLE lead_orders (
+                             id INT Primary key auto_increment,
+                             GPNR INT,
+                             anzahl INT NOT NULL,
+                             bl VARCHAR(100) NOT NULL,
+                             plzrange VARCHAR(9) NOT NULL,
+                             kampagne VARCHAR(255) NOT NULL,
+                             note TEXT,
+                             status VARCHAR(50) NOT NULL DEFAULT 'offen',
+                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+INSERT INTO lead_orders (GPNR, anzahl, bl, plzrange, kampagne, note, status, created_at) VALUES
+                                                                                             (1002, 10, 'Niederösterreich', '1220-1220', 'BK', 'Te', 'offen', '2025-08-04 17:03:31'),
+                                                                                             (1002, 5, 'Wien', '1010-1010', 'Sommeraktion', 'Eilige Lieferung', 'offen', '2025-07-15 09:45:00'),
+                                                                                             (1002, 20, 'Oberösterreich', '4020-4030', 'Winterkampagne', NULL, 'offen', '2025-06-20 14:30:00'),
+                                                                                             (1002, 15, 'Steiermark', '8010-8010', 'Frühjahr', 'Kunde bevorzugt', 'offen', '2025-08-01 12:00:00'),
+                                                                                             (1002, 8, 'Salzburg', '5020-5020', 'Sonderangebot', NULL, 'offen', '2025-05-10 10:15:00');
+
+
 CREATE TABLE kamp (
-                             nr INT AUTO_INCREMENT PRIMARY KEY ,
-                             name varchar(100) not null unique
+                      nr INT AUTO_INCREMENT PRIMARY KEY ,
+                      name varchar(100) not null unique
 );
 
 -- Leads-Tabelle
@@ -38,6 +59,7 @@ CREATE TABLE leads (
 
 INSERT into kamp(name)
 VALUES
+    ("BK"),
     ("Flughafen"),
     ("BK-KR"),
     ("BK-Niklas"),
@@ -58,7 +80,7 @@ INSERT INTO mitarbeiter (
 INSERT INTO leads (
     datum, kampagne, name, telefon, bl, plz, partner, status, adresse
 ) VALUES
-      ('2025-07-19', 'Quick Check', 'Anna Schmidt', '+436771234567', 'W', '1020', 0, 'offen', 'Graben 1, 1020 Wien'),
+      ('2025-07-19', 'BK', 'Anna Schmidt', '+436771234567', 'W', '1020', 0, 'offen', 'Graben 1, 1020 Wien'),
       ('2025-07-19', 'BK', 'Peter Müller', '+436778899001', 'NÖ', '3000', 0, 'offen', 'Bahnhofstraße 10, 3000 St. Pölten'),
       ('2025-07-19', 'SK', 'Laura Meier', '+436765432198', 'ST', '8020', 0, 'offen', 'Schillerplatz 5, 8020 Graz'),
       ('2025-07-19', 'Flughafen', 'Markus Huber', '+436770011223', 'OÖ', '4040', 0, 'offen', 'Landstraße 12, 4040 Linz'),
@@ -70,7 +92,7 @@ INSERT INTO leads (
       ('2025-07-19', 'BK', 'Daniela Krüger', '+436762211009', 'NÖ', '2000', 0, 'offen', 'Landstraße 5, 2000 Stockerau'),
       ('2025-07-19', 'SK', 'Stefan Novak', '+436761100998', 'W', '1050', 0, 'offen', 'Favoritenstraße 70, 1050 Wien'),
       ('2025-07-19', 'Flughafen', 'Petra Sommer', '+436760099887', 'OÖ', '4050', 0, 'offen', 'Franz-Fritsch-Straße 8, 4050 Leonding'),
-      ('2025-07-19', 'Quick Check', 'Matthias Bauer', '+436759988776', 'T', '6020', 0, 'offen', 'Innrain 7, 6020 Innsbruck'),
+      ('2025-07-19', 'SK', 'Matthias Bauer', '+436759988776', 'T', '6020', 0, 'offen', 'Innrain 7, 6020 Innsbruck'),
       ('2025-07-19', 'BK', 'Nina Fischer', '+436758877665', 'ST', '8010', 0, 'offen', 'Hauptplatz 4, 8010 Graz'),
       ('2025-07-19', 'SK', 'Oliver Schwarz', '+436757766554', 'W', '1060', 0, 'offen', 'Mariahilfer Straße 25, 1060 Wien'),
       ('2025-07-19', 'Flughafen', 'Eva Meier', '+436756655443', 'S', '5020', 0, 'offen', 'Mozartstraße 7, 5020 Salzburg'),

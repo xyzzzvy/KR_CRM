@@ -2,18 +2,19 @@ import mysql from "mysql2/promise"; // Use the promise wrapper for convenience
 //CONN
 //region
 // Create pool instead of single connection
-/*
+
 const pool = mysql.createPool({
-    host: '34.32.52.209',
+    host: '34.51.205.183',
     user: 'xyzzvy',
-    password: 'Knecht2303',
-    database: 'sol', // adjust this if the remote DB has a different name
+    password: 'Knecht2303!',
+    database: 'sol',
     port: 3306,
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 20,
     queueLimit: 0
 });
-*/
+
+/*
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',                  // oder dein MySQL-Benutzername
@@ -24,7 +25,7 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0
 });
-
+*/
 
 
 // No need to connect manually with pools, but let's check connection once
