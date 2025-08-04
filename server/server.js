@@ -18,6 +18,10 @@ import {
     assignLeads,
     getAllUsers,
     addLead,
+    getAllKampagnes,
+    insertLeadOrder,
+    getAllLeadOrders,
+    updateOrderStatus,
     end
 } from './database.js';
 //endregion
@@ -151,6 +155,23 @@ app.get('/api/leads', authenticateToken, authorizeAdmin, async (req, res) => {
     }
 });
 
+// Route, um User-Daten basierend auf dem eingeloggten User (gpnr) zurückzugeben
+app.get('/api/userdata', authenticateToken, async (req, res) => {
+    try {
+        const gpnr = req.user.gpnr; // aus JWT
+        const user = await getUserInfo(gpnr);
+        if (!user) {
+            return res.status(404).json({ error: 'User nicht gefunden' });
+        }
+        res.json(user);
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Userdaten:', err);
+        res.status(500).json({ error: 'Serverfehler' });
+    }
+});
+
+
+
 //alle user
 app.get('/api/users', authenticateToken, authorizeAdmin, async (req, res) => {
     try {
@@ -164,6 +185,20 @@ app.get('/api/users', authenticateToken, authorizeAdmin, async (req, res) => {
         res.status(500).json({ error: 'Fehler beim Laden der Nutzer' });
     }
 });
+
+app.get('/api/kamps', authenticateToken, async (req, res) => {
+    try {
+        const users = await getAllKampagnes();
+        if (!users) {
+            return res.status(404).json({ error: 'Keine Nutzer gefunden' });
+        }
+        res.json(users);
+    } catch (err) {
+        console.error('Fehler beim Laden der Nutzer:', err);
+        res.status(500).json({ error: 'Fehler beim Laden der Nutzer' });
+    }
+});
+
 
 app.get('/api/leads/partner/:partner', authenticateToken, async (req, res) => {
     try {
@@ -250,7 +285,7 @@ app.use('/Anmelden', express.static(path.join(__dirname, '../Anmelden')));
 // Requestpage liefert basierend auf Token die Weiterleitungs-URL
 app.get('/requestpage', authenticateToken, (req, res) => {
     if (req.user.role === 'Admin') {
-        res.json({ page: '/Admin/AdminPanel.html' });
+        res.json({ page: '/Admin/HTML/AdminPanel.html' });
     } else {
         res.json({ page: '/html/User.html' });
     }
@@ -346,6 +381,59 @@ app.post('/api/leads/add', async (req, res) => {
     } catch (err) {
         console.error('❌ Fehler beim Anlegen des Leads:', err.message);
         res.status(500).json({ error: 'Lead konnte nicht angelegt werden' });
+    }
+});
+
+//endregion
+
+//-- ORDER--
+//region
+
+app.get('/api/leadorders', authenticateToken, authorizeAdmin, async (req, res) => {
+    try {
+        const orders = await getAllLeadOrders();
+        res.json(orders);
+    } catch (err) {
+        console.error('Fehler beim Laden der Bestellungen:', err);
+        res.status(500).json({ error: 'Fehler beim Laden der Bestellungen' });
+    }
+});
+
+
+app.patch('/orders/:id', async (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+
+    if (!status) {
+        return res.status(400).json({ error: 'Status fehlt' });
+    }
+
+    try {
+        const success = await updateOrderStatus(id, status);
+        if (!success) {
+            return res.status(404).json({ error: 'Bestellung nicht gefunden' });
+        }
+        res.json({ message: 'Status erfolgreich aktualisiert' });
+    } catch (err) {
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+});
+
+
+
+app.post('/api/leads/order', async (req, res) => {
+    const { gpnr, anzahl, bundesland: bl, plzRange: plzrange, kampagne, note } = req.body;
+
+    if (!gpnr || !anzahl || !bl || !plzrange || !kampagne) {
+        return res.status(400).json({ error: 'Fehlende Felder' });
+    }
+
+    const result = await insertLeadOrder({ gpnr, anzahl, bl, plzrange, kampagne, note });
+
+    if (result.success) {
+        res.status(201).json({ message: 'Bestellung erfolgreich', insertId: result.insertId });
+    } else {
+        res.status(500).json({ error: 'Fehler beim Einfügen', details: result.error });
     }
 });
 

@@ -14,4 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = apiBase + "/anmelden";
         });
     }
+
+
 });

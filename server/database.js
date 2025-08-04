@@ -2,6 +2,7 @@ import mysql from "mysql2/promise"; // Use the promise wrapper for convenience
 //CONN
 //region
 // Create pool instead of single connection
+/*
 const pool = mysql.createPool({
     host: '34.32.52.209',
     user: 'xyzzvy',
@@ -12,6 +13,18 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0
 });
+*/
+const pool = mysql.createPool({
+    host: 'localhost',
+    user: 'root',                  // oder dein MySQL-Benutzername
+    password: '',     // leer lassen, nur wenn dein Root-Benutzer kein Passwort hat
+    database: 'sol',
+    port: 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
 
 
 // No need to connect manually with pools, but let's check connection once
@@ -51,6 +64,8 @@ export async function getAllLeads() {
 }
 
 
+
+
 // PARTNER Leads holen & direkt passend formatieren
 export async function getLeadsByPartner(gpnr) {
     try {
@@ -88,6 +103,36 @@ export async function getAllUsers() {
     }
 }
 
+export async function getMitarbeiterByGpnr(gpnr) {
+    try {
+        const [results] = await pool.query(
+            `SELECT gpnr, vorname, nachname, role, telefon, email, fuehrungskraft 
+       FROM mitarbeiter WHERE gpnr = ?`,
+            [gpnr]
+        );
+        if (results.length === 0) return null; // Kein Mitarbeiter gefunden
+        return results[0]; // Erster und einziger Treffer
+    } catch (err) {
+        console.error('Fehler beim Abrufen des Mitarbeiters:', err.message);
+        throw err;
+    }
+}
+
+export async function getAllKampagnes() {
+    try {
+        const [results] = await pool.query(`SELECT * FROM kamp`);
+        if (results.length === 0) return null;
+        return results; // <-- hier das ganze Array zurückgeben
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Nutzerinfo:', err.message);
+        throw err;
+    }
+}
+
+console.log(await getAllKampagnes());
+
+
+
 export async function getUserInfo(gpnr) {
     try {
         const [results] = await pool.query(
@@ -113,7 +158,7 @@ export async function LoginInfoChecker(gpnr, password) {
         throw err;
     }
 }
-// 👤 Existenz-Prüfung via gpnr
+//  Existenz-Prüfung via gpnr
 export async function checkIfUserAlreadyExists(gpnr) {
     try {
         const [results] = await pool.query("SELECT COUNT(*) AS count FROM mitarbeiter WHERE gpnr = ?", [gpnr]);
@@ -156,6 +201,52 @@ export async function updateLeadsStatus(updates) {
         pool.query('UPDATE leads SET status = ? WHERE id = ?', [lead.status, lead.id])
     );
     await Promise.all(updateQueries);
+}
+
+// Alle Bestellungen abrufen
+export async function getAllLeadOrders() {
+    const sql = `
+        SELECT id,GPNR, anzahl, bl, plzrange, kampagne, note, status, created_at
+        FROM lead_orders
+        ORDER BY created_at DESC
+    `;
+
+    try {
+        const [rows] = await pool.query(sql);
+        return rows;
+    } catch (error) {
+        console.error('Fehler beim Abrufen der lead_orders:', error.message);
+        throw error;
+    }
+}
+
+
+export async function insertLeadOrder({ gpnr, anzahl, bl, plzrange, kampagne, note = '', status = 'offen' }) {
+    const sql = `
+        INSERT INTO lead_orders (GPNR, anzahl, bl, plzrange, kampagne, note, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const values = [gpnr, anzahl, bl, plzrange, kampagne, note, status];
+
+    try {
+        const [result] = await pool.execute(sql, values);
+        return { success: true, insertId: result.insertId };
+    } catch (error) {
+        console.error('❌ Fehler beim Einfügen in lead_orders:', error.sqlMessage || error.message);
+        return { success: false, error };
+    }
+}
+
+export async function updateOrderStatus(id, newStatus) {
+    try {
+        const sql = 'UPDATE lead_orders SET status = ? WHERE id = ?';
+        const [result] = await pool.query(sql, [newStatus, id]);
+        return result.affectedRows === 1;
+    } catch (err) {
+        console.error('Fehler beim Aktualisieren des Order-Status:', err.message);
+        throw err;
+    }
 }
 
 

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leads bestellen & Userinfo</title>
+  <style>
+    /* Grund-Reset */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1, h2 {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    /* Userdaten Container */
+    #userDataContainer {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    #userDataContainer ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    #userDataContainer li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-weight: 500;
+    }
+
+    form {
+      background: white;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgb(0 0 0 / 0.1);
+      max-width: 600px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 30px;
+    }
+
+    form h2 {
+      grid-column: 1 / -1;
+      margin-top: 0;
+      font-size: 1.8rem;
+      color: #222;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.8px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      font-family: inherit;
+      resize: vertical;
+    }
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #007BFF;
+      outline: none;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+    }
+
+    /* Full width elements (note and button) */
+    textarea {
+      grid-column: 1 / -1;
+      min-height: 100px;
+    }
+
+    button {
+      grid-column: 1 / -1;
+      padding: 14px 20px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Nachricht */
+    #message {
+      margin-top: 25px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: green;
+    }
+    #message.error {
+      color: #d93025;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+      textarea, button {
+        grid-column: 1;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>User Informationen</h1>
+<div id="userDataContainer">
+  <p>Lade Benutzerdaten...</p>
+</div>
+
+<form id="leadOrderForm" novalidate>
+  <h2>Leads bestellen</h2>
+
+  <div>
+    <label for="leadsCount">Anzahl Leads:</label>
+    <input type="number" id="leadsCount" name="leadsCount" min="1" max="1000" required placeholder="z.B. 10" />
+  </div>
+
+  <div>
+    <label for="bl">Bundesland (BL):</label>
+    <input type="text" id="bl" name="bl" required placeholder="z.B. Niederösterreich" />
+  </div>
+
+  <div>
+    <label for="plzRange">PLZ Range (z.B. 1190-1220):</label>
+    <input type="text" id="plzRange" name="plzRange" pattern="^\d{4}-\d{4}$" required placeholder="1000-2000" />
+  </div>
+
+  <div>
+    <label for="kampagne">Kampagne:</label>
+    <select id="kampagne" name="kampagne" required>
+      <option value="">Lade Kampagnen...</option>
+    </select>
+  </div>
+
+  <div style="grid-column: 1 / -1;">
+    <label for="note">Notiz:</label>
+    <textarea id="note" name="note" rows="4" placeholder="Optional: Notiz eingeben..."></textarea>
+  </div>
+
+  <button type="submit">Leads bestellen</button>
+</form>
+
+<div id="message" class="message"></div>
+
+<script>
+  // User-Daten laden und anzeigen
+  async function loadUserData() {
+    const container = document.getElementById('userDataContainer');
+    try {
+      const res = await fetch('/api/userdata', { credentials: 'include' });
+      if (!res.ok) throw new Error('Fehler beim Laden der Benutzerdaten');
+      const user = await res.json();
+
+      let html = '<ul>';
+      for (const [key, value] of Object.entries(user)) {
+        html += `<li><strong>${key}:</strong> ${value ?? '-'}</li>`;
+      }
+      html += '</ul>';
+
+      container.innerHTML = html;
+    } catch (err) {
+      container.innerHTML = `<p class="error">Benutzerdaten konnten nicht geladen werden.</p>`;
+      console.error(err);
+    }
+  }
+
+  // Kampagnen laden und Dropdown füllen
+  async function loadCampaigns() {
+    const select = document.getElementById('kampagne');
+    try {
+      const response = await fetch('/api/kamps', { credentials: 'include' });
+      if (!response.ok) throw new Error('Fehler beim Laden der Kampagnen');
+      const kampagnen = await response.json();
+
+      select.innerHTML = '<option value="">Bitte auswählen</option>';
+      kampagnen.forEach(k => {
+        const name = typeof k === 'object' && k.name ? k.name : k;
+        select.innerHTML += `<option value="${name}">${name}</option>`;
+      });
+    } catch (error) {
+      select.innerHTML = '<option value="">Kampagnen konnten nicht geladen werden</option>';
+      console.error(error);
+    }
+  }
+
+  // Formular abschicken
+  document.getElementById('leadOrderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const messageDiv = document.getElementById('message');
+    messageDiv.textContent = '';
+    messageDiv.classList.remove('error');
+
+    const leadsCount = Number(e.target.leadsCount.value);
+    const bl = e.target.bl.value.trim();
+    const plzRange = e.target.plzRange.value.trim();
+    const kampagne = e.target.kampagne.value;
+    const note = e.target.note.value.trim();
+
+    const plzPattern = /^\d{4}-\d{4}$/;
+    if (!plzPattern.test(plzRange)) {
+      messageDiv.textContent = 'Bitte eine gültige PLZ Range im Format "1000-2000" eingeben.';
+      messageDiv.classList.add('error');
+      return;
+    }
+
+    if (!leadsCount || leadsCount < 1) {
+      messageDiv.textContent = 'Bitte eine gültige Anzahl Leads eingeben.';
+      messageDiv.classList.add('error');
+      return;
+    }
+    if (!bl) {
+      messageDiv.textContent = 'Bitte das Bundesland (BL) eingeben.';
+      messageDiv.classList.add('error');
+      return;
+    }
+    if (!kampagne) {
+      messageDiv.textContent = 'Bitte eine Kampagne auswählen.';
+      messageDiv.classList.add('error');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/leads/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          gpnr:localStorage.getItem('pr'),
+          anzahl: leadsCount,
+          bundesland: bl,
+          plzRange: plzRange,
+          kampagne,
+          note
+        })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Fehler bei der Bestellung');
+      }
+
+      messageDiv.textContent = 'Leads-Bestellung erfolgreich abgeschickt!';
+      e.target.reset();
+    } catch (err) {
+      messageDiv.textContent = err.message;
+      messageDiv.classList.add('error');
+      console.error(err);
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadUserData();
+    loadCampaigns();
+  });
+</script>
+
+</body>
+</html>
+

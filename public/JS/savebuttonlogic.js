@@ -2,12 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const savebutton = document.getElementById('savebutton');
     const logoutButton = document.getElementById('logout');
     const saveHint = document.getElementById('saveHint');
+    const bestellen = document.getElementById('bestellen');
 
     // Logout-Event (wie gehabt)
     logoutButton.addEventListener('click', () => {
         const apiBase = window.location.origin;
         window.location.href = apiBase + "/";
     });
+
+    bestellen.addEventListener('click', () => {
+        const apiBase = window.location.origin;
+        window.location.href = "Leads-bestellen.html";
+    })
 
     // Toast erstellen & anhängen (einmalig)
     const toast = document.createElement('div');

@@ -14,6 +14,12 @@ CREATE TABLE mitarbeiter (
                              passwort VARCHAR(255) NOT NULL
 );
 
+
+CREATE TABLE kamp (
+                             nr INT AUTO_INCREMENT PRIMARY KEY ,
+                             name varchar(100) not null unique
+);
+
 -- Leads-Tabelle
 CREATE TABLE leads (
                        id INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,6 +33,19 @@ CREATE TABLE leads (
                        status VARCHAR(50),
                        adresse VARCHAR(255)
 );
+
+
+
+INSERT into kamp(name)
+VALUES
+    ("Flughafen"),
+    ("BK-KR"),
+    ("BK-Niklas"),
+    ("BK-Marvin"),
+    ("SK"),
+    ("BK-Nina");
+
+
 
 -- Mitarbeiter einfügen
 INSERT INTO mitarbeiter (

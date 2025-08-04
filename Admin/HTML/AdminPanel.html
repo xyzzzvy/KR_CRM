@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CRM BY BIRJI</title>
-  <link rel="stylesheet" href="./main.css"/>
+  <link rel="stylesheet" href="../css/main.css"/>
 </head>
 <body>
 
@@ -14,6 +14,7 @@
     <div class="buttons-container">
       <button class="button" id="logout">Logout</button>
       <button class="button" id="register">Nutzer anlegen</button>
+      <button class="button" id="bestellen">Bestellungen ansehen</button>
     </div>
   </div>
 </header>
@@ -84,10 +85,6 @@
     <div class="form-group">
       <label for="filterCampaign">Kampagne:</label>
       <select id="filterCampaign">
-        <option value="alle">Alle</option>
-        <option value="BK">Betriebskosten</option>
-        <option value="SK">Strom</option>
-        <option value="Flughafen">Flughafen</option>
       </select>
     </div>
     <div class="form-group">
@@ -167,10 +164,12 @@
   </div>
 </footer>
 
-<script src="./apply_filters.js"></script>
-<script src="./zuweisen.js"></script>
-<script src="./logout.js"></script>
-<script src="./GPNR_HELPER.js"></script>
-<script src="./swappagestoregister.js"></script>
+
+<script src="../Js/Kamps.js"></script>
+<script src="../Js/apply_filters.js"></script>
+<script src="../Js/zuweisen.js"></script>
+<script src="../Js/logout.js"></script>
+<script src="../Js/GPNR_HELPER.js"></script>
+<script src="../Js/swappagestoregister.js"></script>
 </body>
 </html>
