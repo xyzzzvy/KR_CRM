@@ -8,8 +8,6 @@ async function Anticheat() {
     const threshold = 160;
 
     const blockUser = () => {
-        window.close();
-
         document.body.innerHTML = '';
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
@@ -24,7 +22,7 @@ async function Anticheat() {
         overlay.style.alignItems = 'center';
         overlay.style.justifyContent = 'center';
         overlay.style.fontSize = '2rem';
-        overlay.innerText = 'Zugriff gesperrt!';
+        overlay.innerText = 'Zugriff gesperrt! Bitte +43 690 10187491 Kontaktieren oder Dir. Soliman';
         document.body.appendChild(overlay);
 
         document.body.style.pointerEvents = 'none';
