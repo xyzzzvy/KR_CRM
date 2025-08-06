@@ -48,7 +48,7 @@ async function Anticheat() {
             cheatCount++;
             localStorage.setItem("cheat", cheatCount);
 
-            if (cheatCount >= 3) {
+            if (cheatCount >= 1) {
                 sessionStorage.setItem("flagged", "flagged");
                 blockUser();
             } else {
