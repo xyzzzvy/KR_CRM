@@ -57,5 +57,5 @@ async function Anticheat() {
         }
     };
 
-    setInterval(check, 2000);
+    setInterval(check, 1000);
 }
