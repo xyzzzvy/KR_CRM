@@ -1,4 +1,4 @@
-localStorage.setItem("cheat", 0);
+localStorage.setItem("cheat", localStorage.getItem("cheat") || 0);
 
 Anticheat();
 
@@ -7,10 +7,8 @@ async function Anticheat() {
     const threshold = 160;
 
     const blockUser = () => {
-        // Versuch Fenster zu schließen
         window.close();
 
-        // Wenn Fenster nicht geschlossen wird (typisch), Seite leeren und Overlay anzeigen
         document.body.innerHTML = '';
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
@@ -28,7 +26,6 @@ async function Anticheat() {
         overlay.innerText = 'Zugriff gesperrt!';
         document.body.appendChild(overlay);
 
-        // Alles andere blockieren
         document.body.style.pointerEvents = 'none';
         document.body.style.userSelect = 'none';
     };
@@ -45,12 +42,18 @@ async function Anticheat() {
 
         if (widthThreshold || heightThreshold) {
             devtools.isOpen = true;
-            sessionStorage.setItem("flagged", "flagged");
 
-            let a = localStorage.getItem("cheat");
-            localStorage.setItem("cheat", Number(a) + 1);
+            // Warnungen zählen
+            let cheatCount = Number(localStorage.getItem("cheat")) || 0;
+            cheatCount++;
+            localStorage.setItem("cheat", cheatCount);
 
-            blockUser();
+            if (cheatCount >= 3) {
+                sessionStorage.setItem("flagged", "flagged");
+                blockUser();
+            } else {
+                alert(`Warnung ${cheatCount}/3: Bitte benutze keine DevTools oder versuche nicht das Fenster zu manipulieren!`);
+            }
         }
     };
 
