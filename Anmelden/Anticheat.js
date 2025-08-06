@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
             const widthThreshold = window.outerWidth - window.innerWidth > threshold;
             const heightThreshold = window.outerHeight - window.innerHeight > threshold;
 
-            let flag = sessionStorage.getItem("flagged");
+            let flag = localStorage.getItem("flagged");
             if (flag === "flagged") {
                 blockUser();
                 return;
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
                 // sofort blockieren beim ersten Verstoß
                 localStorage.setItem("cheat", 1);
-                sessionStorage.setItem("flagged", "flagged");
+                localStorage.setItem("flagged", "flagged");
                 blockUser();
             }
         };
