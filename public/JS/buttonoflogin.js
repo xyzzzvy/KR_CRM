@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok && result.success) {
                 // Nach erfolgreichem Login: Weiterleitungsseite abrufen
-                localStorage.setItem("pr", gpnr);
+                sessionStorage.setItem("pr", gpnr);
                 const roleResponse = await fetch("/requestpage", {
                     method: "GET",
                     credentials: "include"  // Cookie wird mitgesendet

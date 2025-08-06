@@ -7,7 +7,7 @@ const filterBL = document.getElementById('BL');
 const applyFilterBtn = document.getElementById('applyFilter');
 const remainingLeadsDisplay = document.getElementById('remainingLeads');
 const saveHint = document.getElementById('saveHint'); // "Bitte speichern"
-const partnerGpnr = localStorage.getItem("pr");
+const partnerGpnr = sessionStorage.getItem("pr");
 
 
 
