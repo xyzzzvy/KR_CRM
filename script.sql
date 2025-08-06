@@ -74,7 +74,12 @@ INSERT INTO mitarbeiter (
     gpnr, vorname, nachname, telefon, email, fuehrungskraft, passwort, role
 ) VALUES
       (62804, 'Hashim', 'Soliman', '+436701112223', 'max.mustermann@firma.at', 0000 , 'Test1234', 'Admin'),
-      (1002, 'Sabine', 'Huber', '+436641112233', 'sabine.huber@firma.at', 62804, 'Geheim1234', 'Berater');
+      (1002, 'Sabine', 'Huber', '+436641112233', 'sabine.huber@firma.at', 62804, 'Geheim1234', 'Berater'),
+      (3001, 'Julia', 'Mayer', '+436601234567', 'julia.mayer@firma.at', 62804, 'Passwort1', 'Berater'),
+      (3002, 'Thomas', 'Schmidt', '+436601234568', 'thomas.schmidt@firma.at', 1002, 'Passwort2', 'Techniker'),
+      (3003, 'Lena', 'Fischer', '+436601234569', 'lena.fischer@firma.at', 1002, 'Passwort3', 'Vertrieb'),
+      (3004, 'Markus', 'Neumann', '+436601234570', 'markus.neumann@firma.at', 3001, 'Passwort4', 'Support'),
+      (3005, 'Anna', 'Klein', '+436601234571', 'anna.klein@firma.at', 3003, 'Passwort5', 'Marketing');
 
 -- Leads einfügen (Partner korrekt auf gpnr 1001 oder 1002 gesetzt)
 INSERT INTO leads (

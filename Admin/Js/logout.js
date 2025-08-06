@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     bestellen.addEventListener('click', () => {
         const apiBase = window.location.origin;
-        window.location.href = "Bestellungen.html";
+        window.location.href = "../HTML/Bestellungen.html";
     })
 
 

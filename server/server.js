@@ -440,6 +440,33 @@ app.post('/api/leads/order', async (req, res) => {
 //endregion
 
 
+//-- Mitarbeiter--
+//region
+// API: Alle Nutzer zurückgeben, wenn gpnr Admin ist oder gleiche gpnr angefragt wird
+app.get('/api/users/by-gpnr/:gpnr', authenticateToken, async (req, res) => {
+    try {
+        const requestedGpnr = req.params.gpnr;
+        const requester = req.user; // Aus JWT, enthält gpnr und role
+
+        // Zugriff prüfen: Nur Admin oder der User selbst darf die Liste sehen
+        if (requester.role !== 'Admin' && requester.gpnr !== requestedGpnr) {
+            return res.status(403).json({ error: 'Zugriff verweigert' });
+        }
+
+        const users = await getAllUsers();
+
+        if (!users || users.length === 0) {
+            return res.status(404).json({ error: 'Keine Nutzer gefunden' });
+        }
+
+        res.json(users);
+    } catch (err) {
+        console.error('Fehler beim Laden der Nutzer:', err);
+        res.status(500).json({ error: 'Fehler beim Laden der Nutzer' });
+    }
+});
+//endregion
+
 
 // Server starten
 app.listen(port, '0.0.0.0', () => {

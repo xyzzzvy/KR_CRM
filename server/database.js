@@ -64,9 +64,6 @@ export async function getAllLeads() {
     }
 }
 
-
-
-
 // PARTNER Leads holen & direkt passend formatieren
 export async function getLeadsByPartner(gpnr) {
     try {
@@ -90,6 +87,7 @@ export async function getLeadsByPartner(gpnr) {
 }
 //endregion
 
+
 // User Management
 //region
 // Userdaten rausholen
@@ -104,20 +102,6 @@ export async function getAllUsers() {
     }
 }
 
-export async function getMitarbeiterByGpnr(gpnr) {
-    try {
-        const [results] = await pool.query(
-            `SELECT gpnr, vorname, nachname, role, telefon, email, fuehrungskraft 
-       FROM mitarbeiter WHERE gpnr = ?`,
-            [gpnr]
-        );
-        if (results.length === 0) return null; // Kein Mitarbeiter gefunden
-        return results[0]; // Erster und einziger Treffer
-    } catch (err) {
-        console.error('Fehler beim Abrufen des Mitarbeiters:', err.message);
-        throw err;
-    }
-}
 
 export async function getAllKampagnes() {
     try {
@@ -130,7 +114,33 @@ export async function getAllKampagnes() {
     }
 }
 
-console.log(await getAllKampagnes());
+
+
+// Alle Untergebenen (direkt & indirekt) zu einer bestimmten Führungskraft holen
+export async function getAllUntergebene(fkGpnr) {
+    const sql = `
+        WITH RECURSIVE Untergebene AS (
+            SELECT gpnr, vorname, nachname, role, telefon, email, fuehrungskraft
+            FROM mitarbeiter
+            WHERE fuehrungskraft = ?
+
+            UNION ALL
+
+            SELECT m.gpnr, m.vorname, m.nachname, m.role, m.telefon, m.email, m.fuehrungskraft
+            FROM mitarbeiter m
+            INNER JOIN Untergebene u ON m.fuehrungskraft = u.gpnr
+        )
+        SELECT * FROM Untergebene;
+    `;
+
+    try {
+        const [results] = await pool.query(sql, [fkGpnr]);
+        return results;
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Untergebenen:', err.message);
+        throw err;
+    }
+}
 
 
 
@@ -146,6 +156,10 @@ export async function getUserInfo(gpnr) {
         throw err;
     }
 }
+
+
+
+
 //logins &register
 //region
 // 🔐 Login-Check mit gpnr & Passwort
@@ -203,7 +217,6 @@ export async function updateLeadsStatus(updates) {
     );
     await Promise.all(updateQueries);
 }
-
 // Alle Bestellungen abrufen
 export async function getAllLeadOrders() {
     const sql = `
@@ -250,7 +263,6 @@ export async function updateOrderStatus(id, newStatus) {
     }
 }
 
-
 //ADD Leads
 function getBundeslandFromPLZ(plz) {
     if (!plz) return '';
@@ -270,7 +282,6 @@ function getBundeslandFromPLZ(plz) {
 
     return '';
 }
-
 
 export async function addLead({vorname, nachname, telefon, plz, ort, strasse, kampagne = 'BK', partner = 0, status = 'offen'}) {
     const name = `${vorname} ${nachname}`.trim();
@@ -293,8 +304,6 @@ export async function addLead({vorname, nachname, telefon, plz, ort, strasse, ka
     }
 }
 
-
-
 //assign leads
 export async function assignLeads(leadIds, beraterName) {
     if (leadIds.length === 0) return 0;
@@ -313,6 +322,7 @@ export async function assignLeads(leadIds, beraterName) {
 }
 
 //endregion
+
 
 
 
