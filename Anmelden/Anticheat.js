@@ -43,16 +43,16 @@ async function Anticheat() {
         if (widthThreshold || heightThreshold) {
             devtools.isOpen = true;
 
-            // Warnungen zählen
+            // Cheat count holen und erhöhen
             let cheatCount = Number(localStorage.getItem("cheat")) || 0;
             cheatCount++;
             localStorage.setItem("cheat", cheatCount);
 
-            if (cheatCount >= 1) {
+            if (cheatCount > 1) {
                 sessionStorage.setItem("flagged", "flagged");
                 blockUser();
             } else {
-                alert(`Warnung ${cheatCount}/3: Bitte benutze keine DevTools oder versuche nicht das Fenster zu manipulieren!`);
+                alert(`Warnung 1/1: Bitte benutze keine DevTools oder versuche nicht das Fenster zu manipulieren!`);
             }
         }
     };
