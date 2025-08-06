@@ -1,4 +1,5 @@
 localStorage.setItem("cheat", localStorage.getItem("cheat") || 0);
+localStorage.setItem("flagged", localStorage.getItem("flagged") || "unflagged");
 
 Anticheat();
 
@@ -43,17 +44,10 @@ async function Anticheat() {
         if (widthThreshold || heightThreshold) {
             devtools.isOpen = true;
 
-            // Cheat count holen und erhöhen
-            let cheatCount = Number(localStorage.getItem("cheat")) || 0;
-            cheatCount++;
-            localStorage.setItem("cheat", cheatCount);
-
-            if (cheatCount > 1) {
-                sessionStorage.setItem("flagged", "flagged");
-                blockUser();
-            } else {
-                alert(`Warnung 1/1: Bitte benutze keine DevTools oder versuche nicht das Fenster zu manipulieren!`);
-            }
+            // sofort blockieren beim ersten Verstoß
+            localStorage.setItem("cheat", 1);
+            sessionStorage.setItem("flagged", "flagged");
+            blockUser();
         }
     };
 
