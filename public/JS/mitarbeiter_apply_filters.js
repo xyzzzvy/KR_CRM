@@ -63,7 +63,10 @@ async function fetchLeads() {
 function renderLeads(data) {
     tbody.innerHTML = '';
 
-    data.forEach(({ lead, originalIndex }) => {
+    const maxToRender = 1000;
+    const limitedData = data.slice(0, maxToRender);
+
+    limitedData.forEach(({ lead, originalIndex }) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${lead.id}</td>
@@ -89,7 +92,11 @@ function renderLeads(data) {
         tbody.appendChild(tr);
     });
 
-    remainingLeadsDisplay.textContent = data.length;
+    if (data.length > maxToRender) {
+        remainingLeadsDisplay.textContent = `${data.length} (zeige ${maxToRender})`;
+    } else {
+        remainingLeadsDisplay.textContent = data.length;
+    }
 
     document.querySelectorAll('.status-select').forEach(select => {
         select.addEventListener('change', function () {
@@ -110,6 +117,7 @@ function renderLeads(data) {
         });
     });
 }
+
 
 function applyFilter() {
     const kampagne = filterCampaign.value;
