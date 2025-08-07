@@ -22,8 +22,9 @@ import {
     insertLeadOrder,
     getAllLeadOrders,
     updateOrderStatus,
+    getAllUntergebene,
     end
-} from './database.js';
+} from './database2.js';
 //endregion
 
 //Settings raw
@@ -203,12 +204,40 @@ app.get('/api/kamps', authenticateToken, async (req, res) => {
 app.get('/api/leads/partner/:partner', authenticateToken, async (req, res) => {
     try {
         const partner = req.params.partner;
+        const gpnr = req.user.gpnr; // aus JWT
+        if(gpnr!=partner){
+            res.status(403).json({ error: 'Zugriff verweigert' });
+        }
+
         const leads = await getLeadsByPartner(partner);
         res.json(leads);
     } catch (err) {
         res.status(500).json({ error: 'Fehler beim Laden der Partner-Leads' });
     }
 });
+
+
+app.get('/api/leads/partnerFK/:partner', authenticateToken, async (req, res) => {
+    try {
+        const partner = req.params.partner;
+        const FK = req.user.gpnr; // aus JWT
+
+        const untergebene = await getAllUntergebene(FK); // z.B. [ { gpnr: '1234' }, { gpnr: '5678' } ]
+
+        const gpnrList = untergebene.map(user => String(user.gpnr));
+
+        if (gpnrList.includes(String(partner))) {
+            const leads = await getLeadsByPartner(partner);
+            res.json(leads);
+        } else {
+            res.status(403).json({ error: 'Zugriff verweigert' });
+        }
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Leads nach Partner:', err.message);
+        res.status(500).json({ error: 'Fehler beim Laden der Partner-Leads' });
+    }
+});
+
 
 app.get('/api/user/:gpnr', authenticateToken, async (req, res) => {
     try {
@@ -443,28 +472,34 @@ app.post('/api/leads/order', async (req, res) => {
 //-- Mitarbeiter--
 //region
 // API: Alle Nutzer zurückgeben, wenn gpnr Admin ist oder gleiche gpnr angefragt wird
-app.get('/api/users/by-gpnr/:gpnr', authenticateToken, async (req, res) => {
+app.get('/api/users/by-gpnr', authenticateToken, async (req, res) => {
     try {
-        const requestedGpnr = req.params.gpnr;
-        const requester = req.user; // Aus JWT, enthält gpnr und role
+        const requester = req.user; // kommt aus dem JWT (z.B. { gpnr, role })
 
-        // Zugriff prüfen: Nur Admin oder der User selbst darf die Liste sehen
-        if (requester.role !== 'Admin' && requester.gpnr !== requestedGpnr) {
+        if (!requester || !requester.gpnr) {
+            return res.status(401).json({ error: 'Ungültiger Token oder Benutzer nicht authentifiziert' });
+        }
+
+        const gpnr = requester.gpnr;
+
+        // Admins dürfen alles sehen, andere nur ihre eigenen Untergebenen
+        if (requester.role !== 'Admin' && req.query.gpnr && req.query.gpnr !== String(gpnr)) {
             return res.status(403).json({ error: 'Zugriff verweigert' });
         }
 
-        const users = await getAllUsers();
+        const untergebene = await getAllUntergebene(gpnr);
 
-        if (!users || users.length === 0) {
-            return res.status(404).json({ error: 'Keine Nutzer gefunden' });
+        if (!untergebene || untergebene.length === 0) {
+            return res.status(404).json({ error: 'Keine Untergebenen gefunden' });
         }
 
-        res.json(users);
+        res.json(untergebene);
     } catch (err) {
-        console.error('Fehler beim Laden der Nutzer:', err);
-        res.status(500).json({ error: 'Fehler beim Laden der Nutzer' });
+        console.error('Fehler beim Laden der Untergebenen:', err.message);
+        res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
+
 //endregion
 
 

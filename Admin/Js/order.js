@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const ordersWithNames = await Promise.all(
                 orders.map(async order => {
-                    const name = await getUserName(order.GPNR);
+                    const name = await getUserName(order.gpnr);
                     return { ...order, name };
                 })
             );
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             tr.innerHTML = `
         <td>${order.name}</td>
-        <td>${order.GPNR}</td>
+        <td>${order.gpnr}</td>
         <td>${order.anzahl ?? '-'}</td>
         <td>${order.bundesland ?? order.bl ?? '-'}</td>
         <td>${order.plzrange ?? order.plz ?? '-'}</td>

@@ -263,7 +263,7 @@
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          gpnr:localStorage.getItem('pr'),
+          gpnr:sessionStorage.getItem('pr'),
           anzahl: leadsCount,
           bundesland: bl,
           plzRange: plzRange,

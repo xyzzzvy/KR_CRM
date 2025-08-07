@@ -1,14 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     const savebutton = document.getElementById('savebutton');
-    const logoutButton = document.getElementById('logout');
     const saveHint = document.getElementById('saveHint');
     const bestellen = document.getElementById('bestellen');
+    const  mit=document.getElementById('mit');
+    const logoutButton = document.getElementById('logout');
+
+
+    mit.addEventListener('click', () => {
+        window.location.href="Mitarbeiter.html"
+    })
 
     // Logout-Event (wie gehabt)
     logoutButton.addEventListener('click', () => {
         const apiBase = window.location.origin;
         window.location.href = apiBase + "/";
     });
+
 
     bestellen.addEventListener('click', () => {
         const apiBase = window.location.origin;
