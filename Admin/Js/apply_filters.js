@@ -63,7 +63,7 @@ async function fetchLeads() {
         }
 
         leads = await response.json();
-        renderLeads(leads.map((lead, index) => ({ lead, originalIndex: index })));
+        renderLeads(leads.map((lead, index) => ({ lead, originalIndex: index })), leads.length);
         updatedLeads = [];
         document.dispatchEvent(new Event('leadsLoaded'));
     } catch (error) {
@@ -76,10 +76,13 @@ async function fetchLeads() {
     }
 }
 
-function renderLeads(data) {
+function renderLeads(data, totalCount = null) {
     tbody.innerHTML = '';
 
-    data.forEach(({ lead, originalIndex }) => {
+    const maxToRender = 1000;
+    const limitedData = data.slice(0, maxToRender);
+
+    limitedData.forEach(({ lead, originalIndex }) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${lead.id}</td>
@@ -105,7 +108,11 @@ function renderLeads(data) {
         tbody.appendChild(tr);
     });
 
-    remainingLeadsDisplay.textContent = data.length;
+    if (totalCount !== null && totalCount > maxToRender) {
+        remainingLeadsDisplay.textContent = `${totalCount} (zeige ${maxToRender})`;
+    } else {
+        remainingLeadsDisplay.textContent = data.length;
+    }
 
     document.querySelectorAll('.status-select').forEach(select => {
         select.addEventListener('change', function () {
@@ -181,7 +188,7 @@ function applyFilter() {
                 return kampagneMatch && plzMatch && statusMatch && blMatch && gpnrMatch && nameMatch && fromMatch && toMatch;
             });
 
-        renderLeads(filtered);
+        renderLeads(filtered, filtered.length);
         hideLoadingToast();
     }, 150);
 }
