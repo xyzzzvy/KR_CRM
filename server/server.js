@@ -201,15 +201,14 @@ app.get('/api/kamps', authenticateToken, async (req, res) => {
 });
 
 
-app.get('/api/leads/partner/:partner', authenticateToken, async (req, res) => {
+app.get('/api/leads/partner', authenticateToken, async (req, res) => {
     try {
-        const partner = req.params.partner;
         const gpnr = req.user.gpnr; // aus JWT
-        if(gpnr!=partner){
+        if(!gpnr){
             res.status(403).json({ error: 'Zugriff verweigert' });
         }
 
-        const leads = await getLeadsByPartner(partner);
+        const leads = await getLeadsByPartner(gpnr);
         res.json(leads);
     } catch (err) {
         res.status(500).json({ error: 'Fehler beim Laden der Partner-Leads' });

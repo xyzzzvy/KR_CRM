@@ -9,14 +9,16 @@ const remainingLeadsDisplay = document.getElementById('remainingLeads');
 const saveHint = document.getElementById('saveHint'); // "Bitte speichern"
 const partnerGpnr = sessionStorage.getItem("pr");
 
-
+const dateFilterSelect = document.getElementById("dateFilter");
+const customStartInput = document.getElementById("customStart");
+const customEndInput = document.getElementById("customEnd");
 
 let leads = [];
 var updatedLeads = [];
 
 async function fetchLeads() {
     try {
-        const response = await fetch(`/api/leads/partner/${partnerGpnr}`, {
+        const response = await fetch(`/api/leads/partner`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -95,6 +97,42 @@ function applyFilter() {
     const nameInput = document.getElementById('nameFilter');
     const name = nameInput ? nameInput.value.trim().toLowerCase() : '';
 
+    // Datumsauswahl
+    const dateFilter = dateFilterSelect.value;
+    const customStart = customStartInput.value;
+    const customEnd = customEndInput.value;
+
+    let startDate = null;
+    let endDate = new Date();
+
+    switch (dateFilter) {
+        case "24h":
+            startDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
+            break;
+        case "7d":
+            startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            break;
+        case "14d":
+            startDate = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+            break;
+        case "1m":
+            startDate = new Date();
+            startDate.setMonth(startDate.getMonth() - 1);
+            break;
+        case "custom":
+            if (!customStart || !customEnd) {
+                alert("Bitte sowohl Start- als auch Enddatum angeben.");
+                return;
+            }
+            startDate = new Date(customStart);
+            endDate = new Date(customEnd);
+            endDate.setHours(23, 59, 59, 999); // bis Ende des Tages
+            break;
+        default:
+            // kein Zeitfilter
+            break;
+    }
+
     const filtered = leads
         .map((lead, index) => ({ lead, originalIndex: index }))
         .filter(({ lead }) => {
@@ -106,7 +144,14 @@ function applyFilter() {
                 name === '' ||
                 lead.name.toLowerCase().includes(name) ||
                 lead.telefon.replace(/\s+/g, '').includes(name);
-            return kampagneMatch && plzMatch && statusMatch && blMatch && nameMatch;
+
+            const dateMatch = (() => {
+                if (!startDate) return true;
+                const leadDate = new Date(lead.datum);
+                return leadDate >= startDate && leadDate <= endDate;
+            })();
+
+            return kampagneMatch && plzMatch && statusMatch && blMatch && nameMatch && dateMatch;
         });
 
     renderLeads(filtered);
@@ -125,5 +170,10 @@ function formatDate(isoString) {
     return `${day}.${month}.${year}`;
 }
 
+function toggleCustomDateInputs() {
+    const selected = dateFilterSelect.value;
+    const customDateInputs = document.getElementById("customDateInputs");
+    customDateInputs.style.display = selected === "custom" ? "flex" : "none";
+}
 
 fetchLeads();

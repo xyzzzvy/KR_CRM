@@ -246,3 +246,40 @@ footer {
     transform: translateY(0);
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
+
+/* Custom Date Inputs Style - angepasst an dein Design */
+
+#customDateInputs {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+#customDateInputs label {
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: #333;
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+
+#customDateInputs input[type="date"],
+#customDateInputs input[type="datetime-local"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    min-width: 160px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+}
+
+#customDateInputs input[type="date"]:focus,
+#customDateInputs input[type="datetime-local"]:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.5);
+    outline: none;
+    background-color: #f9faff;
+}

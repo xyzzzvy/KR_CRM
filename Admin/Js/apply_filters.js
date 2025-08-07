@@ -139,6 +139,28 @@ function applyFilter() {
         const nameInput = document.getElementById('nameFilter');
         const name = nameInput ? nameInput.value.trim().toLowerCase() : '';
 
+        // Datumsauswahl
+        const dateFilter = document.getElementById('dateFilter').value;
+        let dateFrom = null;
+        let dateTo = null;
+        const now = new Date();
+
+        if (dateFilter === '24h') {
+            dateFrom = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        } else if (dateFilter === '7d') {
+            dateFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        } else if (dateFilter === '14d') {
+            dateFrom = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+        } else if (dateFilter === '1m') {
+            dateFrom = new Date(now);
+            dateFrom.setMonth(dateFrom.getMonth() - 1);
+        } else if (dateFilter === 'custom') {
+            const customStart = document.getElementById('customStart').value;
+            const customEnd = document.getElementById('customEnd').value;
+            dateFrom = customStart ? new Date(customStart) : null;
+            dateTo = customEnd ? new Date(customEnd) : null;
+        }
+
         const filtered = leads
             .map((lead, index) => ({ lead, originalIndex: index }))
             .filter(({ lead }) => {
@@ -151,18 +173,24 @@ function applyFilter() {
                     name === '' ||
                     lead.name.toLowerCase().includes(name) ||
                     lead.telefon.replace(/\s+/g, '').includes(name);
-                return kampagneMatch && plzMatch && statusMatch && blMatch && gpnrMatch && nameMatch;
+
+                const leadDate = new Date(lead.datum);
+                const fromMatch = !dateFrom || leadDate >= dateFrom;
+                const toMatch = !dateTo || leadDate <= dateTo;
+
+                return kampagneMatch && plzMatch && statusMatch && blMatch && gpnrMatch && nameMatch && fromMatch && toMatch;
             });
 
         renderLeads(filtered);
         hideLoadingToast();
-    }, 150); // Simuliere minimales Delay für saubere Anzeige
+    }, 150);
 }
 
-applyFilterBtn.addEventListener('click', e => {
-    e.preventDefault();
-    applyFilter();
-});
+function toggleCustomDateInputs() {
+    const dateFilter = document.getElementById('dateFilter').value;
+    const customInputs = document.getElementById('customDateInputs');
+    customInputs.style.display = dateFilter === 'custom' ? 'block' : 'none';
+}
 
 function formatDate(isoString) {
     const date = new Date(isoString);
@@ -172,4 +200,14 @@ function formatDate(isoString) {
     return `${day}.${month}.${year}`;
 }
 
+// Event Listener für Filter-Button
+applyFilterBtn.addEventListener('click', e => {
+    e.preventDefault();
+    applyFilter();
+});
+
+// Event Listener für Datumsauswahl (toggle custom inputs)
+document.getElementById('dateFilter').addEventListener('change', toggleCustomDateInputs);
+
+// Initiale Daten laden
 fetchLeads();
