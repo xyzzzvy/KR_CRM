@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
             applyFilters(); // Initialfilter anwenden
         } catch (error) {
             console.error('Fehler bei der Initialisierung:', error);
-            showError('Fehler beim Start: ' + error.message);
+            console.log('Fehler beim Start: ' + error.message);
         }
     }
 
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             populateMitarbeiterDropdown();
         } catch (error) {
             console.error('Fehler beim Laden der Mitarbeiter:', error);
-            showError('Fehler beim Laden der Mitarbeiterliste');
+            console.log('Fehler beim Laden der Mitarbeiterliste');
             mitarbeiterListe.innerHTML = '<option value="">Fehler beim Laden</option>';
             throw error;
         }
@@ -305,18 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fehler anzeigen
-    function showError(message) {
-        console.error('Fehler:', message);
-        const errorBox = document.createElement('div');
-        errorBox.className = 'error-message';
-        errorBox.textContent = message;
-        document.body.prepend(errorBox);
 
-        setTimeout(() => {
-            errorBox.remove();
-        }, 5000);
-    }
 
     // Globale Funktion für Bearbeiten-Button
     window.editTermin = function(terminId) {
