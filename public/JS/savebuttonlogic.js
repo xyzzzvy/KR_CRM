@@ -2,13 +2,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const savebutton = document.getElementById('savebutton');
     const saveHint = document.getElementById('saveHint');
     const bestellen = document.getElementById('bestellen');
-    const  mit=document.getElementById('mit');
+    const mit = document.getElementById('mit');
     const logoutButton = document.getElementById('logout');
+    const historybutton = document.getElementById('bestellhistory');
+    const sicht=document.getElementById('sicht');
 
+
+
+    // Initialisiere updatedLeads, falls noch nicht vorhanden
+    if (!window.updatedLeads) {
+        window.updatedLeads = [];
+    }
+
+    historybutton.addEventListener('click', () => {
+        window.location.href = "Bestellübersicht.html";
+    });
+
+    sicht.addEventListener('click', () => {
+        window.location.href="Tagesübersicht.html";
+    })
 
     mit.addEventListener('click', () => {
-        window.location.href="Mitarbeiter.html"
-    })
+        window.location.href = "Mitarbeiter.html";
+    });
 
     // Logout-Event (wie gehabt)
     logoutButton.addEventListener('click', () => {
@@ -16,11 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = apiBase + "/";
     });
 
-
     bestellen.addEventListener('click', () => {
         const apiBase = window.location.origin;
         window.location.href = "Leads-bestellen.html";
-    })
+    });
 
     // Toast erstellen & anhängen (einmalig)
     const toast = document.createElement('div');

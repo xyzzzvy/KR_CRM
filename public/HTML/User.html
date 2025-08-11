@@ -15,6 +15,8 @@
       <button class="button" id="logout">Logout</button>
       <button class="button" id="bestellen">Leads bestellen</button>
       <button class="button" id="mit">Mitarbeiter</button>
+      <button class="button" id="bestellhistory">Bestell History</button>
+      <button class="button" id="sicht">Tagesbericht</button>
     </div>
   </div>
 </header>
@@ -40,8 +42,12 @@
         <option value="offen">offen</option>
         <option value="n.err">n.err</option>
         <option value="erreicht">erreicht</option>
-        <option value="fixiert">fixiert</option>
-        <option value="erledigt">erledigt</option>
+        <option value="QC fixiert">QC fixiert</option>
+        <option value="VG fixiert">VG fixiert</option>
+        <option value="QC durchgeführt">QC durchgeführt</option>
+        <option value="VG durchgeführt">VG durchgeführt</option>
+        <option value="Vg positiv erledigt">Vg positiv erledigt</option>
+        <option value="Vg negativ erledigt">Vg negativ erledigt</option>
       </select>
     </div>
 
@@ -86,6 +92,28 @@
       <input type="date" id="customEnd" />
     </div>
 
+
+
+    <div class="form-group">
+      <label for="terminisiertFilter">Terminisiert am:</label>
+      <select id="terminisiertFilter" onchange="toggleCustomTerminDateInputs()">
+        <option value="">Alle</option>
+        <option value="24h">Letzte 24 Stunden</option>
+        <option value="7d">Letzte 7 Tage</option>
+        <option value="14d">Letzte 14 Tage</option>
+        <option value="1m">Letzter Monat</option>
+        <option value="custom">Benutzerdefiniert</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="customTerminDateInputs" style="display: none;">
+      <label for="customTerminStart">Von:</label>
+      <input type="date" id="customTerminStart" />
+      <label for="customTerminEnd">Bis:</label>
+      <input type="date" id="customTerminEnd" />
+    </div>
+
+
     <div class="form-group filter-button-wrapper">
       <label>&nbsp;</label>
       <button id="applyFilter" class="button">Filtern</button>
@@ -116,6 +144,7 @@
           <th>PLZ</th>
           <th>Partner</th>
           <th>Status</th>
+          <th>Terminisiert</th>
         </tr>
         </thead>
         <tbody id="leadsTableBody">

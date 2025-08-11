@@ -1,7 +1,4 @@
-import mysql from "mysql2/promise"; // Use the promise wrapper for convenience
-//CONN
-//region
-// Create pool instead of single connection
+import mysql from "mysql2/promise";
 
 const pool = mysql.createPool({
     host: '34.51.205.183',
@@ -14,21 +11,7 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-/*
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',                  // oder dein MySQL-Benutzername
-    password: '',     // leer lassen, nur wenn dein Root-Benutzer kein Passwort hat
-    database: 'sol',
-    port: 3306,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
-*/
 
-
-// No need to connect manually with pools, but let's check connection once
 (async () => {
     try {
         const connection = await pool.getConnection();
@@ -38,11 +21,9 @@ const pool = mysql.createPool({
         console.error('Fehler beim Verbinden mit der Datenbank:', err.message);
     }
 })();
-//endregion
 
-//GETLEADS ETC
-//region
-// Leads holen & direkt passend formatieren
+//#region Leads
+
 export async function getAllLeads() {
     try {
         const [results] = await pool.query("SELECT * FROM leads");
@@ -59,12 +40,11 @@ export async function getAllLeads() {
             adresse: row.adresse
         }));
     } catch (err) {
-        console.error('Fehler beim Ausführen der Abfrage:', err.message);
+        console.error('Fehler beim Abrufen der Leads:', err.message);
         throw err;
     }
 }
 
-// PARTNER Leads holen & direkt passend formatieren
 export async function getLeadsByPartner(gpnr) {
     try {
         const [results] = await pool.query("SELECT * FROM leads WHERE partner = ?", [gpnr]);
@@ -81,42 +61,100 @@ export async function getLeadsByPartner(gpnr) {
             adresse: row.adresse
         }));
     } catch (err) {
-        console.error('Fehler beim Ausführen der Abfrage:', err.message);
+        console.error('Fehler beim Abrufen der Leads nach Partner:', err.message);
         throw err;
     }
 }
-//endregion
 
+export async function addLead({ vorname, nachname, telefon, plz, ort, strasse, kampagne = 'BK', partner = null, status = 'offen' }) {
+    const name = `${vorname} ${nachname}`.trim();
+    const adresse = `${strasse}, ${plz} ${ort}`.trim();
+    const datum = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const bl = getBundeslandFromPLZ(plz);
 
-// User Management
-//region
-// Userdaten rausholen
+    try {
+        const [result] = await pool.query(
+            `INSERT INTO leads 
+            (datum, kampagne, name, telefon, bl, plz, partner, status, adresse)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [datum, kampagne, name, telefon, bl, plz, partner, status, adresse]
+        );
+        return result.insertId;
+    } catch (err) {
+        console.error('Fehler beim Einfügen des Leads:', err.message);
+        throw err;
+    }
+}
+
+// Hilfsfunktion Bundesland ermitteln (vereinfachte Version)
+function getBundeslandFromPLZ(plz) {
+    if (!plz) return '';
+    if (plz.startsWith('1')) return 'W';                    // Wien
+    if (plz.startsWith('2') || plz.startsWith('3')) return 'NÖ';  // Niederösterreich
+    if (plz.startsWith('4')) return 'OÖ';                   // Oberösterreich
+    if (plz.startsWith('5')) return 'S';                    // Salzburg
+    if (plz.startsWith('6')) return 'T';                    // Tirol
+    if (plz.startsWith('68') || plz.startsWith('69')) return 'V'; // Vorarlberg
+    if (plz.startsWith('7')) return 'B';                    // Burgenland
+    if (plz.startsWith('8')) return 'ST';                   // Steiermark
+    if (plz.startsWith('9')) return 'K';                    // Kärnten
+    return '';
+}
+
+export async function updateLeadsStatus(updates) {
+    try {
+        const updateQueries = updates.map(({ id, status }) =>
+            pool.query('UPDATE leads SET status = ? WHERE id = ?', [status, id])
+        );
+        await Promise.all(updateQueries);
+    } catch (err) {
+        console.error('Fehler beim Aktualisieren des Lead-Status:', err.message);
+        throw err;
+    }
+}
+
+export async function assignLeads(leadIds, gpnr) {
+    if (!leadIds.length) return 0;
+    const placeholders = leadIds.map(() => '?').join(',');
+    try {
+        const [result] = await pool.query(
+            `UPDATE leads SET partner = ? WHERE id IN (${placeholders})`,
+            [gpnr, ...leadIds]
+        );
+        return result.affectedRows;
+    } catch (err) {
+        console.error('Fehler beim Zuweisen der Leads:', err.message);
+        throw err;
+    }
+}
+
+//#endregion
+
+//#region Mitarbeiter (Users)
+
 export async function getAllUsers() {
     try {
-        const [results] = await pool.query(`SELECT * FROM mitarbeiter`);
-        if (results.length === 0) return null;
-        return results; // <-- hier das ganze Array zurückgeben
+        const [results] = await pool.query("SELECT gpnr, vorname, nachname, role, telefon, email, fuehrungskraft FROM mitarbeiter");
+        return results.length ? results : null;
     } catch (err) {
-        console.error('Fehler beim Abrufen der Nutzerinfo:', err.message);
+        console.error('Fehler beim Abrufen der Mitarbeiter:', err.message);
         throw err;
     }
 }
 
-
-export async function getAllKampagnes() {
+export async function getUserInfo(gpnr) {
     try {
-        const [results] = await pool.query(`SELECT * FROM kamp`);
-        if (results.length === 0) return null;
-        return results; // <-- hier das ganze Array zurückgeben
+        const [results] = await pool.query(
+            "SELECT gpnr, vorname, nachname, role, telefon, email, fuehrungskraft FROM mitarbeiter WHERE gpnr = ?",
+            [gpnr]
+        );
+        return results.length ? results[0] : null;
     } catch (err) {
-        console.error('Fehler beim Abrufen der Nutzerinfo:', err.message);
+        console.error('Fehler beim Abrufen der Mitarbeiter-Info:', err.message);
         throw err;
     }
 }
 
-
-
-// Alle Untergebenen (direkt & indirekt) zu einer bestimmten Führungskraft holen
 export async function getAllUntergebene(fkGpnr) {
     const sql = `
         WITH RECURSIVE Untergebene AS (
@@ -132,7 +170,6 @@ export async function getAllUntergebene(fkGpnr) {
         )
         SELECT * FROM Untergebene;
     `;
-
     try {
         const [results] = await pool.query(sql, [fkGpnr]);
         return results;
@@ -142,120 +179,78 @@ export async function getAllUntergebene(fkGpnr) {
     }
 }
 
+//#endregion
 
+//#region Kampagnen
 
-export async function getUserInfo(gpnr) {
+export async function getAllKampagnes() {
     try {
-        const [results] = await pool.query(
-            `SELECT gpnr, vorname, nachname, role, telefon, email, fuehrungskraft 
-             FROM mitarbeiter WHERE gpnr = ?`, [gpnr]);
-        if (results.length === 0) return null;
-        return results[0];
+        const [results] = await pool.query("SELECT * FROM kamp");
+        return results.length ? results : null;
     } catch (err) {
-        console.error('Fehler beim Abrufen der Nutzerinfo:', err.message);
+        console.error('Fehler beim Abrufen der Kampagnen:', err.message);
         throw err;
     }
 }
 
+//#endregion
 
+//#region Lead Orders
 
-
-//logins &register
-//region
-// 🔐 Login-Check mit gpnr & Passwort
-export async function LoginInfoChecker(gpnr, password) {
-    try {
-        const [results] = await pool.query("SELECT passwort FROM mitarbeiter WHERE gpnr = ?", [gpnr]);
-        if (results.length === 0) return false;
-        return results[0].passwort === password;
-    } catch (err) {
-        console.error('Fehler beim Ausführen der Abfrage:', err.message);
-        throw err;
-    }
-}
-//  Existenz-Prüfung via gpnr
-export async function checkIfUserAlreadyExists(gpnr) {
-    try {
-        const [results] = await pool.query("SELECT COUNT(*) AS count FROM mitarbeiter WHERE gpnr = ?", [gpnr]);
-        return results[0].count > 0;
-    } catch (err) {
-        console.error('Fehler beim Ausführen der Abfrage:', err.message);
-        throw err;
-    }
-}
-// REGISTER
-export async function registerUser(gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort) {
-    // Await check if user already exists
-    const exists = await checkIfUserAlreadyExists(gpnr);
-    if (exists) {
-        console.log(gpnr + " existiert bereits, kann nicht mehr angelegt werden");
-        return;
-    }
-
-    try {
-        const [results] = await pool.query(
-            `INSERT INTO mitarbeiter 
-            (gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort]
-        );
-        return gpnr; // gpnr is PK, so return it directly
-    } catch (err) {
-        console.error('Fehler beim Einfügen des neuen Mitarbeiters:', err.message);
-        throw err;
-    }
-}
-//endregion
-//endregion
-
-
-//Update Leads status
-//region
-export async function updateLeadsStatus(updates) {
-    const updateQueries = updates.map(lead =>
-        pool.query('UPDATE leads SET status = ? WHERE id = ?', [lead.status, lead.id])
-    );
-    await Promise.all(updateQueries);
-}
-// Alle Bestellungen abrufen
 export async function getAllLeadOrders() {
-    const sql = `
-        SELECT id,GPNR, anzahl, bl, plzrange, kampagne, note, status, created_at
-        FROM lead_orders
-        ORDER BY created_at DESC
-    `;
-
     try {
-        const [rows] = await pool.query(sql);
+        const [rows] = await pool.query(`
+            SELECT id, gpnr, anzahl, bl, plzrange, kampagne, note, status, created_at
+            FROM lead_orders
+            ORDER BY created_at DESC
+        `);
         return rows;
-    } catch (error) {
-        console.error('Fehler beim Abrufen der lead_orders:', error.message);
-        throw error;
+    } catch (err) {
+        console.error('Fehler beim Abrufen der lead_orders:', err.message);
+        throw err;
+    }
+}
+
+export async function getAllLeadOrdersBy(gpnr = null) {
+    try {
+        let query = `
+            SELECT id, gpnr, anzahl, bl, plzrange, kampagne, note, status, created_at
+            FROM lead_orders
+        `;
+        const params = [];
+
+        if (gpnr !== null) {
+            query += ` WHERE gpnr = ?`;
+            params.push(gpnr);
+        }
+
+        query += ` ORDER BY created_at DESC`;
+
+        const [rows] = await pool.query(query, params);
+        return rows;
+    } catch (err) {
+        console.error('Fehler beim Abrufen der lead_orders:', err.message);
+        throw err;
     }
 }
 
 
 export async function insertLeadOrder({ gpnr, anzahl, bl, plzrange, kampagne, note = '', status = 'offen' }) {
-    const sql = `
-        INSERT INTO lead_orders (GPNR, anzahl, bl, plzrange, kampagne, note, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-
-    const values = [gpnr, anzahl, bl, plzrange, kampagne, note, status];
-
     try {
-        const [result] = await pool.execute(sql, values);
+        const [result] = await pool.query(
+            `INSERT INTO lead_orders (gpnr, anzahl, bl, plzrange, kampagne, note, status) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [gpnr, anzahl, bl, plzrange, kampagne, note, status]
+        );
         return { success: true, insertId: result.insertId };
-    } catch (error) {
-        console.error('❌ Fehler beim Einfügen in lead_orders:', error.sqlMessage || error.message);
-        return { success: false, error };
+    } catch (err) {
+        console.error('Fehler beim Einfügen in lead_orders:', err.message);
+        return { success: false, error: err };
     }
 }
 
 export async function updateOrderStatus(id, newStatus) {
     try {
-        const sql = 'UPDATE lead_orders SET status = ? WHERE id = ?';
-        const [result] = await pool.query(sql, [newStatus, id]);
+        const [result] = await pool.query("UPDATE lead_orders SET status = ? WHERE id = ?", [newStatus, id]);
         return result.affectedRows === 1;
     } catch (err) {
         console.error('Fehler beim Aktualisieren des Order-Status:', err.message);
@@ -263,70 +258,55 @@ export async function updateOrderStatus(id, newStatus) {
     }
 }
 
-//ADD Leads
-function getBundeslandFromPLZ(plz) {
-    if (!plz) return '';
+//#endregion
 
-    const plzNum = parseInt(plz, 10);
-    if (isNaN(plzNum)) return '';
+//#region Login & Registration
 
-    if (plz.startsWith('1')) return 'Wien';
-    if (plz.startsWith('2')) return 'Niederösterreich';
-    if (plz.startsWith('3')) return 'Niederösterreich';
-    if (plz.startsWith('4')) return 'Oberösterreich';
-    if (plz.startsWith('5')) return 'Salzburg';
-    if (plz.startsWith('6')) return 'Tirol';
-    if (plz.startsWith('7')) return 'Vorarlberg';
-    if (plz.startsWith('8')) return 'Steiermark';
-    if (plz.startsWith('9')) return 'Kärnten';
-
-    return '';
-}
-
-export async function addLead({vorname, nachname, telefon, plz, ort, strasse, kampagne = 'BK', partner = 0, status = 'offen'}) {
-    const name = `${vorname} ${nachname}`.trim();
-    const adresse = `${strasse}, ${plz} ${ort}`.trim();
-    const datum = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const bl = ort; // oder '' wenn du es nicht brauchst
-
+export async function LoginInfoChecker(gpnr, password) {
     try {
-        const [result] = await pool.query(
-            `INSERT INTO leads 
-            (datum, kampagne, name, telefon, bl, plz, partner, status, adresse)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [datum, kampagne, name, telefon, bl, plz, partner, status, adresse]
-        );
-
-        return result.insertId;
+        const [results] = await pool.query("SELECT passwort FROM mitarbeiter WHERE gpnr = ?", [gpnr]);
+        if (!results.length) return false;
+        return results[0].passwort === password;
     } catch (err) {
-        console.error('❌ Fehler beim Einfügen des Leads:', err.message);
+        console.error('Fehler beim Login-Check:', err.message);
         throw err;
     }
 }
 
-//assign leads
-export async function assignLeads(leadIds, beraterName) {
-    if (leadIds.length === 0) return 0;
-
-    // IDs als kommaseparierte Liste für SQL IN-Klausel
-    const placeholders = leadIds.map(() => '?').join(',');
-
-    // Query mit IN-Klausel und Update partner
-    const [result] = await pool.query(
-        `UPDATE leads SET partner = ? WHERE id IN (${placeholders})`,
-        [beraterName, ...leadIds]
-    );
-
-    // result.affectedRows gibt die Anzahl der aktualisierten Zeilen zurück
-    return result.affectedRows;
+export async function checkIfUserAlreadyExists(gpnr) {
+    try {
+        const [results] = await pool.query("SELECT COUNT(*) AS count FROM mitarbeiter WHERE gpnr = ?", [gpnr]);
+        return results[0].count > 0;
+    } catch (err) {
+        console.error('Fehler bei Benutzerprüfung:', err.message);
+        throw err;
+    }
 }
 
-//endregion
+export async function registerUser(gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort) {
+    const exists = await checkIfUserAlreadyExists(gpnr);
+    if (exists) {
+        console.log(`Benutzer mit gpnr ${gpnr} existiert bereits.`);
+        return null;
+    }
 
+    try {
+        const [result] = await pool.query(
+            `INSERT INTO mitarbeiter (gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort]
+        );
+        return gpnr;
+    } catch (err) {
+        console.error('Fehler beim Registrieren des Benutzers:', err.message);
+        throw err;
+    }
+}
 
+//#endregion
 
+//#region Verbindung sauber schließen
 
-// Verbindung sauber schließen
 export async function end() {
     try {
         await pool.end();
@@ -335,3 +315,5 @@ export async function end() {
         console.error('Fehler beim Schließen der Verbindung:', err.message);
     }
 }
+
+//#endregion

@@ -78,7 +78,7 @@ VALUES
 
 -- INSERTs für Mitarbeiter
 INSERT INTO mitarbeiter (gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort) VALUES
-                                                                                                      (0,'System','SYSTEM','Admin','+4300','nomail@gmai.com',null,'ASDFGHJKLÄASDASD!§§S:DS!§=1231232SDQDADASDA0'),
+                                                                                                      (0,'System','SYSTEM','Admin','+4300','nomail@gmai.com',null,'ASDFGHJKLÄASDASD!§§S:DS!§=1231232SDQDADASrestrdzufjdghstrzehdgDA0'),
                                                                                                       (62804, 'Hashim', 'Soliman', 'Admin', '+4369911122233', 'hashim.soliman@example.com', 0, '1'),
                                                                                                       (1002, 'Sabine', 'Huber', 'Berater', '+436641234567', 'sabine.huber@example.com', 62804, '1');
 

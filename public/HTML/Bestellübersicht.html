@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bestellungen Übersicht</title>
+  <link rel="stylesheet" href="../css/order.css" />
+</head>
+<body>
+
+<section class="orders-box-wrapper">
+  <h1>Bestellungen Übersicht</h1>
+
+  <!-- Filter Controls -->
+  <div class="filter-controls">
+    <label for="statusFilter">Status:</label>
+    <select id="statusFilter">
+      <option value="alle">Alle</option>
+      <option value="offen">Offen</option>
+      <option value="erledigt">Erledigt</option>
+    </select>
+
+    <label for="dateSort">Sortierung Datum:</label>
+    <select id="dateSort">
+      <option value="desc" selected>Neueste zuerst</option>
+      <option value="asc">Älteste zuerst</option>
+    </select>
+  </div>
+
+  <div class="orders-count">
+    <p><strong>Aktuell verfügbare Bestellungen:</strong> <span id="remainingOrders">0</span></p>
+  </div>
+
+  <div class="orders-table-wrapper">
+    <table class="orders-table">
+      <thead>
+      <tr>
+        <th>GPNR</th>
+        <th>Anzahl</th>
+        <th>Bundesland</th>
+        <th>PLZ Bereich</th>
+        <th>Kampagne</th>
+        <th>Note</th>
+        <th>Status</th>
+        <th>Erstellt am</th>
+      </tr>
+      </thead>
+      <tbody id="ordersTableBody">
+      <!-- Dynamische Bestellungen hier -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script src="../JS/Orderprev.js"></script>
+
+</body>
+</html>

@@ -37,7 +37,8 @@ export async function getAllLeads() {
             plz: row.plz,
             partner: row.partner,
             status: row.status,
-            adresse: row.adresse
+            adresse: row.adresse,
+            terminisiert: row.terminisiert  // NEU: terminierte Spalte mitliefern
         }));
     } catch (err) {
         console.error('Fehler beim Abrufen der Leads:', err.message);
@@ -58,7 +59,8 @@ export async function getLeadsByPartner(gpnr) {
             plz: row.plz,
             partner: row.partner,
             status: row.status,
-            adresse: row.adresse
+            adresse: row.adresse,
+            terminisiert: row.terminisiert  // NEU: terminierte Spalte mitliefern
         }));
     } catch (err) {
         console.error('Fehler beim Abrufen der Leads nach Partner:', err.message);
@@ -66,7 +68,7 @@ export async function getLeadsByPartner(gpnr) {
     }
 }
 
-export async function addLead({ vorname, nachname, telefon, plz, ort, strasse, kampagne = 'BK', partner = null, status = 'offen' }) {
+export async function addLead({ vorname, nachname, telefon, plz, ort, strasse, kampagne = 'BK', partner = null, status = 'offen', terminisiert = null }) {
     const name = `${vorname} ${nachname}`.trim();
     const adresse = `${strasse}, ${plz} ${ort}`.trim();
     const datum = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
@@ -75,9 +77,9 @@ export async function addLead({ vorname, nachname, telefon, plz, ort, strasse, k
     try {
         const [result] = await pool.query(
             `INSERT INTO leads 
-            (datum, kampagne, name, telefon, bl, plz, partner, status, adresse)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [datum, kampagne, name, telefon, bl, plz, partner, status, adresse]
+            (datum, kampagne, name, telefon, bl, plz, partner, status, adresse, terminisiert)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [datum, kampagne, name, telefon, bl, plz, partner, status, adresse, terminisiert]
         );
         return result.insertId;
     } catch (err) {
@@ -103,15 +105,26 @@ function getBundeslandFromPLZ(plz) {
 
 export async function updateLeadsStatus(updates) {
     try {
-        const updateQueries = updates.map(({ id, status }) =>
-            pool.query('UPDATE leads SET status = ? WHERE id = ?', [status, id])
-        );
+        const updateQueries = updates.map(({ id, status, terminisiert }) => {
+            if (terminisiert !== undefined) {
+                return pool.query(
+                    'UPDATE leads SET status = ?, terminisiert = ? WHERE id = ?',
+                    [status, terminisiert, id]
+                );
+            } else {
+                return pool.query(
+                    'UPDATE leads SET status = ? WHERE id = ?',
+                    [status, id]
+                );
+            }
+        });
         await Promise.all(updateQueries);
     } catch (err) {
         console.error('Fehler beim Aktualisieren des Lead-Status:', err.message);
         throw err;
     }
 }
+
 
 export async function assignLeads(leadIds, gpnr) {
     if (!leadIds.length) return 0;
@@ -210,6 +223,30 @@ export async function getAllLeadOrders() {
         throw err;
     }
 }
+
+export async function getAllLeadOrdersBy(gpnr = null) {
+    try {
+        let query = `
+            SELECT id, gpnr, anzahl, bl, plzrange, kampagne, note, status, created_at
+            FROM lead_orders
+        `;
+        const params = [];
+
+        if (gpnr !== null) {
+            query += ` WHERE gpnr = ?`;
+            params.push(gpnr);
+        }
+
+        query += ` ORDER BY created_at DESC`;
+
+        const [rows] = await pool.query(query, params);
+        return rows;
+    } catch (err) {
+        console.error('Fehler beim Abrufen der lead_orders:', err.message);
+        throw err;
+    }
+}
+
 
 export async function insertLeadOrder({ gpnr, anzahl, bl, plzrange, kampagne, note = '', status = 'offen' }) {
     try {

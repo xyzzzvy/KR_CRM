@@ -23,6 +23,7 @@ import {
     getAllLeadOrders,
     updateOrderStatus,
     getAllUntergebene,
+    getAllLeadOrdersBy,
     end
 } from './database2.js';
 //endregion
@@ -427,6 +428,16 @@ app.get('/api/leadorders', authenticateToken, authorizeAdmin, async (req, res) =
     }
 });
 
+app.get('/api/leadordersByGp', authenticateToken, async (req, res) => {
+    try {
+        const gp=req.user.gpnr;
+        const orders = await getAllLeadOrdersBy(gp);
+        res.json(orders);
+    } catch (err) {
+        console.error('Fehler beim Laden der Bestellungen:', err);
+        res.status(500).json({ error: 'Fehler beim Laden der Bestellungen' });
+    }
+});
 
 app.patch('/orders/:id', async (req, res) => {
     const id = req.params.id;

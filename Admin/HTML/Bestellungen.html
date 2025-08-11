@@ -4,11 +4,76 @@
   <meta charset="UTF-8" />
   <title>Bestellungen Übersicht</title>
   <link rel="stylesheet" href="../css/order.css" />
+  <link rel="stylesheet" href="../css/main.css" />
 </head>
 <body>
 
 <section class="orders-box-wrapper">
   <h1>Bestellungen Übersicht</h1>
+
+  <section class="assign-form">
+    <div id="openLeadsContainer" role="region" aria-live="polite" aria-atomic="true">
+      <label for="openLeadsCount">Offene Leads:</label>
+      <span id="openLeadsCount">0</span>
+    </div>
+    <h2>Leads einem GP zuweisen</h2>
+    <form id="beraterForm">
+      <div class="form-group">
+        <label for="beraterName">GPNR:</label>
+        <input type="number" id="beraterName" name="beraterName" placeholder="GPNR zb 68109" autocomplete="off" required>
+        <div id="beraterSuggestions" class="autocomplete-items" style="border: 1px solid #ccc; max-height: 150px; overflow-y: auto; position: absolute; background: white; z-index: 1000;"></div>
+      </div>
+      <div class="form-group">
+        <label for="BL">BL:</label>
+        <select id="BLzuweisen">
+          <option value="">Alle</option>
+          <option value="W">Wien</option>
+          <option value="B">Burgenland</option>
+          <option value="NÖ">Niederösterreich</option>
+          <option value="OÖ">Oberösterreich</option>
+          <option value="S">Salzburg</option>
+          <option value="ST">Steiermark</option>
+          <option value="T">Tirol</option>
+          <option value="V">Voralberg</option>
+          <option value="K">Kärnten</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="plz">PLZ</label>
+        <input type="number" id="plz" name="plz" placeholder="2232">
+      </div>
+      <div class="form-group">
+        <label for="filterCampaignSender">Kampagne</label>
+        <select id="filterCampaignSender" name="filterCampaignSender">
+          <option value="alle">Alle</option>
+          <option value="BK">Betriebskosten</option>
+          <option value="SK">Strom</option>
+          <option value="Flughafen">Flughafen</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="leadStatus">Status</label>
+        <select id="leadStatus" name="leadStatus">
+          <option value="alle">alle</option>
+          <option value="offen">offen</option>
+          <option value="n.err">n.err</option>
+          <option value="erreicht">erreicht</option>
+          <option value="QC fixiert">QC fixiert</option>
+          <option value="VG fixiert">VG fixiert</option>
+          <option value="QC durchgeführt">QC durchgeführt</option>
+          <option value="VG durchgeführt">VG durchgeführt</option>
+          <option value="Vg positiv erledigt">Vg positiv erledigt</option>
+          <option value="Vg negativ erledigt">Vg negativ erledigt</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="anzahlLeads">Anzahl der Leads</label>
+        <input type="number" id="anzahlLeads" name="anzahlLeads" placeholder="5" required min="1">
+      </div>
+      <button type="submit" class="button">Zuweisen</button>
+    </form>
+  </section>
+
 
   <!-- Filter Controls -->
   <div class="filter-controls">
@@ -54,6 +119,7 @@
 </section>
 
 <script src="../Js/order.js"></script>
+<script src="../Js/zuweisung_bestellung.js"></script>
 
 </body>
 </html>
