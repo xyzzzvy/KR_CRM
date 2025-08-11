@@ -186,12 +186,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Datumsberechnungen
         const heute = new Date(basisDatum);
 
+        // Woche: 7 Tage ab dem ausgewählten Datum
         const wocheEnde = new Date(basisDatum);
-        wocheEnde.setDate(basisDatum.getDate() + 6); // +6 Tage für 7 Tage insgesamt
+        wocheEnde.setDate(basisDatum.getDate() + 6); // +6 Tage = 7 Tage insgesamt
 
+        // Monat: 30 Tage ab dem ausgewählten Datum
         const monatEnde = new Date(basisDatum);
-        monatEnde.setMonth(basisDatum.getMonth() + 1);
-        monatEnde.setDate(0); // Letzter Tag des Monats
+        monatEnde.setDate(basisDatum.getDate() + 29); // +29 Tage = 30 Tage insgesamt
 
         // Formatierte Datumsstrings erstellen
         const heuteDatumStr = formatDatumKurz(heute);
@@ -205,12 +206,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.termine-section:nth-child(2) h2').textContent = `Diese Woche (${wocheStartStr} - ${wocheEndeStr})`;
         document.querySelector('.termine-section:nth-child(3) h2').textContent = `Diesen Monat (${monatStartStr} - ${monatEndeStr})`;
 
-        // Filtere Termine nach Kategorien
+        // Rest der Funktion bleibt gleich...
         const heuteTermine = filterTermineByDate(heute, heute);
         const wocheTermine = filterTermineByDate(basisDatum, wocheEnde);
         const monatTermine = filterTermineByDate(basisDatum, monatEnde);
 
-        // Rest der Funktion bleibt gleich...
         const heuteQC = filterTermineByType(heuteTermine, 'QC');
         const heuteVG = filterTermineByType(heuteTermine, 'VG');
         const wocheQC = filterTermineByType(wocheTermine, 'QC');
@@ -218,7 +218,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const monatQC = filterTermineByType(monatTermine, 'QC');
         const monatVG = filterTermineByType(monatTermine, 'VG');
 
-        // Aktualisiere Zähler
         heuteQCCount.textContent = heuteQC.length;
         heuteVGCount.textContent = heuteVG.length;
         wocheQCCount.textContent = wocheQC.length;
@@ -226,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function() {
         monatQCCount.textContent = monatQC.length;
         monatVGCount.textContent = monatVG.length;
 
-        // Fülle die Terminlisten
         fillTermineSection('heuteQC', heuteQC);
         fillTermineSection('heuteVG', heuteVG);
         fillTermineSection('wocheQC', wocheQC);
