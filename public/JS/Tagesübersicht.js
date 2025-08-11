@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(`Insgesamt ${alleLeads.length} terminierte Leads geladen`);
         } catch (error) {
             console.error('Fehler beim Laden aller Leads:', error);
-            throw error;
         }
     }
 
@@ -101,10 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
             mitarbeiterData = await response.json();
             populateMitarbeiterDropdown();
         } catch (error) {
-            console.error('Fehler beim Laden der Mitarbeiter:', error);
+            console.log('Fehler beim Laden der Mitarbeiter:', error);
             console.log('Fehler beim Laden der Mitarbeiterliste');
             mitarbeiterListe.innerHTML = '<option value="">Fehler beim Laden</option>';
-            throw error;
         }
     }
 
