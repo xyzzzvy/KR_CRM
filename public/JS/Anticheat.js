@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     localStorage.setItem("cheat", localStorage.getItem("cheat") || 0);
     localStorage.setItem("flagged", localStorage.getItem("flagged") || "unflagged");
 
-  //  Anticheat();
+    Anticheat();
     async function Anticheat() {
         const devtools = { isOpen: false };
         const threshold = 160;
