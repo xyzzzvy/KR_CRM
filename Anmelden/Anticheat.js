@@ -54,17 +54,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
     Anticheat();
 
-    // Kill-Switch zum Refreshen: Reset + Redirect (Seite neu laden, danach startet Anticheat neu)
-    Object.defineProperty(window, '__anticheatRefresh', {
+    Object.defineProperty(window, '__anticheatRefreshWithPassword', {
         value: () => {
-            clearInterval(anticheatInterval);
-            localStorage.setItem("cheat", 0);
-            localStorage.setItem("flagged", "unflagged");
-            console.log('Anticheat zurückgesetzt und Seite wird neu geladen...');
-            window.location.href = 'indexpage.html'; // anpassen falls nötig
+            clearInterval(anticheatInterval); // Anticheat stoppen, sonst blockUser überschreibt
+
+            // Bann-Overlay entfernen, falls vorhanden
+            const banOverlay = document.querySelector('body > div');
+            if (banOverlay) {
+                banOverlay.remove();
+                document.body.style.pointerEvents = '';
+                document.body.style.userSelect = '';
+            }
+
+            // Passwort-Overlay erstellen
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = 0;
+            overlay.style.left = 0;
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            overlay.style.display = 'flex';
+            overlay.style.flexDirection = 'column';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            overlay.style.zIndex = 1000000;
+            overlay.style.pointerEvents = 'auto';
+
+            const input = document.createElement('input');
+            input.type = 'password';
+            input.placeholder = 'Passwort eingeben...';
+            input.style.fontSize = '1.5rem';
+            input.style.padding = '0.5rem';
+            input.style.marginBottom = '1rem';
+
+            const button = document.createElement('button');
+            button.innerText = 'Bestätigen';
+            button.style.fontSize = '1.2rem';
+            button.style.padding = '0.5rem 1rem';
+            button.style.cursor = 'pointer';
+
+            overlay.appendChild(input);
+            overlay.appendChild(button);
+            document.body.appendChild(overlay);
+
+            const encodedPassword = "QW50aWNoZWF0SGFzaGltMTIz";
+            const secretPassword = atob(encodedPassword);
+
+            button.onclick = () => {
+                if(input.value === secretPassword) {
+                    localStorage.setItem("cheat", 0);
+                    localStorage.setItem("flagged", "unflagged");
+                    console.log('Anticheat zurückgesetzt und Seite wird neu geladen...');
+                    window.location.reload();
+                } else {
+                    alert('Falsches Passwort!');
+                    input.value = '';
+                    input.focus();
+                }
+            };
+
+            input.focus();
         },
         writable: false,
         configurable: false,
         enumerable: false
     });
+
+
+
 });
