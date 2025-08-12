@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lead Manager</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 90vw;
+        }
+
+        .header-image {
+            display: block;
+            margin: 0 auto 20px auto;
+            max-height: 60px;
+            height: auto;
+            width: auto;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: #0b0b1a;
+            margin-bottom: 30px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .button {
+            background-color: #007BFF;
+            color: #ffffff;
+            padding: 14px 28px;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        h3 {
+            color: #0b0b1a;
+            margin-top: 30px;
+            font-size: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        /* Responsive Anpassungen */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .button {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+
+            .header-image {
+                max-height: 50px;
+            }
+
+            h3 {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.6rem;
+            }
+
+            .button {
+                width: 100%;
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            .header-image {
+                max-height: 40px;
+            }
+
+            h3 {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <img src="../Bilder/Konsumentenretter-logoPNG1-262x53-1.png" alt="Logo" class="header-image" />
+    <h1 class="title">Konsumentenretter Login</h1>
+
+
+    <div class="button-group">
+        <a id="loginbutton" class="button">Login</a>
+        <a id="Anmelden" class="button">Anmelden</a>
+    </div>
+
+
+    <h3>Dein Komfort ist uns wichtig</h3>
+</div>
+
+<script src="../JS/buttons.js"></script>
+</body>
+</html>

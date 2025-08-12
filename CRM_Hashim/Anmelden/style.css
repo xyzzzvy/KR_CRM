@@ -1,0 +1,299 @@
+/* === Grundlayout === */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #e0f0ff, #f5faff);
+    color: #1a1a1a;
+}
+
+/* === Layout-Container === */
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1300px;
+    margin: auto;
+    padding: 3rem 2rem;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* === Formularbox === */
+.form-section {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 550px;
+    animation: slideInLeft 0.8s ease;
+}
+
+/* === Logo / Überschrift === */
+.logo {
+    color: #007BFF;
+    font-size: 2rem;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+/* === Formularfelder === */
+form label {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="date"],
+form input[type="number"],
+form input[type="password"] {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+form input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* === Checkbox-Styling === */
+form input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+form small {
+    display: block;
+    margin-top: 0.7rem;
+    font-size: 0.75rem;
+    color: #555;
+}
+
+/* === Submit-Button === */
+button[type="submit"] {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 0.9rem;
+    width: 100%;
+    border-radius: 6px;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* === Toast-Benachrichtigung === */
+.toast {
+    visibility: hidden;
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background-color: #007BFF;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1000;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* === FAQ-Bereich === */
+.faq-section {
+    flex: 1;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 550px;
+    animation: slideInRight 0.8s ease;
+}
+
+.faq-section h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #007BFF;
+}
+
+.faq-question {
+    background: #007BFF;
+    color: white;
+    padding: 1rem;
+    width: 100%;
+    border: none;
+    text-align: left;
+    font-size: 1rem;
+    margin-top: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.faq-question:hover {
+    background: #0056b3;
+}
+
+.faq-answer {
+    display: none;
+    padding: 0.8rem;
+    background: #f0f8ff;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+/* === Animationen === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* === Responsive Anpassung === */
+@media (max-width: 1100px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-section, .faq-section {
+        max-width: 100%;
+    }
+}
+
+/* Formular Gruppen Layout */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.two-columns,
+.three-columns {
+    display: flex;
+    gap: 1rem;
+}
+
+.two-columns > div,
+.three-columns > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.agb-text {
+    display: block;
+    font-size: 0.75rem;
+    color: #555;
+    margin-top: 0.5rem;
+}
+
+/* Responsive Anpassung */
+@media (max-width: 768px) {
+    .two-columns, .three-columns {
+        flex-direction: column;
+    }
+}
+
+.executive-box {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #ddd;
+}
+
+.executive-box h3 {
+    font-size: 1.25rem;
+    color: #007BFF;
+    margin-bottom: 1rem;
+}
+
+.executives {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.executive {
+    flex: 1;
+    max-width: 270px;
+    text-align: center;
+}
+
+.executive img {
+    width: 160px;   /* vorher 120px */
+    height: 160px;  /* vorher 120px */
+    object-fit: cover;
+    object-position: top;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 0.5rem;
+}
+
+
+
+.executive .name {
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+}
+
+.executive .title {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+
+/* Anrede Select Styling */
+form select#anrede {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    background-color: white;
+    appearance: none; /* Entfernt Standard-Pfeil, falls gewünscht */
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23007BFF' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+}
+
+form select#anrede:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 4px #007BFF;
+}
