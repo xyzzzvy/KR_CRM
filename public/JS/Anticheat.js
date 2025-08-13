@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Prüfen, ob mobiles Gerät (inkl. iPhone, iPad, Android-Tablets usw.)
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod|Tablet/i.test(navigator.userAgent);
+
+    // Falls mobil -> direkt raus aus der Funktion
+    if (isMobile) {
+        console.log("Anti-Cheat auf mobilen Geräten deaktiviert.");
+        return;
+    }
+
     localStorage.setItem("cheat", localStorage.getItem("cheat") || 0);
     localStorage.setItem("flagged", localStorage.getItem("flagged") || "unflagged");
 
@@ -57,9 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const encodedPassword = "QW50aWNoZWF0SGFzaGltMTIz";
     Object.defineProperty(window, '__anticheatRefreshWithPassword', {
         value: () => {
-            clearInterval(anticheatInterval); // Anticheat stoppen, sonst blockUser überschreibt
+            clearInterval(anticheatInterval);
 
-            // Bann-Overlay entfernen, falls vorhanden
             const banOverlay = document.querySelector('body > div');
             if (banOverlay) {
                 banOverlay.remove();
@@ -67,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.style.userSelect = '';
             }
 
-            // Passwort-Overlay erstellen
             const overlay = document.createElement('div');
             overlay.style.position = 'fixed';
             overlay.style.top = 0;
@@ -103,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const secretPassword = atob(encodedPassword);
 
             button.onclick = () => {
-                if(input.value === secretPassword) {
+                if (input.value === secretPassword) {
                     localStorage.setItem("cheat", 0);
                     localStorage.setItem("flagged", "unflagged");
                     console.log('Anticheat zurückgesetzt und Seite wird neu geladen...');
@@ -121,7 +128,4 @@ document.addEventListener('DOMContentLoaded', () => {
         configurable: false,
         enumerable: false
     });
-
-
-
 });
