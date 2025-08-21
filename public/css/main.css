@@ -8,7 +8,7 @@
 /* Basislayout */
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #ffffff;
+    background-color: #f6f6f6;
     color: #333;
     line-height: 1.6;
 }
@@ -22,10 +22,12 @@ body {
 
 /* Header */
 header {
-    background: #111;
-    color: #fff;
+    background: #ffffff;
+    color: #000000;
     padding: 40px 0;
     text-align: center;
+    border-bottom: 2px solid #ffffff;
+
 }
 
 header h1 {
@@ -90,7 +92,7 @@ select {
 
 /* Leads-Anzahl */
 .leads-count {
-    background: #f0f8ff;
+    background: #ffffff;
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 8px;

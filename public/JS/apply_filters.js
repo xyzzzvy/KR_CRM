@@ -17,6 +17,33 @@ const terminisiertFilterSelect = document.getElementById("terminisiertFilter");
 const customTerminStartInput = document.getElementById("customTerminStart");
 const customTerminEndInput = document.getElementById("customTerminEnd");
 
+const oben=document.getElementById('namenexplizit');
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+    async function getUserName(gpnr) {
+        try {
+            const res = await fetch('/api/userdata', { credentials: 'include' });
+            if (!res.ok) {
+                console.warn(`User API Fehler für GPNR ${gpnr}: ${res.status}`);
+                return 'Unbekannt';
+            }
+            const user = await res.json();
+
+            oben.innerHTML=`Hallo, ${(user.nachname)} ${(user.vorname)} `
+            return user;
+        } catch (err) {
+            console.error('Fehler beim Laden Username für GPNR', gpnr, err);
+            return 'Unbekannt';
+        }
+    }
+
+    await getUserName(partnerGpnr);
+
+})
+
+
 let leads = [];
 var updatedLeads = [];
 
@@ -34,6 +61,11 @@ const statusOptions = [
     "Vg positiv erledigt",
     "Vg negativ erledigt"
 ];
+
+
+
+
+
 
 // Aktuell ausgewählter Lead-Index für den Datepicker
 let currentDateLeadIndex = null;
