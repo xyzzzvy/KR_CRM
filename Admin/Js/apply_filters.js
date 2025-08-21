@@ -159,17 +159,17 @@ function applyFilter() {
 
         if (dateFilter === '24h') {
             dateFrom = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-            dateTo = new Date(); // Aktuelles Datum als Enddatum
+            dateTo = now;
         } else if (dateFilter === '7d') {
             dateFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-            dateTo = new Date(); // Aktuelles Datum als Enddatum
+            dateTo = now;
         } else if (dateFilter === '14d') {
             dateFrom = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
-            dateTo = new Date(); // Aktuelles Datum als Enddatum
+            dateTo = now;
         } else if (dateFilter === '1m') {
             dateFrom = new Date(now);
             dateFrom.setMonth(dateFrom.getMonth() - 1);
-            dateTo = new Date(); // Aktuelles Datum als Enddatum
+            dateTo = now;
         } else if (dateFilter === 'custom') {
             const customStart = document.getElementById('customStart').value;
             const customEnd = document.getElementById('customEnd').value;
@@ -177,59 +177,63 @@ function applyFilter() {
             dateTo = customEnd ? new Date(customEnd) : null;
         }
 
-        // Termin-Filter - KORRIGIERTE VERSION
+        // Termin-Filter
         const terminFilter = document.getElementById('terminisiertFilter').value;
         let terminFrom = null;
-        let terminTo = new Date(); // Standardmäßig aktuelles Datum als Enddatum
+        let terminTo = null;
 
         if (terminFilter === '24h') {
             terminFrom = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            terminTo = now;
         } else if (terminFilter === '7d') {
             terminFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            terminTo = now;
         } else if (terminFilter === '14d') {
             terminFrom = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+            terminTo = now;
         } else if (terminFilter === '1m') {
             terminFrom = new Date(now);
             terminFrom.setMonth(terminFrom.getMonth() - 1);
+            terminTo = now;
         } else if (terminFilter === 'custom') {
             const customTerminStart = document.getElementById('customTerminStart').value;
             const customTerminEnd = document.getElementById('customTerminEnd').value;
             terminFrom = customTerminStart ? new Date(customTerminStart) : null;
-            terminTo = customTerminEnd ? new Date(customTerminEnd) : new Date(); // Fallback auf aktuelles Datum
+            terminTo = customTerminEnd ? new Date(customTerminEnd) : now;
         }
 
         const filtered = leads
             .map((lead, index) => ({ lead, originalIndex: index }))
             .filter(({ lead }) => {
                 const kampagneMatch = kampagne === 'alle' || lead.kampagne === kampagne;
-                const plzMatch = plz === '' || lead.plz.startsWith(plz);
+                const plzMatch = plz === '' || (lead.plz && lead.plz.startsWith(plz));
                 const statusMatch = status === 'alle' || lead.status === status;
                 const blMatch = bl === '' || lead.bl === bl;
                 const gpnrMatch = gpnr === '' || (lead.partner != null && lead.partner.toString().startsWith(gpnr));
                 const nameMatch =
                     name === '' ||
-                    lead.name.toLowerCase().includes(name) ||
-                    lead.telefon.replace(/\s+/g, '').includes(name);
+                    (lead.name && lead.name.toLowerCase().includes(name)) ||
+                    (lead.telefon && lead.telefon.replace(/\s+/g, '').includes(name));
 
                 // Lead-Datum Filter
-                const leadDate = new Date(lead.datum);
-                const fromMatch = !dateFrom || leadDate >= dateFrom;
-                const toMatch = !dateTo || leadDate <= dateTo;
+                const leadDate = lead.datum ? new Date(lead.datum) : null;
+                const fromMatch = !dateFrom || (leadDate && leadDate >= dateFrom);
+                const toMatch = !dateTo || (leadDate && leadDate <= dateTo);
 
-                // Termin-Datum Filter - KORRIGIERTE VERSION
+                // Termin-Datum Filter
                 const terminDate = lead.terminisiert ? new Date(lead.terminisiert) : null;
                 const terminFromMatch = !terminFrom || (terminDate && terminDate >= terminFrom);
-                // WICHTIG: terminTo ist jetzt immer gesetzt (entweder custom oder aktuelles Datum)
-                const terminToMatch = terminDate && terminDate <= terminTo;
+                const terminToMatch = !terminTo || (terminDate && terminDate <= terminTo);
 
                 return kampagneMatch && plzMatch && statusMatch && blMatch && gpnrMatch && nameMatch &&
-                    fromMatch && toMatch && terminFromMatch && terminToMatch;
+                    fromMatch && toMatch && terminFromMatch && (terminDate ? terminToMatch : true);
             });
 
         renderLeads(filtered, filtered.length);
         hideLoadingToast();
     }, 150);
 }
+
 
 function toggleCustomDateInputs() {
     const dateFilter = document.getElementById('dateFilter').value;
