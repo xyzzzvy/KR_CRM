@@ -264,18 +264,27 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     async function getUserName(gpnr) {
         try {
-            const res = await fetch('/api/userdata', { credentials: 'include' });
+            const res = await fetch('/api/user/getnameonly', {
+                method: 'POST',                        // <-- jetzt POST
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ gpnr })        // <-- gpnr im Body
+            });
+
             if (!res.ok) {
                 console.warn(`User API Fehler für GPNR ${gpnr}: ${res.status}`);
                 return 'Unbekannt';
             }
+
             const user = await res.json();
-            return `${user.nachname} ${user.vorname}`;
+            return user.name;
         } catch (err) {
             console.error('Fehler beim Laden Username für GPNR', gpnr, err);
             return 'Unbekannt';
         }
     }
+
+
 
     async function createTerminElement(termin) {
         const element = document.createElement('div');

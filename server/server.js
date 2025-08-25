@@ -253,6 +253,30 @@ app.get('/api/user/:gpnr', authenticateToken, async (req, res) => {
     }
 });
 
+
+// Wichtig: führenden / nicht vergessen!
+app.post('/api/user/getnameonly', authenticateToken ,async (req, res) => {
+    try {
+        const { gpnr } = req.body;   // <-- jetzt aus body
+        if (!gpnr) {
+            return res.status(400).json({ error: 'GPNR fehlt' });
+        }
+
+        const user = await getUserInfo(gpnr);
+        if (!user) {
+            return res.status(404).json({ error: 'User nicht gefunden' });
+        }
+
+        const name = `${user.nachname} ${user.vorname}`;
+        res.json({ name });
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Userdaten:', err);
+        res.status(500).json({ error: 'Fehler beim Abrufen der Userdaten' });
+    }
+});
+
+
+
 // Login: setzt JWT als HttpOnly-Cookie
 app.post('/api/login', async (req, res) => {
     try {
