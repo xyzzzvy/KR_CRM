@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function () {
     // DOM Referenzen
     const mitarbeiterFilter = document.getElementById('mitarbeiterFilter');
     const einzelnerMitarbeiterGroup = document.getElementById('einzelnerMitarbeiterGroup');
@@ -20,8 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let mitarbeiterData = [];
     const currentUserGpnr = parseInt(sessionStorage.getItem('pr') || '');
 
-    // Initialisierung
-    init();
+    await init();
 
     async function init() {
         console.log('Initialisiere Termine-Übersicht...');
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             await fetchMitarbeiter();
             setupEventListeners();
             await ladeAlleTerminierteLeads();
-            applyFilters(); // Initialfilter anwenden
+            await applyFilters(); // Initialfilter anwenden
         } catch (error) {
             console.error('Fehler bei der Initialisierung:', error);
             console.log('Fehler beim Start: ' + error.message);
@@ -70,15 +69,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!response.ok) throw new Error(`Fehler beim Laden von ${endpoint}`);
-
             const leads = await response.json();
             return leads.filter(lead =>
-                (lead.status === "QC fixiert" || lead.status === "VG fixiert") &&
+                (lead.status === "QC fixiert" || lead.status === "VG fixiert" || lead.status === "QC durchgeführt" || lead.status === "VG durchgeführt") &&
                 lead.terminisiert
             );
         } catch (error) {
             console.error(`Fehler beim Laden von ${endpoint}:`, error);
-            return []; // Leeres Array bei Fehler zurückgeben
+            return [];
         }
     }
 
@@ -127,25 +125,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event Listener einrichten
     function setupEventListeners() {
-        mitarbeiterFilter.addEventListener('change', function() {
+        mitarbeiterFilter.addEventListener('change', async function () {
             einzelnerMitarbeiterGroup.style.display = this.value === 'einzelner' ? 'block' : 'none';
-            applyFilters();
+            await applyFilters();
         });
 
-        mitarbeiterListe.addEventListener('change', function() {
+        mitarbeiterListe.addEventListener('change', async function () {
             if (mitarbeiterFilter.value === 'einzelner') {
-                applyFilters();
+                await applyFilters();
             }
         });
 
-        filterApply.addEventListener('click', function(e) {
+        filterApply.addEventListener('click', async function (e) {
             e.preventDefault();
-            applyFilters();
+            await applyFilters();
         });
     }
 
     // Filter anwenden
-    function applyFilters() {
+    async function applyFilters() {
         let filteredData = [...alleLeads];
         const filterOption = mitarbeiterFilter.value;
 
@@ -172,11 +170,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         gefilterteLeads = filteredData;
-        updateTermineAnzeige();
+        await updateTermineAnzeige();
     }
 
     // Termine anzeigen und Zähler aktualisieren
-    function updateTermineAnzeige() {
+    async function updateTermineAnzeige() {
         // Basis-Datum bestimmen
         const basisDatum = filterStart.value ? new Date(filterStart.value) : new Date();
         basisDatum.setHours(0, 0, 0, 0);
@@ -186,13 +184,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Woche: 7 Tage ab dem ausgewählten Datum
         const wocheEnde = new Date(basisDatum);
-        wocheEnde.setDate(basisDatum.getDate() + 6); // +6 Tage = 7 Tage insgesamt
+        wocheEnde.setDate(basisDatum.getDate() + 6);
 
         // Monat: 30 Tage ab dem ausgewählten Datum
         const monatEnde = new Date(basisDatum);
-        monatEnde.setDate(basisDatum.getDate() + 29); // +29 Tage = 30 Tage insgesamt
+        monatEnde.setDate(basisDatum.getDate() + 29);
 
-        // Formatierte Datumsstrings erstellen
+        // Formatierte Datumsstrings mit Uhrzeit
         const heuteDatumStr = formatDatumKurz(heute);
         const wocheStartStr = formatDatumKurz(basisDatum);
         const wocheEndeStr = formatDatumKurz(wocheEnde);
@@ -204,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.termine-section:nth-child(2) h2').textContent = `Diese Woche (${wocheStartStr} - ${wocheEndeStr})`;
         document.querySelector('.termine-section:nth-child(3) h2').textContent = `Diesen Monat (${monatStartStr} - ${monatEndeStr})`;
 
-        // Rest der Funktion bleibt gleich...
+        // Termine berechnen
         const heuteTermine = filterTermineByDate(heute, heute);
         const wocheTermine = filterTermineByDate(basisDatum, wocheEnde);
         const monatTermine = filterTermineByDate(basisDatum, monatEnde);
@@ -223,15 +221,14 @@ document.addEventListener('DOMContentLoaded', function() {
         monatQCCount.textContent = monatQC.length;
         monatVGCount.textContent = monatVG.length;
 
-        fillTermineSection('heuteQC', heuteQC);
-        fillTermineSection('heuteVG', heuteVG);
-        fillTermineSection('wocheQC', wocheQC);
-        fillTermineSection('wocheVG', wocheVG);
-        fillTermineSection('monatQC', monatQC);
-        fillTermineSection('monatVG', monatVG);
+        await fillTermineSection('heuteQC', heuteQC);
+        await fillTermineSection('heuteVG', heuteVG);
+        await fillTermineSection('wocheQC', wocheQC);
+        await fillTermineSection('wocheVG', wocheVG);
+        await fillTermineSection('monatQC', monatQC);
+        await fillTermineSection('monatVG', monatVG);
     }
 
-    // Hilfsfunktionen
     function filterTermineByDate(startDate, endDate) {
         return gefilterteLeads.filter(termin => {
             const terminDatum = new Date(termin.terminisiert);
@@ -240,10 +237,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function filterTermineByType(termine, type) {
-        return termine.filter(termin => termin.status === `${type} fixiert`);
+        return termine.filter(termin => termin.status === `${type} fixiert` || termin.status === `${type} durchgeführt`);
     }
 
-    function fillTermineSection(sectionId, termine) {
+    async function fillTermineSection(sectionId, termine) {
         const section = document.getElementById(sectionId);
         section.innerHTML = '';
 
@@ -252,21 +249,47 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        termine.forEach(termin => {
-            section.appendChild(createTerminElement(termin));
+        // Termine nach Uhrzeit sortieren
+        termine.sort((a, b) => {
+            const dateA = new Date(a.terminisiert);
+            const dateB = new Date(b.terminisiert);
+            return dateA - dateB;
         });
+
+        for (const termin of termine) {
+            const element = await createTerminElement(termin);
+            section.appendChild(element);
+        }
     }
 
-    function createTerminElement(termin) {
+    async function getUserName(gpnr) {
+        try {
+            const res = await fetch('/api/userdata', { credentials: 'include' });
+            if (!res.ok) {
+                console.warn(`User API Fehler für GPNR ${gpnr}: ${res.status}`);
+                return 'Unbekannt';
+            }
+            const user = await res.json();
+            return `${user.nachname} ${user.vorname}`;
+        } catch (err) {
+            console.error('Fehler beim Laden Username für GPNR', gpnr, err);
+            return 'Unbekannt';
+        }
+    }
+
+    async function createTerminElement(termin) {
         const element = document.createElement('div');
         element.className = 'termin-card';
 
         const datum = formatTerminDatum(termin.terminisiert);
+        const uhrzeit = formatTerminUhrzeit(termin.terminisiert);
         const statusClass = termin.status.includes('QC') ? 'status-qc' : 'status-vg';
+        const partnerName = await getUserName(termin.partner);
 
         element.innerHTML = `
             <div class="termin-header">
                 <span class="termin-datum">${datum}</span>
+                <span class="termin-uhrzeit">${uhrzeit}</span>
                 <span class="termin-status ${statusClass}">${termin.status}</span>
             </div>
             <div class="termin-details">
@@ -274,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>${termin.strasse || ''} ${termin.hausnummer || ''}</p>
                 <p>${termin.plz || ''} ${termin.ort || ''}</p>
                 <p>Tel: ${termin.telefon || 'Keine Telefonnummer'}</p>
-                <p>Partner: ${termin.partner}</p>
+                <p>Partner: ${partnerName} (${termin.partner})</p>
             </div>
         `;
 
@@ -284,10 +307,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function formatTerminDatum(datumString) {
         try {
             const datum = new Date(datumString);
-            return datum.toLocaleString('de-DE', {
+            return datum.toLocaleDateString('de-DE', {
                 day: '2-digit',
                 month: '2-digit',
-                year: 'numeric',
+                year: 'numeric'
             });
         } catch (e) {
             console.error('Ungültiges Datum:', datumString);
@@ -295,18 +318,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function formatTerminUhrzeit(datumString) {
+        try {
+            const datum = new Date(datumString);
+            return datum.toLocaleTimeString('de-DE', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            console.error('Ungültige Uhrzeit:', datumString);
+            return '';
+        }
+    }
+
     function formatDatumKurz(datum) {
-        return datum.toLocaleDateString('de-DE', {
+        // Sicherstellen, dass es ein Date-Objekt ist
+        const dateObj = new Date(datum);
+
+        return dateObj.toLocaleDateString('de-DE', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
     }
 
-
-
-    // Globale Funktion für Bearbeiten-Button
-    window.editTermin = function(terminId) {
+    window.editTermin = function (terminId) {
         console.log('Bearbeite Termin:', terminId);
         window.location.href = `/termin-bearbeiten.html?id=${terminId}`;
     };

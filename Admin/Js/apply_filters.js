@@ -86,7 +86,7 @@ function renderLeads(data, totalCount = null) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${lead.id}</td>
-          <td>${formatDate(lead.datum)}</td>
+          <td>${formatDateTime(lead.datum)}</td>
           <td>${lead.kampagne}</td>
           <td><a href="#">${lead.name.replace(/\n/g, '<br>')}<br>${lead.telefon}</a></td>
           <td>${lead.bl}</td>
@@ -108,7 +108,7 @@ function renderLeads(data, totalCount = null) {
                   <option value="Vg negativ erledigt" ${lead.status === 'Vg negativ erledigt' ? 'selected' : ''}>Vg negativ erledigt</option>
             </select>
           </td>
-          <td>${lead.terminisiert ? formatDate(lead.terminisiert) : ''}</td>
+          <td>${lead.terminisiert ? formatDateTime(lead.terminisiert) : ''}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -234,7 +234,6 @@ function applyFilter() {
     }, 150);
 }
 
-
 function toggleCustomDateInputs() {
     const dateFilter = document.getElementById('dateFilter').value;
     const customInputs = document.getElementById('customDateInputs');
@@ -247,14 +246,24 @@ function toggleCustomTerminDateInputs() {
     customTerminInputs.style.display = terminFilter === 'custom' ? 'block' : 'none';
 }
 
-function formatDate(isoString) {
+// Formatierung mit Datum und Uhrzeit
+function formatDateTime(isoString) {
     if (!isoString) return '';
     const date = new Date(isoString);
     if (isNaN(date)) return '';
+
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+}
+
+// Alte formatDate Funktion für Abwärtskompatibilität
+function formatDate(isoString) {
+    return formatDateTime(isoString);
 }
 
 // Event Listener für Filter-Button

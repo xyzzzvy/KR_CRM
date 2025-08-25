@@ -17,11 +17,9 @@ const terminisiertFilterSelect = document.getElementById("terminisiertFilter");
 const customTerminStartInput = document.getElementById("customTerminStart");
 const customTerminEndInput = document.getElementById("customTerminEnd");
 
-const oben=document.getElementById('namenexplizit');
-
+const oben = document.getElementById('namenexplizit');
 
 document.addEventListener('DOMContentLoaded', async () => {
-
     async function getUserName(gpnr) {
         try {
             const res = await fetch('/api/userdata', { credentials: 'include' });
@@ -31,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             const user = await res.json();
 
-            oben.innerHTML=`Hallo, ${(user.nachname)} ${(user.vorname)} `
+            oben.innerHTML = `Hallo, ${(user.nachname)} ${(user.vorname)} `
             return user;
         } catch (err) {
             console.error('Fehler beim Laden Username für GPNR', gpnr, err);
@@ -40,15 +38,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     await getUserName(partnerGpnr);
-
 })
-
 
 let leads = [];
 var updatedLeads = [];
 
 // Status, die mit Datum verknüpft sind
-const statusWithDate = ["QC fixiert", "VG fixiert"];
+const statusWithDate = ["QC fixiert", "VG fixiert", "QC durchgeführt", "VG durchgeführt"];
 
 const statusOptions = [
     "offen",
@@ -62,19 +58,18 @@ const statusOptions = [
     "Vg negativ erledigt"
 ];
 
-
-
-
-
-
 // Aktuell ausgewählter Lead-Index für den Datepicker
 let currentDateLeadIndex = null;
 
-// Zeigt den Datepicker-Toast zum Setzen des Termins
-function showDatePickerToast(leadId, existingDate = "") {
+// Zeigt den Datepicker-Toast zum Setzen des Termins mit Uhrzeit
+function showDatePickerToast(leadId, existingDateTime = "") {
     // Entferne alten Toast, falls vorhanden
     const oldToast = document.getElementById("datePickerToast");
     if (oldToast) oldToast.remove();
+
+    // Extrahiere Datum und Uhrzeit aus existingDateTime
+    const existingDate = existingDateTime ? existingDateTime.split('T')[0] : '';
+    const existingTime = existingDateTime ? existingDateTime.split('T')[1].substring(0, 5) : '12:00';
 
     // Erstelle neuen Toast
     const toast = document.createElement('div');
@@ -91,8 +86,15 @@ function showDatePickerToast(leadId, existingDate = "") {
     toast.style.zIndex = "10001";
 
     toast.innerHTML = `
-        <h4 style="margin-top:0;margin-bottom:10px;">Datum für Lead #${leadId} auswählen</h4>
-        <input type="date" id="toastDateInput" value="${existingDate}" style="width:100%; margin-bottom:10px; padding:5px;">
+        <h4 style="margin-top:0;margin-bottom:10px;">Termin für Lead #${leadId} setzen</h4>
+        <div style="margin-bottom:10px;">
+            <label style="display:block;margin-bottom:5px;">Datum:</label>
+            <input type="date" id="toastDateInput" value="${existingDate}" style="width:100%; padding:5px;">
+        </div>
+        <div style="margin-bottom:15px;">
+            <label style="display:block;margin-bottom:5px;">Uhrzeit:</label>
+            <input type="time" id="toastTimeInput" value="${existingTime}" style="width:100%; padding:5px;">
+        </div>
         <div style="text-align:right;">
             <button id="toastCancelBtn">Abbrechen</button>
             <button id="toastSaveBtn" style="margin-left:5px;">Speichern</button>
@@ -111,36 +113,40 @@ function showDatePickerToast(leadId, existingDate = "") {
     });
 
     document.getElementById("toastSaveBtn").addEventListener("click", () => {
-        const val = document.getElementById("toastDateInput").value;
-        if (!val) {
+        const dateVal = document.getElementById("toastDateInput").value;
+        const timeVal = document.getElementById("toastTimeInput").value;
+
+        if (!dateVal) {
             alert("Bitte ein Datum auswählen.");
             return;
         }
 
-        leads[currentDateLeadIndex].terminisiert = val;
+        // Kombiniere Datum und Uhrzeit zu einem ISO-String
+        const dateTimeString = `${dateVal}T${timeVal}:00`;
+
+        leads[currentDateLeadIndex].terminisiert = dateTimeString;
         const leadIdNum = leads[currentDateLeadIndex].id;
-        const currentStatus = leads[currentDateLeadIndex].status;  // Aktuellen Status holen
+        const currentStatus = leads[currentDateLeadIndex].status;
 
         const idx = updatedLeads.findIndex(l => l.id === leadIdNum);
         if (idx !== -1) {
-            updatedLeads[idx].terminisiert = val;
-            updatedLeads[idx].status = currentStatus;   // Status mit aktualisieren
+            updatedLeads[idx].terminisiert = dateTimeString;
+            updatedLeads[idx].status = currentStatus;
         } else {
             updatedLeads.push({
                 id: leadIdNum,
                 status: currentStatus,
-                terminisiert: val
+                terminisiert: dateTimeString
             });
         }
 
         if (updatedLeads.length > 0) saveHint.style.display = 'block';
 
-        showToast(`Datum für Lead #${leadIdNum} gesetzt auf ${val}`);
+        showToast(`Termin für Lead #${leadIdNum} gesetzt auf ${formatDateTime(dateTimeString)}`);
         removeToast();
         currentDateLeadIndex = null;
         applyFilter();
     });
-
 }
 
 // Einfacher Toast für Statusmeldungen
@@ -215,7 +221,7 @@ function renderLeads(data, totalCount = null) {
               ${optionsHtml}
             </select>
             ${statusWithDate.includes(lead.status) ? `
-                <button class="set-date-btn" data-index="${originalIndex}" title="Datum setzen" style="margin-left:5px;">
+                <button class="set-date-btn" data-index="${originalIndex}" title="Termin setzen" style="margin-left:5px;">
                     <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                         <line x1="16" y1="2" x2="16" y2="6"/>
@@ -225,7 +231,7 @@ function renderLeads(data, totalCount = null) {
                 </button>
             ` : ''}
           </td>
-          <td>${lead.terminisiert ? formatDate(lead.terminisiert) : 'kein Termin'}</td>
+          <td>${lead.terminisiert ? formatDateTime(lead.terminisiert) : 'kein Termin'}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -249,7 +255,7 @@ function renderLeads(data, totalCount = null) {
                     const newBtn = document.createElement('button');
                     newBtn.className = 'set-date-btn';
                     newBtn.dataset.index = originalIndex;
-                    newBtn.title = "Datum setzen";
+                    newBtn.title = "Termin setzen";
                     newBtn.style.marginLeft = "5px";
                     newBtn.innerHTML = `
                         <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -262,10 +268,7 @@ function renderLeads(data, totalCount = null) {
                     this.parentNode.appendChild(newBtn);
                     newBtn.addEventListener('click', function () {
                         currentDateLeadIndex = parseInt(this.dataset.index);
-                        const existing = leads[currentDateLeadIndex].terminisiert
-                            ? leads[currentDateLeadIndex].terminisiert.split('T')[0]
-                            : '';
-                        showDatePickerToast(leads[currentDateLeadIndex].id, existing);
+                        showDatePickerToast(leads[currentDateLeadIndex].id, leads[currentDateLeadIndex].terminisiert);
                     });
                 }
             } else {
@@ -278,7 +281,6 @@ function renderLeads(data, totalCount = null) {
 
             leads[originalIndex].status = newStatus;
 
-            // === WICHTIG: terminisiert nur übernehmen, wenn Status "QC fixiert" oder "VG fixiert" ist ===
             const leadId = leads[originalIndex].id;
             const idx = updatedLeads.findIndex(l => l.id === leadId);
 
@@ -294,7 +296,6 @@ function renderLeads(data, totalCount = null) {
                     terminisiert: newTerminisiert
                 });
             }
-            // ======================================================
 
             if (updatedLeads.length > 0) {
                 saveHint.style.display = 'block';
@@ -302,14 +303,11 @@ function renderLeads(data, totalCount = null) {
         });
     });
 
-    // Eventlistener für Datum setzen Buttons
+    // Eventlistener für Termin setzen Buttons
     document.querySelectorAll('.set-date-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             currentDateLeadIndex = parseInt(this.dataset.index);
-            const existing = leads[currentDateLeadIndex].terminisiert
-                ? leads[currentDateLeadIndex].terminisiert.split('T')[0]
-                : '';
-            showDatePickerToast(leads[currentDateLeadIndex].id, existing);
+            showDatePickerToast(leads[currentDateLeadIndex].id, leads[currentDateLeadIndex].terminisiert);
         });
     });
 }
@@ -430,6 +428,18 @@ function formatDate(isoString) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}.${month}.${year}`;
+}
+
+// Hilfsfunktion: Datum und Uhrzeit formatieren (dd.mm.yyyy HH:mm)
+function formatDateTime(isoString) {
+    const date = new Date(isoString);
+    if (isNaN(date)) return isoString;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
 }
 
 // Zeigt oder versteckt die Eingabefelder für benutzerdefinierten Zeitraum
