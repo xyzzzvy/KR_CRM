@@ -161,7 +161,7 @@
 
   <div>
     <label for="plzRange">PLZ Range (z.B. 1190-1220):</label>
-    <input type="text" id="plzRange" name="plzRange" pattern="^\d{4}-\d{4}$" required placeholder="1000-2000" />
+    <input type="text" id="plzRange" name="plzRange" pattern="^\d{4}-\d{4}$" placeholder="1200-1210" />
   </div>
 
   <div>
@@ -211,8 +211,14 @@
       if (!response.ok) throw new Error('Fehler beim Laden der Kampagnen');
       const kampagnen = await response.json();
 
+      // Nur Kampagnen ohne "-" nehmen
+      const filtered = kampagnen.filter(k => {
+        const name = typeof k === 'object' && k.name ? k.name : k;
+        return !name.includes('-');
+      });
+
       select.innerHTML = '<option value="">Bitte auswählen</option>';
-      kampagnen.forEach(k => {
+      filtered.forEach(k => {
         const name = typeof k === 'object' && k.name ? k.name : k;
         select.innerHTML += `<option value="${name}">${name}</option>`;
       });
