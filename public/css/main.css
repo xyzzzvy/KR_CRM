@@ -472,3 +472,21 @@ footer {
     outline: none;
     background-color: #f9faff;
 }
+
+
+.user-header {
+    display: flex;
+    align-items: center; /* vertikal mittig ausrichten */
+    justify-content: center; /* horizontal zentrieren */
+    gap: 15px; /* Abstand zwischen Text und Bild */
+}
+
+.user-header h1 {
+    margin: 0;
+}
+
+#userImage {
+    width: 250px;  /* gewünschte Breite */
+    height: 70px; /* gewünschte Höhe */
+    object-fit: cover; /* Bild wird passend skaliert */
+}
