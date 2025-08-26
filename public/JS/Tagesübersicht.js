@@ -179,8 +179,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         const basisDatum = filterStart.value ? new Date(filterStart.value) : new Date();
         basisDatum.setHours(0, 0, 0, 0);
 
-        // Datumsberechnungen
-        const heute = new Date(basisDatum);
+        // Heute: kompletter Tag von 00:00 bis 23:59
+        const heuteStart = new Date(basisDatum);
+        heuteStart.setHours(0, 0, 0, 0);
+
+        const heuteEnde = new Date(basisDatum);
+        heuteEnde.setHours(23, 59, 59, 999);
 
         // Woche: 7 Tage ab dem ausgewählten Datum
         const wocheEnde = new Date(basisDatum);
@@ -191,7 +195,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         monatEnde.setDate(basisDatum.getDate() + 29);
 
         // Formatierte Datumsstrings mit Uhrzeit
-        const heuteDatumStr = formatDatumKurz(heute);
+        const heuteDatumStr = formatDatumKurz(heuteStart);
         const wocheStartStr = formatDatumKurz(basisDatum);
         const wocheEndeStr = formatDatumKurz(wocheEnde);
         const monatStartStr = formatDatumKurz(basisDatum);
@@ -203,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.querySelector('.termine-section:nth-child(3) h2').textContent = `Diesen Monat (${monatStartStr} - ${monatEndeStr})`;
 
         // Termine berechnen
-        const heuteTermine = filterTermineByDate(heute, heute);
+        const heuteTermine = filterTermineByDate(heuteStart, heuteEnde);
         const wocheTermine = filterTermineByDate(basisDatum, wocheEnde);
         const monatTermine = filterTermineByDate(basisDatum, monatEnde);
 

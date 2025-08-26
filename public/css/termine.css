@@ -1,6 +1,69 @@
+/* ===============================
+   Reset & Basislayout
+================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f6f6f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* ===============================
+   Header
+================================= */
+header {
+    background: #ffffff;
+    padding: 30px 0;
+    text-align: center;
+    border-bottom: 2px solid #f1f1f1;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.button {
+    background: #0066cc;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.button:hover {
+    background: #004999;
+}
+
+/* ===============================
+   Layout: Termine + Filter
+================================= */
 .termine-page {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2fr 1fr; /* Termine links, Filter rechts */
     gap: 30px;
     margin-top: 40px;
 }
@@ -53,9 +116,72 @@
     border-bottom: none;
 }
 
+/* Scrollbare Box */
+.scrollable-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    margin-top: 10px;
+}
+
+.termin-card {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.termin-card:last-child {
+    border-bottom: none;
+}
+
+.termin-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.termin-status {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.status-qc {
+    background-color: #e6f7ff;
+    color: #1890ff;
+}
+
+.status-vg {
+    background-color: #f6ffed;
+    color: #52c41a;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    background: #f5f5f5;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.summary-count {
+    display: inline-block;
+    min-width: 30px;
+    text-align: center;
+    background: #0066cc;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.9em;
+}
+
 /* Filter-Sidebar */
 .filter-sidebar {
-    background: #f9f9f9;
+    background: #f8f9fa;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -90,40 +216,174 @@
     margin-top: 10px;
 }
 
-#mitarbeiterWrapper {
+/* ===============================
+   Tabellen & Formulare
+================================= */
+.assign-form {
+    background: #f9f9f9;
+    padding: 30px;
+    margin-top: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.assign-form h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.form-group {
     margin-bottom: 20px;
 }
 
-.filter-sidebar select,
-.filter-sidebar button {
-    cursor: pointer;
-}
-
-
-.filter-sidebar {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-.filter-group {
-    margin-bottom: 15px;
-}
-.filter-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-.filter-group select,
-.filter-group input[type="date"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-#filterApply {
+input[type="text"],
+input[type="number"],
+select {
     width: 100%;
     padding: 10px;
-    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 5px;
 }
 
+/* Leads */
+.leads-box-wrapper {
+    margin-top: 40px;
+}
+
+.leads-count {
+    background: #ffffff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#remainingLeads {
+    color: #0066cc;
+}
+
+.leads-table-wrapper {
+    max-height: 1000px;
+    overflow-y: auto;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.leads-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    font-size: 0.95rem;
+    border-radius: 8px;
+}
+
+.leads-table th,
+.leads-table td {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.leads-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+.leads-table-wrapper {
+    overflow-x: auto;
+}
+
+/* ===============================
+   Footer
+================================= */
+footer {
+    background: #111;
+    color: white;
+    padding: 30px 0;
+    margin-top: 50px;
+    text-align: center;
+}
+
+/* ===============================
+   Responsive Design
+================================= */
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .termine-page {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-sidebar {
+        order: -1; /* Filterbox nach oben */
+    }
+
+    .termine-columns {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Smartphones */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 10px 0;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    .termine-columns {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .summary-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .leads-table {
+        font-size: 0.85rem;
+    }
+
+    .leads-table th,
+    .leads-table td {
+        padding: 6px 8px;
+    }
+}
+
+/* Sehr kleine Geräte */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    .termine-section h2 {
+        font-size: 1.1rem;
+    }
+
+    .termine-list h3 {
+        font-size: 1rem;
+    }
+
+    input, select, button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
