@@ -52,7 +52,7 @@ CREATE TABLE leads (
                        partner INT,
                        status VARCHAR(50),
                        adresse VARCHAR(255),
-                       terminisiert DATE,                -- NEU: Termin-Datum für den Lead
+                       terminisiert DATETIME,                -- NEU: Termin-Datum für den Lead
                        FOREIGN KEY (partner) REFERENCES mitarbeiter(gpnr),
                        FOREIGN KEY (kampagne) REFERENCES kamp(name)
 );
@@ -74,8 +74,7 @@ VALUES
 -- INSERTs für Mitarbeiter
 INSERT INTO mitarbeiter (gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort) VALUES
                                                                                                       (0,'System','SYSTEM','Admin','+4300','nomail@gmai.com',null,'ASDFGHJKLÄASDASD!§§S:DS!§=1231232SDQDADASDA0'),
-                                                                                                      (62804, 'Hashim', 'Soliman', 'Admin', '+4369911122233', 'hashim.soliman@example.com', 0, '1'),
-                                                                                                      (1002, 'Sabine', 'Huber', 'Berater', '+436641234567', 'sabine.huber@example.com', 62804, '1');
+                                                                                                      (1000, 'Hashim', 'Soliman', 'Admin', '+4369911122233', 'hashim.soliman@example.com', 0, 'ASDFGHJKLÄASDASD!§§S:DS!§=1231232SDQDADASDA0');
 
 -- INSERTs für Lead Orders
 INSERT INTO lead_orders (gpnr, anzahl, bl, plzrange, kampagne, note, status, created_at) VALUES

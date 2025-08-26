@@ -402,7 +402,12 @@ function applyFilter() {
             // Filter für Lead-Datum
             const dateMatch = (() => {
                 if (!startDate) return true;
-                const leadDate = new Date(lead.datum);
+
+                // Datum direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+                const [datePart] = lead.datum.split('T');
+                const [year, month, day] = datePart.split('-');
+                const leadDate = new Date(year, month - 1, day);
+
                 return leadDate >= startDate && leadDate <= endDate;
             })();
 
@@ -410,7 +415,12 @@ function applyFilter() {
             const terminMatch = (() => {
                 if (!terminStartDate) return true;
                 if (!lead.terminisiert) return false;
-                const terminDate = new Date(lead.terminisiert);
+
+                // Termin-Datum direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+                const [datePart] = lead.terminisiert.split('T');
+                const [year, month, day] = datePart.split('-');
+                const terminDate = new Date(year, month - 1, day);
+
                 return terminDate >= terminStartDate && terminDate <= terminEndDate;
             })();
 
@@ -422,24 +432,23 @@ function applyFilter() {
 
 // Hilfsfunktion: Datum formatieren (dd.mm.yyyy)
 function formatDate(isoString) {
-    const date = new Date(isoString);
-    if (isNaN(date)) return isoString;
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+    if (!isoString) return '';
+
+    // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+    const [datePart] = isoString.split('T');
+    const [year, month, day] = datePart.split('-');
     return `${day}.${month}.${year}`;
 }
 
 // Hilfsfunktion: Datum und Uhrzeit formatieren (dd.mm.yyyy HH:mm)
-function formatDateTime(isoString) {
-    const date = new Date(isoString);
-    if (isNaN(date)) return isoString;
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${day}.${month}.${year} ${hours}:${minutes}`;
+function formatDateTime(localIsoString) {
+    if (!localIsoString) return 'kein Termin';
+
+    // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+    const [datePart, timePart] = localIsoString.split('T');
+    const [year, month, day] = datePart.split('-');
+    const [hour, minute] = timePart.split(':');
+    return `${day}.${month}.${year} ${hour}:${minute}`;
 }
 
 // Zeigt oder versteckt die Eingabefelder für benutzerdefinierten Zeitraum

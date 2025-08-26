@@ -305,7 +305,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', authenticateToken,async (req, res) => {
     try {
         const { gpnr, vorname, nachname, role, telefon, email, fuehrungskraft, passwort } = req.body;
         if (!gpnr || !vorname || !nachname || !role || !telefon || !email || !fuehrungskraft || !passwort) {

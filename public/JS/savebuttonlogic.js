@@ -6,13 +6,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutButton = document.getElementById('logout');
     const historybutton = document.getElementById('bestellhistory');
     const sicht=document.getElementById('sicht');
-
+    const reg=document.getElementById('anlegen');
 
 
     // Initialisiere updatedLeads, falls noch nicht vorhanden
     if (!window.updatedLeads) {
         window.updatedLeads = [];
     }
+
+
+
+    reg.addEventListener('click', () => {
+        window.location.href = "register-page.html";
+    });
+
 
     historybutton.addEventListener('click', () => {
         window.location.href = "Bestellübersicht.html";
