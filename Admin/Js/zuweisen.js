@@ -1,13 +1,25 @@
+// DOM-Referenzen
 const form = document.getElementById('beraterForm');
 const openLeadsCountDisplay = document.getElementById('openLeadsCount');
-
 const plzInput = document.getElementById('plz');
-const kampagneSelect = document.getElementById('filterCampaignSender');
-const statusSelect = document.getElementById('leadStatus');  // Status-Filter
-const blSelect = document.getElementById('BLzuweisen');     // Neuer Bundesland-Filter
+const kampagneInput = document.getElementById('filterCampaignSender');
+const statusSelect = document.getElementById('leadStatus');
+const blSelect = document.getElementById('BLzuweisen');
 const anzahlLeadsInput = document.getElementById('anzahlLeads');
+const kampagneSuggestionsBox = document.createElement('div');
+kampagneSuggestionsBox.id = 'kampagneSuggestions';
+Object.assign(kampagneSuggestionsBox.style, {
+    border: '1px solid #ccc',
+    maxHeight: '150px',
+    overflowY: 'auto',
+    position: 'absolute',
+    background: 'white',
+    zIndex: '1000',
+    display: 'none'
+});
+kampagneInput.parentNode.appendChild(kampagneSuggestionsBox);
 
-// Toast erstellen & anhängen (einmalig)
+// Toast erstellen
 const toast = document.createElement('div');
 toast.id = 'toast';
 Object.assign(toast.style, {
@@ -40,62 +52,95 @@ function showToast(message) {
     }, 3000);
 }
 
+// Autocomplete für Kampagnen
+let kampagnesCache = []; // Wird dynamisch aus den Leads befüllt
+function updateKampagnesCache() {
+    if (!window.leads) return;
+    const allKamps = window.leads.map(l => l.kampagne).filter(Boolean);
+    kampagnesCache = Array.from(new Set(allKamps));
+}
+
+function clearKampagneSuggestions() {
+    kampagneSuggestionsBox.innerHTML = '';
+    kampagneSuggestionsBox.style.display = 'none';
+}
+
+function renderKampagneSuggestions(filtered) {
+    clearKampagneSuggestions();
+    if (filtered.length === 0) return;
+
+    kampagneSuggestionsBox.style.display = 'block';
+    filtered.forEach(k => {
+        const div = document.createElement('div');
+        div.textContent = k;
+        div.style.cursor = 'pointer';
+        div.addEventListener('click', () => {
+            kampagneInput.value = k;
+            clearKampagneSuggestions();
+            updateOpenLeadsCount();
+        });
+        kampagneSuggestionsBox.appendChild(div);
+    });
+}
+
+function filterKampagnes(query) {
+    if (!query) return clearKampagneSuggestions();
+    const filtered = kampagnesCache.filter(k => k.toLowerCase().startsWith(query.toLowerCase()));
+    renderKampagneSuggestions(filtered);
+}
+
+// Events für Kampagnen-Input
+kampagneInput.addEventListener('input', e => filterKampagnes(e.target.value));
+document.addEventListener('click', e => {
+    if (e.target !== kampagneInput && e.target.parentNode !== kampagneSuggestionsBox) {
+        clearKampagneSuggestions();
+    }
+});
+
+// Funktion: offene Leads nach Filter
 function getFilteredOpenLeads() {
-    let offeneLeads = leads.filter(lead => lead.partner === 0);
+    let offeneLeads = window.leads.filter(lead => lead.partner === 0);
 
     const plzFilter = plzInput.value.trim();
-    if (plzFilter) {
-        offeneLeads = offeneLeads.filter(lead => lead.plz.startsWith(plzFilter));
-    }
+    if (plzFilter) offeneLeads = offeneLeads.filter(lead => lead.plz.startsWith(plzFilter));
 
-    const kampagneFilter = kampagneSelect.value;
-    if (kampagneFilter && kampagneFilter !== 'alle') {
-        offeneLeads = offeneLeads.filter(lead => lead.kampagne === kampagneFilter);
-    }
+    const kampagneFilter = kampagneInput.value.trim().toLowerCase();
+    if (kampagneFilter) offeneLeads = offeneLeads.filter(lead => lead.kampagne.toLowerCase().startsWith(kampagneFilter));
 
     const statusFilter = statusSelect.value;
-    if (statusFilter && statusFilter !== 'alle') {
-        offeneLeads = offeneLeads.filter(lead => lead.status === statusFilter);
-    }
+    if (statusFilter && statusFilter !== 'alle') offeneLeads = offeneLeads.filter(lead => lead.status === statusFilter);
 
     const blFilter = blSelect.value;
-    if (blFilter) {
-        offeneLeads = offeneLeads.filter(lead => lead.bl === blFilter);
-    }
+    if (blFilter) offeneLeads = offeneLeads.filter(lead => lead.bl === blFilter);
 
     return offeneLeads;
 }
 
+// Update Lead-Zähler
 function updateOpenLeadsCount() {
+    updateKampagnesCache();
     const offeneLeads = getFilteredOpenLeads();
     openLeadsCountDisplay.textContent = offeneLeads.length;
 }
 
+// Limit für Eingabe der Anzahl
 anzahlLeadsInput.addEventListener('input', () => {
-    let offeneLeadsCount = getFilteredOpenLeads().length;
+    const offeneLeadsCount = getFilteredOpenLeads().length;
     let currentValue = parseInt(anzahlLeadsInput.value, 10);
-
-    if (isNaN(currentValue) || currentValue <= 0) {
-        return;
-    }
-
-    if (currentValue > offeneLeadsCount) {
-        anzahlLeadsInput.value = offeneLeadsCount;
-    }
+    if (isNaN(currentValue) || currentValue <= 0) return;
+    if (currentValue > offeneLeadsCount) anzahlLeadsInput.value = offeneLeadsCount;
 });
 
+// Update bei Änderungen
 plzInput.addEventListener('input', updateOpenLeadsCount);
-kampagneSelect.addEventListener('change', updateOpenLeadsCount);
+kampagneInput.addEventListener('input', updateOpenLeadsCount);
 statusSelect.addEventListener('change', updateOpenLeadsCount);
 blSelect.addEventListener('change', updateOpenLeadsCount);
+document.addEventListener('leadsLoaded', () => updateOpenLeadsCount());
 
-document.addEventListener('leadsLoaded', () => {
-    updateOpenLeadsCount();
-});
-
+// Submit-Event
 form.addEventListener('submit', async function (event) {
     event.preventDefault();
-
     const beraterName = document.getElementById('beraterName').value;
     const anzahlLeads = parseInt(anzahlLeadsInput.value, 10);
 
@@ -104,7 +149,7 @@ form.addEventListener('submit', async function (event) {
         return;
     }
 
-    let gefilterteLeads = getFilteredOpenLeads();
+    const gefilterteLeads = getFilteredOpenLeads();
     const zuzuweisendeLeads = gefilterteLeads.slice(0, anzahlLeads);
 
     if (zuzuweisendeLeads.length === 0) {
@@ -119,24 +164,18 @@ form.addEventListener('submit', async function (event) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ partner: beraterName, leadIds: leadIds }),
+            body: JSON.stringify({ partner: beraterName, leadIds })
         });
 
         if (!response.ok) {
             const text = await response.text();
-            console.error('Fehler-Antwort:', text);
-            throw new Error(`Server antwortete mit Status ${response.status}`);
+            throw new Error(`Server antwortete mit Status ${response.status}: ${text}`);
         }
 
         await response.json();
-
         showToast(`${zuzuweisendeLeads.length} Leads wurden ---${beraterName}--- zugewiesen.`);
-
         form.reset();
-
-        setTimeout(() => {
-            window.location.reload();
-        }, 3500);
+        setTimeout(() => window.location.reload(), 3500);
 
     } catch (error) {
         alert('Fehler bei der Zuweisung: ' + error.message);

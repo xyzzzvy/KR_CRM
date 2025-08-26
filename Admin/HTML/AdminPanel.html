@@ -54,12 +54,8 @@
       </div>
       <div class="form-group">
         <label for="filterCampaignSender">Kampagne</label>
-        <select id="filterCampaignSender" name="filterCampaignSender">
-          <option value="alle">Alle</option>
-          <option value="BK">Betriebskosten</option>
-          <option value="SK">Strom</option>
-          <option value="Flughafen">Flughafen</option>
-        </select>
+        <input type="text" id="filterCampaignSender" placeholder="Kampagne auswählen" autocomplete="off">
+        <div id="kampagneSuggestions" class="autocomplete-items" style="border:1px solid #ccc; max-height:150px; overflow-y:auto; position:absolute; background:white; z-index:1000;"></div>
       </div>
       <div class="form-group">
         <label for="leadStatus">Status</label>
