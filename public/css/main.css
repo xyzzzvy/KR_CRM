@@ -489,4 +489,5 @@ footer {
     width: 250px;  /* gewünschte Breite */
     height: 70px; /* gewünschte Höhe */
     object-fit: cover; /* Bild wird passend skaliert */
+    margin-bottom: 10px;
 }
