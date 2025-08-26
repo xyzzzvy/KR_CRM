@@ -206,9 +206,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         const monatEndeStr = formatDatumKurz(monatEnde);
 
         // Überschriften aktualisieren
-        document.querySelector('.termine-section:nth-child(1) h2').textContent = `(${heuteDatumStr})`;
-        document.querySelector('.termine-section:nth-child(2) h2').textContent = `(${wocheStartStr} - ${wocheEndeStr})`;
-        document.querySelector('.termine-section:nth-child(3) h2').textContent = `(${monatStartStr} - ${monatEndeStr})`;
+        document.querySelector('.termine-section:nth-child(1) h2').textContent = `Heute (${heuteDatumStr})`;
+        document.querySelector('.termine-section:nth-child(2) h2').textContent = `Diese Woche (${wocheStartStr} - ${wocheEndeStr})`;
+        document.querySelector('.termine-section:nth-child(3) h2').textContent = `Diesen Monat (${monatStartStr} - ${monatEndeStr})`;
 
         // Termine berechnen
         const heuteTermine = filterTermineByDate(heuteStart, heuteEnde);
