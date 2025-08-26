@@ -164,7 +164,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             end.setDate(start.getDate() + 30); // 30 Tage später
 
             filteredData = filteredData.filter(lead => {
-                const terminDatum = new Date(lead.terminisiert);
+                // Termin-Datum direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+                const [datePart, timePart] = lead.terminisiert.split('T');
+                const [year, month, day] = datePart.split('-');
+                const terminDatum = new Date(year, month - 1, day);
+
                 return terminDatum >= start && terminDatum <= end;
             });
         }
@@ -235,7 +239,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function filterTermineByDate(startDate, endDate) {
         return gefilterteLeads.filter(termin => {
-            const terminDatum = new Date(termin.terminisiert);
+            // Termin-Datum direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+            const [datePart, timePart] = termin.terminisiert.split('T');
+            const [year, month, day] = datePart.split('-');
+            const terminDatum = new Date(year, month - 1, day);
+
             return terminDatum >= startDate && terminDatum <= endDate;
         });
     }
@@ -255,8 +263,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Termine nach Uhrzeit sortieren
         termine.sort((a, b) => {
-            const dateA = new Date(a.terminisiert);
-            const dateB = new Date(b.terminisiert);
+            // Uhrzeit direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+            const [datePartA, timePartA] = a.terminisiert.split('T');
+            const [datePartB, timePartB] = b.terminisiert.split('T');
+
+            const [yearA, monthA, dayA] = datePartA.split('-');
+            const [hourA, minuteA] = timePartA.split(':');
+
+            const [yearB, monthB, dayB] = datePartB.split('-');
+            const [hourB, minuteB] = timePartB.split(':');
+
+            const dateA = new Date(yearA, monthA - 1, dayA, hourA, minuteA);
+            const dateB = new Date(yearB, monthB - 1, dayB, hourB, minuteB);
+
             return dateA - dateB;
         });
 
@@ -269,10 +288,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     async function getUserName(gpnr) {
         try {
             const res = await fetch('/api/user/getnameonly', {
-                method: 'POST',                        // <-- jetzt POST
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ gpnr })        // <-- gpnr im Body
+                body: JSON.stringify({ gpnr })
             });
 
             if (!res.ok) {
@@ -287,8 +306,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             return 'Unbekannt';
         }
     }
-
-
 
     async function createTerminElement(termin) {
         const element = document.createElement('div');
@@ -319,12 +336,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function formatTerminDatum(datumString) {
         try {
-            const datum = new Date(datumString);
-            return datum.toLocaleDateString('de-DE', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
+            // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+            const [datePart] = datumString.split('T');
+            const [year, month, day] = datePart.split('-');
+            return `${day}.${month}.${year}`;
         } catch (e) {
             console.error('Ungültiges Datum:', datumString);
             return datumString;
@@ -333,11 +348,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function formatTerminUhrzeit(datumString) {
         try {
-            const datum = new Date(datumString);
-            return datum.toLocaleTimeString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+            const [datePart, timePart] = datumString.split('T');
+            const [hour, minute] = timePart.split(':');
+            return `${hour}:${minute}`;
         } catch (e) {
             console.error('Ungültige Uhrzeit:', datumString);
             return '';
@@ -351,9 +365,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         return dateObj.toLocaleDateString('de-DE', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+            year: 'numeric'
         });
     }
 
