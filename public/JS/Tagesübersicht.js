@@ -6,18 +6,28 @@ document.addEventListener('DOMContentLoaded', async function () {
     const filterStart = document.getElementById('filterStart');
     const filterApply = document.getElementById('filterApply');
 
-    // Zähler-Elemente
+    // Zähler-Elemente Heute
     const heuteQCCount = document.getElementById('heuteQCCount');
+    const heuteQCCountdurchgeführt = document.getElementById('heuteQCCountdurchgeführt');
     const heuteVGCount = document.getElementById('heuteVGCount');
+    const heuteVGCountdurchgeführt = document.getElementById('heuteVGCountdurchgeführt');
+
+    // Zähler-Elemente Woche
     const wocheQCCount = document.getElementById('wocheQCCount');
+    const wocheQCCountdurchgeführt = document.getElementById('wocheQCCountdurchgeführt');
     const wocheVGCount = document.getElementById('wocheVGCount');
+    const wocheVGCountdurchgeführt = document.getElementById('wocheVGCountdurchgeführt');
+
+    // Zähler-Elemente Monat
     const monatQCCount = document.getElementById('monatQCCount');
+    const monatQCCountdurchgeführt = document.getElementById('monatQCCountdurchgeführt');
     const monatVGCount = document.getElementById('monatVGCount');
+    const monatVGCountdurchgeführt = document.getElementById('monatVGCountdurchgeführt');
 
     // Globale Variablen
-    let alleLeads = []; // Hauptarray für alle Leads
-    let gefilterteLeads = []; // Aktuell gefilterte Leads
-    let mitarbeiterData = [];
+    window.alleLeads = []; // Hauptarray für alle Leads
+    window.gefilterteLeads = []; // Aktuell gefilterte Leads
+    window.mitarbeiterData = [];
     const currentUserGpnr = parseInt(sessionStorage.getItem('pr') || '');
 
     await init();
@@ -69,9 +79,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
 
             if (!response.ok) throw new Error(`Fehler beim Laden von ${endpoint}`);
+
             const leads = await response.json();
             return leads.filter(lead =>
-                (lead.status === "QC fixiert" || lead.status === "VG fixiert" || lead.status === "QC durchgeführt" || lead.status === "VG durchgeführt") &&
+                (lead.status === "QC fixiert" || lead.status === "VG fixiert" ||
+                    lead.status === "QC durchgeführt" || lead.status === "VG durchgeführt") &&
                 lead.terminisiert
             );
         } catch (error) {
@@ -99,7 +111,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             populateMitarbeiterDropdown();
         } catch (error) {
             console.log('Fehler beim Laden der Mitarbeiter:', error);
-            console.log('Fehler beim Laden der Mitarbeiterliste');
             mitarbeiterListe.innerHTML = '<option value="">Fehler beim Laden</option>';
         }
     }
@@ -157,18 +168,20 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         }
 
-        // Datumsfilter basierend auf ausgewähltem Startdatum
+        // Datumsfilter
         if (filterStart.value) {
             const start = new Date(filterStart.value);
+            start.setHours(0, 0, 0, 0);
+
             const end = new Date(start);
             end.setDate(start.getDate() + 30); // 30 Tage später
+            end.setHours(23, 59, 59, 999);
 
             filteredData = filteredData.filter(lead => {
-                // Termin-Datum direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
-                const [datePart, timePart] = lead.terminisiert.split('T');
-                const [year, month, day] = datePart.split('-');
-                const terminDatum = new Date(year, month - 1, day);
+                if (!lead.terminisiert) return false;
 
+                // Termin-Datum mit Uhrzeit erstellen
+                const terminDatum = new Date(lead.terminisiert);
                 return terminDatum >= start && terminDatum <= end;
             });
         }
@@ -179,77 +192,90 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Termine anzeigen und Zähler aktualisieren
     async function updateTermineAnzeige() {
-        // Basis-Datum bestimmen
+        // Basis-Datum
         const basisDatum = filterStart.value ? new Date(filterStart.value) : new Date();
         basisDatum.setHours(0, 0, 0, 0);
 
-        // Heute: kompletter Tag von 00:00 bis 23:59
+        // Heute
         const heuteStart = new Date(basisDatum);
         heuteStart.setHours(0, 0, 0, 0);
-
         const heuteEnde = new Date(basisDatum);
         heuteEnde.setHours(23, 59, 59, 999);
 
-        // Woche: 7 Tage ab dem ausgewählten Datum
+        // Woche
         const wocheEnde = new Date(basisDatum);
         wocheEnde.setDate(basisDatum.getDate() + 6);
+        wocheEnde.setHours(23, 59, 59, 999);
 
-        // Monat: 30 Tage ab dem ausgewählten Datum
+        // Monat
         const monatEnde = new Date(basisDatum);
         monatEnde.setDate(basisDatum.getDate() + 29);
-
-        // Formatierte Datumsstrings mit Uhrzeit
-        const heuteDatumStr = formatDatumKurz(heuteStart);
-        const wocheStartStr = formatDatumKurz(basisDatum);
-        const wocheEndeStr = formatDatumKurz(wocheEnde);
-        const monatStartStr = formatDatumKurz(basisDatum);
-        const monatEndeStr = formatDatumKurz(monatEnde);
+        monatEnde.setHours(23, 59, 59, 999);
 
         // Überschriften aktualisieren
-        document.querySelector('.termine-section:nth-child(1) h2').textContent = `Heute (${heuteDatumStr})`;
-        document.querySelector('.termine-section:nth-child(2) h2').textContent = `Diese Woche (${wocheStartStr} - ${wocheEndeStr})`;
-        document.querySelector('.termine-section:nth-child(3) h2').textContent = `Diesen Monat (${monatStartStr} - ${monatEndeStr})`;
+        document.querySelector('.termine-section:nth-child(1) h2').textContent = `Heute (${formatDatumKurz(heuteStart)})`;
+        document.querySelector('.termine-section:nth-child(2) h2').textContent = `Diese Woche (${formatDatumKurz(basisDatum)} - ${formatDatumKurz(wocheEnde)})`;
+        document.querySelector('.termine-section:nth-child(3) h2').textContent = `Diesen Monat (${formatDatumKurz(basisDatum)} - ${formatDatumKurz(monatEnde)})`;
 
         // Termine berechnen
         const heuteTermine = filterTermineByDate(heuteStart, heuteEnde);
         const wocheTermine = filterTermineByDate(basisDatum, wocheEnde);
         const monatTermine = filterTermineByDate(basisDatum, monatEnde);
 
-        const heuteQC = filterTermineByType(heuteTermine, 'QC');
-        const heuteVG = filterTermineByType(heuteTermine, 'VG');
-        const wocheQC = filterTermineByType(wocheTermine, 'QC');
-        const wocheVG = filterTermineByType(wocheTermine, 'VG');
-        const monatQC = filterTermineByType(monatTermine, 'QC');
-        const monatVG = filterTermineByType(monatTermine, 'VG');
+        // Heute
+        const heuteQC_fixiert = filterTermineByStatus(heuteTermine, "QC fixiert");
+        const heuteQC_durchgeführt = filterTermineByStatus(heuteTermine, "QC durchgeführt");
+        const heuteVG_fixiert = filterTermineByStatus(heuteTermine, "VG fixiert");
+        const heuteVG_durchgeführt = filterTermineByStatus(heuteTermine, "VG durchgeführt");
 
-        heuteQCCount.textContent = heuteQC.length;
-        heuteVGCount.textContent = heuteVG.length;
-        wocheQCCount.textContent = wocheQC.length;
-        wocheVGCount.textContent = wocheVG.length;
-        monatQCCount.textContent = monatQC.length;
-        monatVGCount.textContent = monatVG.length;
+        // Woche
+        const wocheQC_fixiert = filterTermineByStatus(wocheTermine, "QC fixiert");
+        const wocheQC_durchgeführt = filterTermineByStatus(wocheTermine, "QC durchgeführt");
+        const wocheVG_fixiert = filterTermineByStatus(wocheTermine, "VG fixiert");
+        const wocheVG_durchgeführt = filterTermineByStatus(wocheTermine, "VG durchgeführt");
 
-        await fillTermineSection('heuteQC', heuteQC);
-        await fillTermineSection('heuteVG', heuteVG);
-        await fillTermineSection('wocheQC', wocheQC);
-        await fillTermineSection('wocheVG', wocheVG);
-        await fillTermineSection('monatQC', monatQC);
-        await fillTermineSection('monatVG', monatVG);
+        // Monat
+        const monatQC_fixiert = filterTermineByStatus(monatTermine, "QC fixiert");
+        const monatQC_durchgeführt = filterTermineByStatus(monatTermine, "QC durchgeführt");
+        const monatVG_fixiert = filterTermineByStatus(monatTermine, "VG fixiert");
+        const monatVG_durchgeführt = filterTermineByStatus(monatTermine, "VG durchgeführt");
+
+        // Counter setzen
+        heuteQCCount.textContent = heuteQC_fixiert.length;
+        heuteQCCountdurchgeführt.textContent = heuteQC_durchgeführt.length;
+        heuteVGCount.textContent = heuteVG_fixiert.length;
+        heuteVGCountdurchgeführt.textContent = heuteVG_durchgeführt.length;
+
+        wocheQCCount.textContent = wocheQC_fixiert.length;
+        wocheQCCountdurchgeführt.textContent = wocheQC_durchgeführt.length;
+        wocheVGCount.textContent = wocheVG_fixiert.length;
+        wocheVGCountdurchgeführt.textContent = wocheVG_durchgeführt.length;
+
+        monatQCCount.textContent = monatQC_fixiert.length;
+        monatQCCountdurchgeführt.textContent = monatQC_durchgeführt.length;
+        monatVGCount.textContent = monatVG_fixiert.length;
+        monatVGCountdurchgeführt.textContent = monatVG_durchgeführt.length;
+
+        // Listen füllen (fixiert + durchgeführt gemischt nach Uhrzeit)
+        await fillTermineSection('heuteQC', [...heuteQC_fixiert, ...heuteQC_durchgeführt]);
+        await fillTermineSection('heuteVG', [...heuteVG_fixiert, ...heuteVG_durchgeführt]);
+        await fillTermineSection('wocheQC', [...wocheQC_fixiert, ...wocheQC_durchgeführt]);
+        await fillTermineSection('wocheVG', [...wocheVG_fixiert, ...wocheVG_durchgeführt]);
+        await fillTermineSection('monatQC', [...monatQC_fixiert, ...monatQC_durchgeführt]);
+        await fillTermineSection('monatVG', [...monatVG_fixiert, ...monatVG_durchgeführt]);
     }
 
     function filterTermineByDate(startDate, endDate) {
         return gefilterteLeads.filter(termin => {
-            // Termin-Datum direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
-            const [datePart, timePart] = termin.terminisiert.split('T');
-            const [year, month, day] = datePart.split('-');
-            const terminDatum = new Date(year, month - 1, day);
+            if (!termin.terminisiert) return false;
 
+            const terminDatum = new Date(termin.terminisiert);
             return terminDatum >= startDate && terminDatum <= endDate;
         });
     }
 
-    function filterTermineByType(termine, type) {
-        return termine.filter(termin => termin.status === `${type} fixiert` || termin.status === `${type} durchgeführt`);
+    function filterTermineByStatus(termine, status) {
+        return termine.filter(termin => termin.status === status);
     }
 
     async function fillTermineSection(sectionId, termine) {
@@ -263,19 +289,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Termine nach Uhrzeit sortieren
         termine.sort((a, b) => {
-            // Uhrzeit direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
-            const [datePartA, timePartA] = a.terminisiert.split('T');
-            const [datePartB, timePartB] = b.terminisiert.split('T');
-
-            const [yearA, monthA, dayA] = datePartA.split('-');
-            const [hourA, minuteA] = timePartA.split(':');
-
-            const [yearB, monthB, dayB] = datePartB.split('-');
-            const [hourB, minuteB] = timePartB.split(':');
-
-            const dateA = new Date(yearA, monthA - 1, dayA, hourA, minuteA);
-            const dateB = new Date(yearB, monthB - 1, dayB, hourB, minuteB);
-
+            const dateA = new Date(a.terminisiert);
+            const dateB = new Date(b.terminisiert);
             return dateA - dateB;
         });
 
@@ -289,7 +304,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         try {
             const res = await fetch('/api/user/getnameonly', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 credentials: 'include',
                 body: JSON.stringify({ gpnr })
             });
@@ -336,10 +353,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function formatTerminDatum(datumString) {
         try {
-            // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
-            const [datePart] = datumString.split('T');
-            const [year, month, day] = datePart.split('-');
-            return `${day}.${month}.${year}`;
+            const dateObj = new Date(datumString);
+            return dateObj.toLocaleDateString('de-DE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
         } catch (e) {
             console.error('Ungültiges Datum:', datumString);
             return datumString;
@@ -348,10 +367,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function formatTerminUhrzeit(datumString) {
         try {
-            // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
-            const [datePart, timePart] = datumString.split('T');
-            const [hour, minute] = timePart.split(':');
-            return `${hour}:${minute}`;
+            const dateObj = new Date(datumString);
+            return dateObj.toLocaleTimeString('de-DE', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
         } catch (e) {
             console.error('Ungültige Uhrzeit:', datumString);
             return '';
@@ -359,9 +379,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function formatDatumKurz(datum) {
-        // Sicherstellen, dass es ein Date-Objekt ist
         const dateObj = new Date(datum);
-
         return dateObj.toLocaleDateString('de-DE', {
             day: '2-digit',
             month: '2-digit',

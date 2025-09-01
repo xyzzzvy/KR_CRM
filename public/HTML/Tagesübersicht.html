@@ -93,19 +93,21 @@
             <div class="termine-section">
                 <h2>Heute</h2>
                 <div class="summary-row">
-                    <span>QC: <span class="summary-count" id="heuteQCCount">0</span></span>
-                    <span>VG: <span class="summary-count" id="heuteVGCount">0</span></span>
+                    <span>QC fixiert: <span class="summary-count" id="heuteQCCount">0</span></span>
+                    <span>QC durchgeführt: <span class="summary-count" id="heuteQCCountdurchgeführt">0</span></span>
+                    <span>VG fixiert: <span class="summary-count" id="heuteVGCount">0</span></span>
+                    <span>VG durchgeführt: <span class="summary-count" id="heuteVGCountdurchgeführt">0</span></span>
                 </div>
                 <div class="termine-columns">
                     <div class="termine-list">
-                        <h3>QC fixiert</h3>
+                        <h3>QC</h3>
                         <div class="scrollable-container" id="heuteQC">
                             <!-- Termine werden per JS hier eingefügt -->
                             <p class="no-termine">Keine Termine</p>
                         </div>
                     </div>
                     <div class="termine-list">
-                        <h3>VG fixiert</h3>
+                        <h3>VG</h3>
                         <div class="scrollable-container" id="heuteVG">
                             <!-- Termine werden per JS hier eingefügt -->
                             <p class="no-termine">Keine Termine</p>
@@ -118,19 +120,21 @@
             <div class="termine-section">
                 <h2>Diese Woche</h2>
                 <div class="summary-row">
-                    <span>QC: <span class="summary-count" id="wocheQCCount">0</span></span>
-                    <span>VG: <span class="summary-count" id="wocheVGCount">0</span></span>
+                    <span>QC fixiert: <span class="summary-count" id="wocheQCCount">0</span></span>
+                    <span>QC durchgeführt: <span class="summary-count" id="wocheQCCountdurchgeführt">0</span></span>
+                    <span>VG fixiert: <span class="summary-count" id="wocheVGCount">0</span></span>
+                    <span>VG durchgeführt: <span class="summary-count" id="wocheVGCountdurchgeführt">0</span></span>
                 </div>
                 <div class="termine-columns">
                     <div class="termine-list">
-                        <h3>QC fixiert</h3>
+                        <h3>QC</h3>
                         <div class="scrollable-container" id="wocheQC">
                             <!-- Termine werden per JS hier eingefügt -->
                             <p class="no-termine">Keine Termine</p>
                         </div>
                     </div>
                     <div class="termine-list">
-                        <h3>VG fixiert</h3>
+                        <h3>VG</h3>
                         <div class="scrollable-container" id="wocheVG">
                             <!-- Termine werden per JS hier eingefügt -->
                             <p class="no-termine">Keine Termine</p>
@@ -143,19 +147,21 @@
             <div class="termine-section">
                 <h2>Diesen Monat</h2>
                 <div class="summary-row">
-                    <span>QC: <span class="summary-count" id="monatQCCount">0</span></span>
-                    <span>VG: <span class="summary-count" id="monatVGCount">0</span></span>
+                    <span>QC fixiert: <span class="summary-count" id="monatQCCount">0</span></span>
+                    <span>QC durchgeführt: <span class="summary-count" id="monatQCCountdurchgeführt">0</span></span>
+                    <span>VG fixiert: <span class="summary-count" id="monatVGCount">0</span></span>
+                    <span>VG durchgeführt: <span class="summary-count" id="monatVGCountdurchgeführt">0</span></span>
                 </div>
                 <div class="termine-columns">
                     <div class="termine-list">
-                        <h3>QC fixiert</h3>
+                        <h3>QC</h3>
                         <div class="scrollable-container" id="monatQC">
                             <!-- Termine werden per JS hier eingefügt -->
                             <p class="no-termine">Keine Termine</p>
                         </div>
                     </div>
                     <div class="termine-list">
-                        <h3>VG fixiert</h3>
+                        <h3>VG</h3>
                         <div class="scrollable-container" id="monatVG">
                             <!-- Termine werden per JS hier eingefügt -->
                             <p class="no-termine">Keine Termine</p>
@@ -194,6 +200,23 @@
 
 
             <button class="button" id="filterApply">Filtern</button>
+
+            <div class="filter-group">
+                <label for="tageFilter">Letzte X Tage:</label>
+                <input type="number" id="tageFilter" min="1" max="365" placeholder="z. B. 7">
+                <button id="tageApply">Anzeigen</button>
+            </div>
+
+            <div id="tageErgebnis" class="tage-ergebnis">
+                <h3>Letzte X Tage Übersicht</h3>
+                <ul>
+                    <li>QC fixiert: <span id="tageQCCount">0</span></li>
+                    <li>QC durchgeführt: <span id="tageQCCountdurchgeführt">0</span></li>
+                    <li>VG fixiert: <span id="tageVGCount">0</span></li>
+                    <li>VG durchgeführt: <span id="tageVGCountdurchgeführt">0</span></li>
+                </ul>
+            </div>
+
         </aside>
 
     </div>
@@ -207,5 +230,6 @@
 
 <script src="../JS/Tagesübersicht.js"></script>
 <script src="../JS/Anticheat.js"></script>
+<script src="../JS/lastxdays.js"></script>
 </body>
 </html>

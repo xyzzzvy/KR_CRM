@@ -9,8 +9,8 @@
 
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #f6f6f6;
-    color: #333;
+    background-color: #f0f2f5;
+    color: #222;
     line-height: 1.6;
 }
 
@@ -28,12 +28,13 @@ header {
     background: #ffffff;
     padding: 30px 0;
     text-align: center;
-    border-bottom: 2px solid #f1f1f1;
+    border-bottom: 2px solid #e0e0e0;
 }
 
 header h1 {
-    font-size: 2.2rem;
+    font-size: 2.4rem;
     margin-bottom: 15px;
+    color: #004999;
 }
 
 .buttons-container {
@@ -46,16 +47,17 @@ header h1 {
 .button {
     background: #0066cc;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 25px;
     font-size: 1rem;
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
 }
 
 .button:hover {
     background: #004999;
+    transform: translateY(-2px);
 }
 
 /* ===============================
@@ -63,27 +65,29 @@ header h1 {
 ================================= */
 .termine-page {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Termine links, Filter rechts */
+    grid-template-columns: 2fr 1fr;
     gap: 30px;
     margin-top: 40px;
 }
 
 /* Termine-Box */
 .termine-box {
-    background: #f9f9f9;
+    background: #ffffff;
     border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
 }
 
 .termine-section {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .termine-section h2 {
     margin-bottom: 15px;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     color: #0066cc;
+    border-left: 4px solid #0066cc;
+    padding-left: 10px;
 }
 
 .termine-columns {
@@ -93,23 +97,30 @@ header h1 {
 }
 
 .termine-list {
-    background: white;
-    border-radius: 8px;
-    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 12px;
     border: 1px solid #ddd;
+    transition: box-shadow 0.3s;
+}
+
+.termine-list:hover {
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
 .termine-list h3 {
-    margin-bottom: 8px;
-    font-size: 1.1rem;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+    font-size: 1.15rem;
+    color: #004999;
+    border-bottom: 1px solid #e0e0e0;
     padding-bottom: 4px;
 }
 
 .termine-item {
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
     font-size: 0.95rem;
+    color: #333;
 }
 
 .termine-item:last-child {
@@ -126,46 +137,51 @@ header h1 {
     margin-top: 10px;
 }
 
+/* Termin Card */
 .termin-card {
     padding: 15px;
     border-bottom: 1px solid #eee;
+    border-radius: 8px;
+    background: #fdfdfd;
+    transition: transform 0.2s, box-shadow 0.3s;
 }
 
-.termin-card:last-child {
-    border-bottom: none;
+.termin-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .termin-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .termin-status {
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
     font-weight: bold;
+    color: white;
 }
 
 .status-qc {
-    background-color: #e6f7ff;
-    color: #1890ff;
+    background-color: #1890ff;
 }
 
 .status-vg {
-    background-color: #f6ffed;
-    color: #52c41a;
+    background-color: #52c41a;
 }
 
 .summary-row {
     display: flex;
     justify-content: space-between;
     background: #f5f5f5;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 12px;
     font-weight: bold;
+    color: #004999;
 }
 
 .summary-count {
@@ -174,76 +190,81 @@ header h1 {
     text-align: center;
     background: #0066cc;
     color: white;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-size: 0.9em;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.95em;
 }
 
 /* Filter-Sidebar */
 .filter-sidebar {
-    background: #f8f9fa;
-    padding: 20px;
+    background: #f0f2f5;
+    padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
 }
 
 .filter-sidebar h3 {
-    margin-bottom: 15px;
-    font-size: 1.3rem;
-    color: #333;
+    margin-bottom: 18px;
+    font-size: 1.4rem;
+    color: #004999;
 }
 
 .filter-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .filter-group label {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     display: block;
+    color: #222;
 }
 
 .filter-sidebar select,
-.filter-sidebar input[type="date"] {
+.filter-sidebar input[type="date"],
+.filter-sidebar input[type="number"] {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    font-size: 0.95rem;
 }
 
 .filter-sidebar .button {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 /* ===============================
    Tabellen & Formulare
 ================================= */
 .assign-form {
-    background: #f9f9f9;
+    background: #ffffff;
     padding: 30px;
     margin-top: 40px;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 3px 15px rgba(0,0,0,0.07);
 }
 
 .assign-form h2 {
-    margin-bottom: 20px;
-    font-size: 1.8rem;
+    margin-bottom: 22px;
+    font-size: 1.9rem;
+    color: #0066cc;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 input[type="text"],
 input[type="number"],
 select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    margin-top: 5px;
+    margin-top: 6px;
+    font-size: 0.95rem;
 }
 
 /* Leads */
@@ -253,24 +274,25 @@ select {
 
 .leads-count {
     background: #ffffff;
-    padding: 15px;
+    padding: 16px;
     margin-bottom: 20px;
-    border-radius: 8px;
-    font-size: 1.2rem;
+    border-radius: 10px;
+    font-size: 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #004999;
 }
 
 #remainingLeads {
-    color: #0066cc;
+    color: #1890ff;
 }
 
 .leads-table-wrapper {
     max-height: 1000px;
     overflow-y: auto;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
 }
 
 .leads-table {
@@ -283,13 +305,14 @@ select {
 
 .leads-table th,
 .leads-table td {
-    padding: 10px 12px;
+    padding: 12px 14px;
     border: 1px solid #ddd;
     text-align: left;
+    color: #333;
 }
 
 .leads-table th {
-    background-color: #f4f4f4;
+    background-color: #e6f7ff;
     font-weight: bold;
     position: sticky;
     top: 0;
@@ -305,7 +328,7 @@ select {
    Footer
 ================================= */
 footer {
-    background: #111;
+    background: #000000;
     color: white;
     padding: 30px 0;
     margin-top: 50px;
@@ -324,7 +347,7 @@ footer {
     }
 
     .filter-sidebar {
-        order: -1; /* Filterbox nach oben */
+        order: -1;
     }
 
     .termine-columns {
@@ -355,7 +378,7 @@ footer {
     .summary-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 5px;
+        gap: 6px;
     }
 
     .leads-table {
@@ -364,7 +387,7 @@ footer {
 
     .leads-table th,
     .leads-table td {
-        padding: 6px 8px;
+        padding: 8px 10px;
     }
 }
 
@@ -385,5 +408,121 @@ footer {
     input, select, button {
         font-size: 0.9rem;
         padding: 8px;
+    }
+}
+/* ===============================
+   Letzte X Tage Filter & Ergebnis
+================================= */
+.tage-ergebnis {
+    background: #ffffff;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+    margin-top: 15px;
+}
+
+.tage-ergebnis h3 {
+    font-size: 1.3rem;
+    color: #0066cc;
+    margin-bottom: 12px;
+    border-left: 4px solid #0066cc;
+    padding-left: 8px;
+}
+
+.tage-ergebnis ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.tage-ergebnis li {
+    padding: 8px 0;
+    font-size: 0.95rem;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+}
+
+.tage-ergebnis li:last-child {
+    border-bottom: none;
+}
+
+.tage-ergebnis span {
+    font-weight: bold;
+    background: #0066cc;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    min-width: 30px;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Filter Input + Button Styling */
+.filter-group input[type="number"] {
+    width: calc(100% - 10px);
+    padding: 10px;
+    font-size: 0.95rem;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    margin-top: 6px;
+    margin-bottom: 8px;
+}
+
+.filter-group button#tageApply {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 25px;
+    background: #1890ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-group button#tageApply:hover {
+    background: #0066cc;
+    transform: translateY(-1px);
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+    .tage-ergebnis {
+        padding: 15px 20px;
+    }
+
+    .tage-ergebnis h3 {
+        font-size: 1.15rem;
+    }
+
+    .tage-ergebnis li {
+        font-size: 0.9rem;
+    }
+
+    .filter-group input[type="number"],
+    .filter-group button#tageApply {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tage-ergebnis {
+        padding: 12px 15px;
+    }
+
+    .tage-ergebnis h3 {
+        font-size: 1rem;
+    }
+
+    .tage-ergebnis li {
+        font-size: 0.85rem;
+    }
+
+    .filter-group input[type="number"],
+    .filter-group button#tageApply {
+        font-size: 0.85rem;
+        padding: 6px;
     }
 }
