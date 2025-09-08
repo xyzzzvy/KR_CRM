@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         whiteSpace: 'normal',
         wordBreak: 'break-word'
     });
+
     document.body.appendChild(toast);
 
     function showToast(message, isError = false) {
