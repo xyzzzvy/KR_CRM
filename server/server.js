@@ -292,7 +292,21 @@ app.post('/api/user/getnameonly', authenticateToken ,async (req, res) => {
 // Login: setzt JWT als HttpOnly-Cookie
 app.post('/api/login', async (req, res) => {
     try {
+
         const { gpnr, password } = req.body;
+        const user1 = await getUserInfo(gpnr);
+        if (!user1) {
+            return res.status(404).json({ error: 'User nicht gefunden' });
+        }
+        const name1 = `${user1.nachname} ${user1.vorname}`;
+        let logMessage = `${new Date().toISOString()} - User ${gpnr} ${name1} hat sich probiert einzuloggen.\n`;
+        let logFilePath = path.join(__dirname, 'loglogin.txt');
+        fs.appendFile(logFilePath, logMessage, (err) => {
+            if (err) {
+                console.error('Fehler beim Schreiben in die Log-Datei:', err.message);
+            }
+        });
+
         if (!gpnr || !password) return res.status(400).json({ error: 'gpnr und password benötigt' });
 
         const valid = await LoginInfoChecker(gpnr, password);
@@ -309,6 +323,15 @@ app.post('/api/login', async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             maxAge: 2 * 60 * 60 * 1000 // 2 Stunden
+        });
+
+        // Loggen des Login-Vorgangs
+         logMessage = `${new Date().toISOString()} - User ${gpnr} (${user.role}) hat sich eingeloggt.\n`;
+         logFilePath = path.join(__dirname, 'loglogin.txt');
+        fs.appendFile(logFilePath, logMessage, (err) => {
+            if (err) {
+                console.error('Fehler beim Schreiben in die Log-Datei:', err.message);
+            }
         });
 
         res.json({ success: true, role: user.role });
