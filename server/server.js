@@ -5,6 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
 import cookieParser from 'cookie-parser';
 
 import {
@@ -77,7 +78,8 @@ app.post('/api/leads/update', authenticateToken, async (req, res) => {
 app.post('/assign-leads', authenticateToken, authorizeAdmin, async (req, res) => {
     try {
         const { leadIds, partner } = req.body;
-        let partner1=Number.parseInt(partner);
+        let partner1 = Number.parseInt(partner);
+
         if (!Array.isArray(leadIds) || leadIds.length === 0) {
             return res.status(400).json({ error: 'Keine Lead-IDs angegeben' });
         }
@@ -87,12 +89,22 @@ app.post('/assign-leads', authenticateToken, authorizeAdmin, async (req, res) =>
 
         const modifiedCount = await assignLeads(leadIds, partner);
 
+        // Loggen der Zuweisung
+        const logMessage = `${new Date().toISOString()} - ${modifiedCount} Leads wurden an Partner ${partner1} zugewiesen.\n`;
+        const logFilePath = path.join(__dirname, 'log.txt');
+        fs.appendFile(logFilePath, logMessage, (err) => {
+            if (err) {
+                console.error('Fehler beim Schreiben in die Log-Datei:', err.message);
+            }
+        });
+
         res.json({ success: true, assignedCount: modifiedCount });
     } catch (error) {
         console.error('Fehler bei Lead-Zuweisung:', error);
         res.status(500).json({ error: 'Interner Serverfehler' });
     }
 });
+
 
 //endregion
 
