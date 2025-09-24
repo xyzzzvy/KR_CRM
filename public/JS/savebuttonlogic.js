@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const historybutton = document.getElementById('bestellhistory');
     const sicht=document.getElementById('sicht');
     const reg=document.getElementById('anlegen');
+    const addnewleadbut=document.getElementById('addLead');
 
 
     // Initialisiere updatedLeads, falls noch nicht vorhanden
@@ -14,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.updatedLeads = [];
     }
 
+
+    addnewleadbut.addEventListener('click', () => {
+        window.location.href="NeuenLeadanlegen.html"
+    })
 
 
     reg.addEventListener('click', () => {

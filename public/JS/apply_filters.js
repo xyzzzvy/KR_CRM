@@ -403,7 +403,7 @@ function applyFilter() {
             const dateMatch = (() => {
                 if (!startDate) return true;
 
-                // Datum direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+
                 const [datePart] = lead.datum.split('T');
                 const [year, month, day] = datePart.split('-');
                 const leadDate = new Date(year, month - 1, day);
