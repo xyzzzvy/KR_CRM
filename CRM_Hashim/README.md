@@ -1,2 +1,0 @@
-# CRM_Hashim
-BIRJI IS GOATED
