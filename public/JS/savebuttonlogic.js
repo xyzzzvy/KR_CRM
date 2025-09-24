@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sicht=document.getElementById('sicht');
     const reg=document.getElementById('anlegen');
     const addnewleadbut=document.getElementById('addLead');
+    const telparty=document.getElementById('telparty');
+
+
 
 
     // Initialisiere updatedLeads, falls noch nicht vorhanden
@@ -20,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href="NeuenLeadanlegen.html"
     })
 
+    telparty.addEventListener('click', () => {
+        window.location.href="Telefonparty.html"
+    })
 
     reg.addEventListener('click', () => {
         window.location.href = "register-page.html";
