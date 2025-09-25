@@ -1,7 +1,13 @@
 async function renderLeaderboard(rawData) {
     let preparedData = await prepareData(rawData);
     const leaderboard = document.getElementById('leaderboard');
-    leaderboard.innerHTML = '';
+    leaderboard.innerHTML = ' ' +
+        '           <div class="leaderboard-entry header-entry">\n' +
+        '            <div>RANK</div>\n' +
+        '            <div class="entry-value">NAME</div>\n' +
+        '            <div class="entry-value">NEUE TERMINE</div>\n' +
+        '            </div>';
+
     if(preparedData.length === 0) {
         console.log('No data found');
         return;

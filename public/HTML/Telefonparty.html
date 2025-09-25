@@ -23,6 +23,7 @@
 
 <body>
 	<button class="button" id="party-join-btn" >Telefonparty beitreten</button>
+	<button class="button" id="party" style="margin-top: 10px" >Leaderboard</button>
 	<script>
 		document.getElementById("party-join-btn").addEventListener("click", () => {
 
@@ -30,6 +31,11 @@
 			window.location.reload();
 			window.location.href = "User.html";
 		});
+
+		document.getElementById("party").addEventListener("click", () => {
+			window.location.href = "telefonparty-leaderboard.html";
+		});
+
 	</script>
 </body>
 

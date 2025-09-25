@@ -50,7 +50,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Received message", event.data);
             const data = JSON.parse(event.data);
             if (data.type === "updateUsers") {
-                renderLeaderboard(event.data);
+                if (window.location.href.includes('leaderboard')) {
+                    renderLeaderboard(event.data);
+                }
             }
         };
 
