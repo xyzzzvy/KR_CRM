@@ -26,6 +26,8 @@ function renderLeaderboard(rawData) {
         entry.appendChild(rankDiv);
         entry.appendChild(nameDiv);
         entry.appendChild(pointsDiv);
+
+        leaderboard.appendChild(entry);
     })
 }
 
