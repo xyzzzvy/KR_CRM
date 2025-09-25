@@ -1,4 +1,4 @@
-
+document.addEventListener('DOMContentLoaded', () => {
     if(sessionStorage.getItem('telefonparty')) {
         function showPersistentToast() {
             const toast = document.createElement('div');
@@ -20,7 +20,6 @@
             });
 
             document.body.appendChild(toast);
-
             requestAnimationFrame(() => {
                 toast.style.opacity = '1';
             });
@@ -32,5 +31,7 @@
             myToast.remove();
         }
     }
+})
 
-window.reload();
+
+

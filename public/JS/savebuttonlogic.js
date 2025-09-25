@@ -118,5 +118,17 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Fehler beim Speichern:', error);
             showToast('Speichern fehlgeschlagen: ' + error.message);
         }
+        //Hier wird das websocket aufgerufen mit einem 500ms delay async
+
+
+
+
+
+
+
+
+
+
+
     });
 });
