@@ -64,7 +64,7 @@ async function websockethandler(wss) {
                     user.ws = ws;
                     user.disconnectTimeout = null;
                 } else {
-                    user = { id: data.id, name: data.name, termine: 0, terminealt: await getLeadsByPartnerNext8Days(data.id), ws, disconnectTimeout: null };
+                    user = { id: data.id, name: data.name, termine: 0, terminealt: await getLeadsByPartnerNext8Days(data.id).count, ws, disconnectTimeout: null };
                     liveUsers.push(user);
                 }
                 await broadcastUsers();
