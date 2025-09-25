@@ -188,8 +188,8 @@
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 
-		let start = document.getElementById('start-zeit').value;
-		let end = document.getElementById('end-zeit').value;
+		let start = combineDateTime(document.getElementById('start-zeit').value);
+		let end = combineDateTime(document.getElementById('end-zeit').value);
 
 		createWebsocket(start, end);
 	});
@@ -217,6 +217,15 @@
 			console.error("API call failed:", err);
 		}
 	}
+
+    function combineDateTime(timeStr) {
+        if (!timeStr) return null;
+
+        const today = new Date();
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        today.setHours(hours, minutes, 0, 0); // seconds and ms = 0
+        return today.toISOString();
+    }
 
 </script>
 </html>
