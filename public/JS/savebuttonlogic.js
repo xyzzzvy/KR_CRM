@@ -118,15 +118,35 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Fehler beim Speichern:', error);
             showToast('Speichern fehlgeschlagen: ' + error.message);
         }
-        //Hier wird das websocket aufgerufen mit einem 500ms delay async
+
+        async function fetchCredits() {
+            try {
+                const response = await fetch("/api/websocket/credits", {
+                    method: "GET",
+                    credentials: "include",
+                });
+                const data = await response.json();
+                if (data.success) {
+                    console.log("GPNR:", data.gpnr, "Name:", data.name);
+                    return { gpnr: data.gpnr, name: data.name };
+                } else {
+                    console.error("Fehler:", data.error);
+                    return {};
+                }
+            } catch (err) {
+                console.error("Fetch-Fehler:", err);
+                return {};
+            }
+        }
+
+        const { gpnr, name } = await fetchCredits();
 
 
-
-
-
-
-
-
+        if (window.socket && window.socket.readyState === WebSocket.OPEN) {
+            window.socket.send(JSON.stringify({ type: "update", id: gpnr }));
+        } else {
+            console.warn("Socket nicht verbunden");
+        }
 
 
 

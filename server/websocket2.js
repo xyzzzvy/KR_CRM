@@ -73,7 +73,7 @@ async function websockethandler(wss) {
             if (data.type === 'update') {
                 const user = liveUsers.find(u => u.id === data.id);
                 if (user) {
-                    user.termineneu = (await getLeadsByPartnerNext8Days(data.id)) - user.terminealt;
+                    user.termineneu = (await getLeadsByPartnerNext8Days(data.id)).count - user.terminealt;
                     await broadcastUsers();
                 }
             }
