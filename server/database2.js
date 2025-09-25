@@ -125,6 +125,34 @@ export async function updateLeadsStatus(updates) {
     }
 }
 
+export async function getLeadsByPartnerNext8Days(gpnr) {
+    try {
+        const [results] = await pool.query(
+            `SELECT * FROM leads
+             WHERE partner = ?
+               AND datum >= NOW()
+               AND datum < DATE_ADD(NOW(), INTERVAL 8 DAY)
+             ORDER BY datum ASC`,
+            [gpnr]
+        );
+
+        return results.map(row => ({
+            id: row.id,
+            datum: row.datum,
+            kampagne: row.kampagne,
+            name: row.name,
+            telefon: row.telefon,
+            bl: row.bl,
+            plz: row.plz,
+            partner: row.partner,
+            status: row.status,
+            adresse: row.adresse
+        }));
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Leads der nächsten 8 Tage:', err.message);
+        throw err;
+    }
+}
 
 export async function assignLeads(leadIds, gpnr) {
     if (!leadIds.length) return 0;

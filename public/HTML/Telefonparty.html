@@ -22,8 +22,15 @@
 
 
 <body>
-	<button class="button" id="party-join-btn">Telefonparty beitreten</button>
+	<button class="button" id="party-join-btn" >Telefonparty beitreten</button>
+	<script>
+		document.getElementById("party-join-btn").addEventListener("click", () => {
+
+			sessionStorage.setItem('telefonparty', true);
+			window.location.reload();
+		});
+	</script>
 </body>
 
-
+<script src="../JS/telefonparty_alert.js"></script>
 </html>
