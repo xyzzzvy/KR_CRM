@@ -6,7 +6,7 @@ import {
     checkIfUserAlreadyExists,
     registerUser,
     updateLeadsStatus,
-    getLeadsByPartnerNext8Days,
+    getLeadsByPartnerNext8DaysQC,
     assignLeads,
     getAllUsers,
     addLead,
@@ -48,7 +48,7 @@ wss.on('connection', (ws) => {
                 user.ws = ws;
                 user.disconnectTimeout = null;
             } else {
-                user = { id: data.id, name: data.name, termine: 0, terminealt: await getLeadsByPartnerNext8Days(data.id), ws, disconnectTimeout: null };
+                user = { id: data.id, name: data.name, termine: 0, terminealt: await getLeadsByPartnerNext8DaysQC(data.id), ws, disconnectTimeout: null };
                 liveUsers.push(user);
             }
 
@@ -59,7 +59,7 @@ wss.on('connection', (ws) => {
         if (data.type === 'update') {
             const user = liveUsers.find(u => u.id === data.id);
             if (user) {
-                user.termineneu = (await (getLeadsByPartnerNext8Days(data.id))) - user.terminealt;
+                user.termineneu = (await (getLeadsByPartnerNext8DaysQC(data.id))) - user.terminealt;
                 broadcastUsers();
             }
         }

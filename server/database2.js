@@ -125,13 +125,14 @@ export async function updateLeadsStatus(updates) {
     }
 }
 
-export async function getLeadsByPartnerNext8Days(gpnr) {
+export async function getLeadsByPartnerNext8DaysQC(gpnr) {
     try {
         const [results] = await pool.query(
             `SELECT * FROM leads
              WHERE partner = ?
-               AND datum >= NOW()
-               AND datum < DATE_ADD(NOW(), INTERVAL 8 DAY)
+               AND terminisiert >= NOW()
+               AND terminisiert < DATE_ADD(NOW(), INTERVAL 8 DAY)
+               AND status LIKE 'QC fixiert'
              ORDER BY datum ASC`,
             [gpnr]
         );

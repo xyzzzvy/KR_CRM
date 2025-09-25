@@ -6,7 +6,7 @@ import {
     checkIfUserAlreadyExists,
     registerUser,
     updateLeadsStatus,
-    getLeadsByPartnerNext8Days,
+    getLeadsByPartnerNext8DaysQC,
     assignLeads,
     getAllUsers,
     addLead,
@@ -64,7 +64,8 @@ async function websockethandler(wss) {
                     user.ws = ws;
                     user.disconnectTimeout = null;
                 } else {
-                    user = { id: data.id, name: data.name, termineneu: 0, terminealt: await getLeadsByPartnerNext8Days(data.id).count, ws, disconnectTimeout: null };
+                    let val=(await getLeadsByPartnerNext8DaysQC(data.id)).length
+                    user = { id: data.id, name: data.name, termineneu: 0, terminealt: val, ws, disconnectTimeout: null };
                     liveUsers.push(user);
                 }
                 await broadcastUsers();
@@ -73,7 +74,8 @@ async function websockethandler(wss) {
             if (data.type === 'update') {
                 const user = liveUsers.find(u => u.id === data.id);
                 if (user) {
-                    user.termineneu = (await getLeadsByPartnerNext8Days(data.id)).count - user.terminealt;
+                    let val=(await getLeadsByPartnerNext8DaysQC(data.id)).length
+                    user.termineneu = val - user.terminealt;
                     await broadcastUsers();
                 }
             }
