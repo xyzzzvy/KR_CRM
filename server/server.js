@@ -284,7 +284,6 @@ app.post('/api/user/getnameonly', authenticateToken ,async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User nicht gefunden' });
         }
-
         const name = `${user.nachname} ${user.vorname}`;
         res.json({ name });
     } catch (err) {
@@ -628,6 +627,9 @@ app.get('/api/users/by-gpnr', authenticateToken, async (req, res) => {
 
 //endregion
 
+
+//--- WEBSOCKET---
+//#region
 app.post('/api/websocket/erstellen',authenticateToken, authorizeAdmin, async (req, res) => {
     try{
         const {start, ende} = req.body;
@@ -651,6 +653,26 @@ app.post('/api/websocket/erstellen',authenticateToken, authorizeAdmin, async (re
     }
 })
 
+
+app.get('api/websocket/credits',authenticateToken, async (req, res) => {
+    try{
+        const requester = req.user; // kommt aus dem JWT (z.B. { gpnr, role })
+
+        if (!requester || !requester.gpnr) {
+            return res.status(401).json({ error: 'Ungültiger Token oder Benutzer nicht authentifiziert' });
+        }
+        const user = await getUserInfo(gpnr);
+        const name = `${user.nachname} ${user.vorname}`;
+
+        res.json({success:true, gpnr:requester.gpnr,name:name});
+
+    }
+    catch (err){
+        console.error('Fehler beim Abfragen der Credits:', err.message);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+})
+//#endregion
 
 
 
