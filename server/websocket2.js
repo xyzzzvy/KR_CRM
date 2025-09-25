@@ -46,7 +46,7 @@ export async function ManageWebSocket(start, ende) {
 async function websockethandler(wss) {
 
     async function broadcastUsers() {
-        const data = JSON.stringify({ type: "updateUsers", users: liveUsers.map(u => ({ name: u.name, termineneu: u.termineneu-u.terminealt })) });
+        const data = JSON.stringify({ type: "updateUsers", users: liveUsers.map(u => ({ name: u.name, termineneu: u.termineneu })) });
         for (const u of liveUsers) {
             if (u.ws && u.ws.readyState === WebSocket.OPEN)
                 await u.ws.send(data);
@@ -64,7 +64,7 @@ async function websockethandler(wss) {
                     user.ws = ws;
                     user.disconnectTimeout = null;
                 } else {
-                    user = { id: data.id, name: data.name, termine: 0, terminealt: await getLeadsByPartnerNext8Days(data.id).count, ws, disconnectTimeout: null };
+                    user = { id: data.id, name: data.name, termineneu: 0, terminealt: await getLeadsByPartnerNext8Days(data.id).count, ws, disconnectTimeout: null };
                     liveUsers.push(user);
                 }
                 await broadcastUsers();

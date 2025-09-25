@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         window.socket.onmessage = (event) => {
+            console.log("Received message", event.data);
             const data = JSON.parse(event.data);
             if (data.type === "updateUsers") {
                 renderUsers(data.users);
