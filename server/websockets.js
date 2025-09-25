@@ -23,7 +23,6 @@ import { WebSocketServer } from 'ws';
 let liveUsers = []; // { id, name, termineneu, terminealt ,ws, disconnectTimeout }
 
 
-await getLeadsByPartnerNext8Days(data.id)
 
 
 const wss = new WebSocketServer({ port: 8080 });

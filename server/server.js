@@ -27,6 +27,12 @@ import {
     getAllLeadOrdersBy,
     end
 } from './database2.js';
+
+
+import {
+    ManageWebSocket
+} from './websocket2.js';
+
 //endregion
 
 //Settings raw
@@ -621,6 +627,33 @@ app.get('/api/users/by-gpnr', authenticateToken, async (req, res) => {
 });
 
 //endregion
+
+app.post('/api/websocket/erstellen',authenticateToken, authorizeAdmin, async (req, res) => {
+    try{
+        const {start, ende} = req.body;
+        const requester = req.user; // kommt aus dem JWT (z.B. { gpnr, role })
+
+        if (!requester || !requester.gpnr) {
+            return res.status(401).json({ error: 'Ungültiger Token oder Benutzer nicht authentifiziert' });
+        }
+
+        if (requester.role !== 'Admin') {
+            return res.status(403).json({ error: 'Zugriff verweigert' });
+        }
+
+        await ManageWebSocket(new Date(start), new Date(ende));
+        res.json({success:true, message:'Websocket erstellt'});
+
+    }
+    catch (err){
+        console.error('Fehler beim Erstellen des Websockets:', err.message);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+})
+
+
+
+
 
 
 // Server starten
