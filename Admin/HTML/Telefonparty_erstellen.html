@@ -196,7 +196,7 @@
 
 	async function createWebsocket(start, ende) {
 		try {
-			const response = await fetch("http://localhost:3000/api/websocket/erstellen", {
+			const response = await fetch("/api/websocket/erstellen", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
