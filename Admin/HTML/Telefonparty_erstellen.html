@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Title</title>
+	<title>Telefonparty starten</title>
     <style>
         /* === Grundlayout === */
         body {
@@ -91,36 +91,48 @@
         button[type="submit"]:hover { background: #0056b3; }
 
         /* === Toast === */
-        .toast {
-            visibility: hidden;
+        #toast {
             position: fixed;
-            top: 2rem;
-            right: 2rem;
+            top: 20px;
+            right: 20px;
+            margin: 0;
+            text-align: center;
+            z-index: 1000;
+
             background: #007BFF;
             color: #fff;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.15);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: 1000;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+
+            max-width: 200px;
+            max-height: 60px;
         }
-        .toast.show { visibility: visible; opacity: 1; }
+
+        .move-to-corner {
+            animation: moveToCorner 1s ease;
+        }
 
         /* === Animations === */
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
         @keyframes slideInLeft { from {transform:translateX(-50px);opacity:0;} to {transform:translateX(0);opacity:1;} }
+        @keyframes moveToCorner { 0% { top:-50px; opacity: 0; } 100% { top:20px; right:20px; opacity: 1; transform:none; } }
 
         /* === Responsive === */
-        @media (max-width:768px) { .two-columns, .three-columns { flex-direction: column; } }
+        @media (max-width:768px) { .two-columns { flex-direction: column; } }
     </style>
 
 
 </head>
 <body>
+
+<div id="toast" style="visibility: hidden;">
+    Telefonparty wurde gestartet!
+</div>
+
 <div class="main-container">
   <section class="form-section">
-    <div class="logo">Telefonparty planen</div>
+    <div class="logo">Telefonparty starten</div>
     <form id="phoneparty-form">
             <div class="form-group two-columns">
         <div>
@@ -148,7 +160,10 @@
 		let start = combineDateTime(document.getElementById('start-zeit').value);
 		let end = combineDateTime(document.getElementById('end-zeit').value);
 
-		createWebsocket(start, end);
+		let data = createWebsocket(start, end);
+        if(data) {
+            showToast();
+        }
 	});
 
 	async function createWebsocket(start, ende) {
@@ -183,5 +198,16 @@
         today.setHours(hours, minutes, 0, 0); // seconds and ms = 0
         return today.toISOString();
     }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.style.visibility = 'visible';
+        toast.classList.add('move-to-corner');
+        setTimeout(() => {
+            toast.style.visibility = 'hidden';
+            toast.classList.remove('move-to-corner');
+        }, 3000)
+    }
+
 </script>
 </html>
