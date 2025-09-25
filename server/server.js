@@ -654,14 +654,14 @@ app.post('/api/websocket/erstellen',authenticateToken, authorizeAdmin, async (re
 })
 
 
-app.get('api/websocket/credits',authenticateToken, async (req, res) => {
+app.get('/api/websocket/credits',authenticateToken, async (req, res) => {
     try{
         const requester = req.user; // kommt aus dem JWT (z.B. { gpnr, role })
 
         if (!requester || !requester.gpnr) {
             return res.status(401).json({ error: 'Ungültiger Token oder Benutzer nicht authentifiziert' });
         }
-        const user = await getUserInfo(gpnr);
+        const user = await getUserInfo(requester.gpnr);
         const name = `${user.nachname} ${user.vorname}`;
 
         res.json({success:true, gpnr:requester.gpnr,name:name});

@@ -1,6 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const logoutButton = document.getElementById('logout');
     const bestellen=document.getElementById('bestellen');
+    const telparty=document.getElementById('telparty');
+
+    telparty.addEventListener('click', (e) => {
+        window.location.href = "Telefonparty_erstellen.html";
+    })
+
+
     logoutButton.addEventListener('click', async() => {
         const apiBase = window.location.origin;
         window.location.href = apiBase + "/";

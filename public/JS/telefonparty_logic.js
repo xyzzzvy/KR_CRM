@@ -1,16 +1,15 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     if (!sessionStorage.getItem('telefonparty')) {
         // Noch nichts zu tun
-    } else if (sessionStorage.getItem('telefonparty') === true) {
+    }
+    else if (sessionStorage.getItem('telefonparty') === 'true') {
         let socket;
 
         async function fetchCredits() {
             try {
                 const response = await fetch('/api/websocket/credits', {
                     method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + sessionStorage.getItem('jwt') // falls JWT im Storage
-                    }
+                    credentials:"include"
                 });
                 const data = await response.json();
                 if (data.success) {
@@ -26,7 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        let {gpnr,name}=fetchCredits()
+
+        let {gpnr,name}=await fetchCredits()
+
+        console.log(gpnr)
+        console.log(name)
 
         let reconnectInterval = 2000;
 
@@ -37,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
             socket.onopen = () => {
                 console.log("🔗 Connected to WS");
                 reconnectInterval = 2000;
-                // User join
                 socket.send(JSON.stringify({ type: 'join', id: gpnr, name: name }));
             };
 

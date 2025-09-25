@@ -188,15 +188,15 @@
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 
-		let start = document.getElementById('start-zeit').value();
-		let end = document.getElementById('end-zeit').value();
+		let start = document.getElementById('start-zeit').value;
+		let end = document.getElementById('end-zeit').value;
 
 		createWebsocket(start, end);
-	}
+	});
 
 	async function createWebsocket(start, ende) {
 		try {
-			const response = await fetch("/api/websocket/erstellen", {
+			const response = await fetch('/api/websocket/erstellen', {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
