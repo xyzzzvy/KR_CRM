@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Telefonparty</title>
+	<meta charset="UTF-8">
+	<title>Telefonparty</title>
 	<style>
 		#party-join-btn {
 			display: flex;
@@ -15,28 +15,33 @@
 			align-items: center;
 			height: 100vh;
 		}
+
+		.button {
+			font-size:32px;
+			padding: 30px 60px;
+		}
 	</style>
-    
+
 	<link rel="stylesheet" href="../css/main.css"/>
 </head>
 
 
 <body>
-	<button class="button" id="party-join-btn" >Telefonparty beitreten</button>
-	<button class="button" id="party" style="margin-top: 10px" >Leaderboard</button>
-	<script>
-		document.getElementById("party-join-btn").addEventListener("click", () => {
+<button class="button" id="party-join-btn" >Telefonparty beitreten</button>
+<button class="button" id="party" style="margin-top: 10px" >Leaderboard</button>
+<script>
+	document.getElementById("party-join-btn").addEventListener("click", () => {
 
-			sessionStorage.setItem('telefonparty', true);
-			window.location.reload();
-			window.location.href = "User.html";
-		});
+		sessionStorage.setItem('telefonparty', true);
+		window.location.reload();
+		window.location.href = "User.html";
+	});
 
-		document.getElementById("party").addEventListener("click", () => {
-			window.location.href = "telefonparty-leaderboard.html";
-		});
+	document.getElementById("party").addEventListener("click", () => {
+		window.location.href = "telefonparty-leaderboard.html";
+	});
 
-	</script>
+</script>
 </body>
 
 <script src="../JS/telefonparty_alert.js"></script>

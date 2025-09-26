@@ -142,9 +142,7 @@
 <body>
 
 <h1>User Informationen</h1>
-<div id="userDataContainer">
-  <p>Lade Benutzerdaten...</p>
-</div>
+
 
 <form id="leadOrderForm" novalidate>
   <h2>Leads bestellen</h2>
@@ -161,7 +159,7 @@
 
   <div>
     <label for="plzRange">PLZ Range (z.B. 1190-1220, Optional):</label>
-    <input type="text" id="plzRange" name="plzRange" pattern="^\d{4}-\d{4}$" placeholder="1200-1210" />
+    <input type="text" id="plzRange" name="plzRange" placeholder="1200-1210" />
   </div>
 
   <div>
@@ -183,7 +181,7 @@
 
 <script>
   // User-Daten laden und anzeigen
-  async function loadUserData() {
+  /*async function loadUserData() {
     const container = document.getElementById('userDataContainer');
     try {
       const res = await fetch('/api/userdata', { credentials: 'include' });
@@ -202,6 +200,7 @@
       console.error(err);
     }
   }
+   */
 
   // Kampagnen laden und Dropdown füllen
   async function loadCampaigns() {
