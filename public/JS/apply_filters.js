@@ -8,15 +8,12 @@ const applyFilterBtn = document.getElementById('applyFilter');
 const remainingLeadsDisplay = document.getElementById('remainingLeads');
 const saveHint = document.getElementById('saveHint');
 const partnerGpnr = sessionStorage.getItem("pr");
-
 const dateFilterSelect = document.getElementById("dateFilter");
 const customStartInput = document.getElementById("customStart");
 const customEndInput = document.getElementById("customEnd");
-
 const terminisiertFilterSelect = document.getElementById("terminisiertFilter");
 const customTerminStartInput = document.getElementById("customTerminStart");
 const customTerminEndInput = document.getElementById("customTerminEnd");
-
 const oben = document.getElementById('namenexplizit');
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -28,15 +25,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return 'Unbekannt';
             }
             const user = await res.json();
-
-            oben.innerHTML = `Hallo, ${(user.nachname)} ${(user.vorname)} `
+            oben.innerHTML = `Hallo, ${(user.nachname)} ${(user.vorname)}`
             return user;
         } catch (err) {
             console.error('Fehler beim Laden Username für GPNR', gpnr, err);
             return 'Unbekannt';
         }
     }
-
     await getUserName(partnerGpnr);
 })
 
@@ -45,7 +40,6 @@ var updatedLeads = [];
 
 // Status, die mit Datum verknüpft sind
 const statusWithDate = ["QC fixiert", "VG fixiert", "QC durchgeführt", "VG durchgeführt"];
-
 const statusOptions = [
     "offen",
     "n.err",
@@ -84,7 +78,6 @@ function showDatePickerToast(leadId, existingDateTime = "") {
     toast.style.borderRadius = "6px";
     toast.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
     toast.style.zIndex = "10001";
-
     toast.innerHTML = `
         <h4 style="margin-top:0;margin-bottom:10px;">Termin für Lead #${leadId} setzen</h4>
         <div style="margin-bottom:10px;">
@@ -115,7 +108,6 @@ function showDatePickerToast(leadId, existingDateTime = "") {
     document.getElementById("toastSaveBtn").addEventListener("click", () => {
         const dateVal = document.getElementById("toastDateInput").value;
         const timeVal = document.getElementById("toastTimeInput").value;
-
         if (!dateVal) {
             alert("Bitte ein Datum auswählen.");
             return;
@@ -123,7 +115,6 @@ function showDatePickerToast(leadId, existingDateTime = "") {
 
         // Kombiniere Datum und Uhrzeit zu einem ISO-String
         const dateTimeString = `${dateVal}T${timeVal}:00`;
-
         leads[currentDateLeadIndex].terminisiert = dateTimeString;
         const leadIdNum = leads[currentDateLeadIndex].id;
         const currentStatus = leads[currentDateLeadIndex].status;
@@ -133,15 +124,10 @@ function showDatePickerToast(leadId, existingDateTime = "") {
             updatedLeads[idx].terminisiert = dateTimeString;
             updatedLeads[idx].status = currentStatus;
         } else {
-            updatedLeads.push({
-                id: leadIdNum,
-                status: currentStatus,
-                terminisiert: dateTimeString
-            });
+            updatedLeads.push({ id: leadIdNum, status: currentStatus, terminisiert: dateTimeString });
         }
 
         if (updatedLeads.length > 0) saveHint.style.display = 'block';
-
         showToast(`Termin für Lead #${leadIdNum} gesetzt auf ${formatDateTime(dateTimeString)}`);
         removeToast();
         currentDateLeadIndex = null;
@@ -195,7 +181,6 @@ async function fetchLeads() {
 // Rendert die Leads in die Tabelle
 function renderLeads(data, totalCount = null) {
     tbody.innerHTML = '';
-
     const maxToRender = 1000;
     const limitedData = data.slice(0, maxToRender);
 
@@ -203,35 +188,36 @@ function renderLeads(data, totalCount = null) {
         const optionsHtml = statusOptions.map(status =>
             `<option value="${status}" ${lead.status === status ? 'selected' : ''}>${status}</option>`
         ).join('');
-         console.log(lead.terminisiert);
+        console.log(lead.terminisiert);
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${lead.id}</td>
-          <td>${formatDate(lead.datum)}</td>
-          <td>${lead.kampagne}</td>
-          <td><a href="#">${lead.name.replace(/\n/g, '<br>')}<br>${lead.telefon}</a></td>
-          <td>${lead.bl}</td>
-          <td>
-            ${lead.plz}<br>
-            <small style="color: gray; font-style: italic;">${lead.adresse ? lead.adresse : ''}</small>
-          </td>
-          <td>${lead.partner}</td>
-          <td>
-            <select class="status-select" data-index="${originalIndex}">
-              ${optionsHtml}
-            </select>
-            ${statusWithDate.includes(lead.status) ? `
-                <button class="set-date-btn" data-index="${originalIndex}" title="Termin setzen" style="margin-left:5px;">
+            <td>${lead.id}</td>
+            <td>${formatDate(lead.datum)}</td>
+            <td>${lead.kampagne}</td>
+            <td><a href="#">${lead.name.replace(/\n/g, '<br>')}<br>${lead.telefon}</a></td>
+            <td>${lead.bl}</td>
+            <td>
+                ${lead.plz}<br>
+                <small style="color: gray; font-style: italic;">${lead.adresse ? lead.adresse : ''}</small>
+            </td>
+            <td>${lead.partner}</td>
+            <td>
+                <select class="status-select" data-index="${originalIndex}">
+                    ${optionsHtml}
+                </select>
+                ${statusWithDate.includes(lead.status) ?
+            `<button class="set-date-btn" data-index="${originalIndex}" title="Termin setzen" style="margin-left:5px;">
                     <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                         <line x1="16" y1="2" x2="16" y2="6"/>
                         <line x1="8" y1="2" x2="8" y2="6"/>
                         <line x1="3" y1="10" x2="21" y2="10"/>
                     </svg>
-                </button>
-            ` : ''}
-          </td>
-          <td>${lead.terminisiert ? formatDateTime(lead.terminisiert) : 'kein Termin'}</td>
+                </button>`
+            : ''}
+            </td>
+            <td>${lead.terminisiert ? formatDateTime(lead.terminisiert) : 'kein Termin'}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -247,8 +233,8 @@ function renderLeads(data, totalCount = null) {
         select.addEventListener('change', function () {
             const originalIndex = parseInt(this.dataset.index);
             const newStatus = this.value;
-
             const dateBtn = tbody.querySelector(`button.set-date-btn[data-index="${originalIndex}"]`);
+
             if (statusWithDate.includes(newStatus)) {
                 if (!dateBtn) {
                     // Button dynamisch hinzufügen, falls noch nicht vorhanden
@@ -266,6 +252,7 @@ function renderLeads(data, totalCount = null) {
                         </svg>
                     `;
                     this.parentNode.appendChild(newBtn);
+
                     newBtn.addEventListener('click', function () {
                         currentDateLeadIndex = parseInt(this.dataset.index);
                         showDatePickerToast(leads[currentDateLeadIndex].id, leads[currentDateLeadIndex].terminisiert);
@@ -274,27 +261,20 @@ function renderLeads(data, totalCount = null) {
             } else {
                 // Button entfernen, wenn Status nicht mehr datumspflichtig ist
                 if (dateBtn) dateBtn.remove();
-
                 // terminisiert nur löschen, wenn Status NICHT in statusWithDate ist
                 leads[originalIndex].terminisiert = null;
             }
 
             leads[originalIndex].status = newStatus;
-
             const leadId = leads[originalIndex].id;
             const idx = updatedLeads.findIndex(l => l.id === leadId);
-
             const newTerminisiert = statusWithDate.includes(newStatus) ? leads[originalIndex].terminisiert : null;
 
             if (idx !== -1) {
                 updatedLeads[idx].status = newStatus;
                 updatedLeads[idx].terminisiert = newTerminisiert;
             } else {
-                updatedLeads.push({
-                    id: leadId,
-                    status: newStatus,
-                    terminisiert: newTerminisiert
-                });
+                updatedLeads.push({ id: leadId, status: newStatus, terminisiert: newTerminisiert });
             }
 
             if (updatedLeads.length > 0) {
@@ -320,11 +300,9 @@ function applyFilter() {
     const bl = filterBL.value;
     const nameInput = document.getElementById('nameFilter');
     const name = nameInput ? nameInput.value.trim().toLowerCase() : '';
-
     const dateFilter = dateFilterSelect.value;
     const customStart = customStartInput.value;
     const customEnd = customEndInput.value;
-
     const terminFilter = terminisiertFilterSelect.value;
     const customTerminStart = customTerminStartInput.value;
     const customTerminEnd = customTerminEndInput.value;
@@ -361,7 +339,6 @@ function applyFilter() {
     // Filter für Termin-Datum
     let terminStartDate = null;
     let terminEndDate = new Date();
-
     switch (terminFilter) {
         case "24h":
             terminStartDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -394,20 +371,14 @@ function applyFilter() {
             const plzMatch = plz === '' || lead.plz.startsWith(plz);
             const statusMatch = status === 'alle' || lead.status === status;
             const blMatch = bl === '' || lead.bl === bl;
-            const nameMatch =
-                name === '' ||
-                lead.name.toLowerCase().includes(name) ||
-                lead.telefon.replace(/\s+/g, '').includes(name);
+            const nameMatch = name === '' || lead.name.toLowerCase().includes(name) || lead.telefon.replace(/\s+/g, '').includes(name);
 
             // Filter für Lead-Datum
             const dateMatch = (() => {
                 if (!startDate) return true;
-
-
                 const [datePart] = lead.datum.split('T');
                 const [year, month, day] = datePart.split('-');
                 const leadDate = new Date(year, month - 1, day);
-
                 return leadDate >= startDate && leadDate <= endDate;
             })();
 
@@ -415,12 +386,10 @@ function applyFilter() {
             const terminMatch = (() => {
                 if (!terminStartDate) return true;
                 if (!lead.terminisiert) return false;
-
                 // Termin-Datum direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
                 const [datePart] = lead.terminisiert.split('T');
                 const [year, month, day] = datePart.split('-');
                 const terminDate = new Date(year, month - 1, day);
-
                 return terminDate >= terminStartDate && terminDate <= terminEndDate;
             })();
 
@@ -433,37 +402,20 @@ function applyFilter() {
 // Hilfsfunktion: Datum formatieren (dd.mm.yyyy)
 function formatDate(isoString) {
     if (!isoString) return '';
-    try {
-        const dateObj = new Date(isoString);
-        return dateObj.toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
-    } catch (e) {
-        return isoString;
-    }
+    // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+    const [datePart] = isoString.split('T');
+    const [year, month, day] = datePart.split('-');
+    return `${day}.${month}.${year}`;
 }
 
 // Hilfsfunktion: Datum und Uhrzeit formatieren (dd.mm.yyyy HH:mm)
 function formatDateTime(localIsoString) {
     if (!localIsoString) return 'kein Termin';
-    try {
-        const dateObj = new Date(localIsoString);
-        const datum = dateObj.toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
-        const uhrzeit = dateObj.toLocaleTimeString('de-DE', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        return `${datum} ${uhrzeit}`;
-    } catch (e) {
-        console.error('Ungültiges Datum:', localIsoString);
-        return localIsoString;
-    }
+    // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+    const [datePart, timePart] = localIsoString.split('T');
+    const [year, month, day] = datePart.split('-');
+    const [hour, minute] = timePart.split(':');
+    return `${day}.${month}.${year} ${hour}:${minute}`;
 }
 
 // Zeigt oder versteckt die Eingabefelder für benutzerdefinierten Zeitraum
@@ -488,13 +440,10 @@ function toggleCustomTerminDateInputs() {
 document.addEventListener('DOMContentLoaded', () => {
     fetchLeads();
     applyFilter();
-
     applyFilterBtn.addEventListener('click', applyFilter);
-
     dateFilterSelect.addEventListener('change', () => {
         toggleCustomDateInputs();
     });
-
     terminisiertFilterSelect.addEventListener('change', () => {
         toggleCustomTerminDateInputs();
     });
