@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const { gpnr, name } = await fetchCredits();
 
-
-
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -33,41 +31,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         let partner = localStorage.getItem('affiliate');
 
         let select = document.getElementById("termin-art");
-        let status = select.options[select.selectedIndex].text;
+        let status = select.options[select.selectedIndex]?.text || null;
 
         const input = document.getElementById('termin').value;
-        const dateObj = new Date(input);
-        const datetime = dateObj.toISOString();
+        let datetime = null;
+        if (input) {
+            const dateObj = new Date(input);
+            // Lokale Zeit als String im deutschen Format
+            datetime = dateObj.toLocaleString('de-DE');
+        }
 
-        // Payload für dein Backend
+        // Payload für das Backend
         const data = {
             anrede: formData.anrede || null,
             titel: formData.titel?.trim() || null,
-            vorname: formData.vorname?.trim(),
-            nachname: formData.nachname?.trim(),
+            vorname: formData.vorname?.trim() || null,
+            nachname: formData.nachname?.trim() || null,
             geburtsdatum: formData.geburtsdatum || null,
-            email: formData.email?.trim(),
-            telefon: formData.telefon?.trim(),
-            plz: formData.plz?.trim(),
-            ort: formData.ort?.trim(),
-            strasse: formData.strasse?.trim(),
+            email: formData.email?.trim() || null,
+            telefon: formData.telefon?.trim() || null,
+            plz: formData.plz?.trim() || null,
+            ort: formData.ort?.trim() || null,
+            strasse: formData.strasse?.trim() || null,
             kampagne: null,
-            partner: gpnr,
+            partner: gpnr || partner || null,
             status: status,
             terminisiert: datetime
         };
 
-        // Einfache Validierung
-        if (!data.vorname ||  !data.telefon) {
+        // Validierung
+        if (!data.vorname || !data.telefon) {
             alert('Bitte alle Pflichtfelder ausfüllen!');
             return;
         }
 
         try {
-            const res = await fetch('/api/leads/addnew', {
+            const res = await fetch('/api/leads/addnewTerminisiert', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials:'include',
+                credentials: 'include',
                 body: JSON.stringify(data)
             });
 

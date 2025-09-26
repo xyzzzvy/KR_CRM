@@ -203,7 +203,7 @@ function renderLeads(data, totalCount = null) {
         const optionsHtml = statusOptions.map(status =>
             `<option value="${status}" ${lead.status === status ? 'selected' : ''}>${status}</option>`
         ).join('');
-
+         console.log(lead.terminisiert);
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${lead.id}</td>
@@ -433,22 +433,37 @@ function applyFilter() {
 // Hilfsfunktion: Datum formatieren (dd.mm.yyyy)
 function formatDate(isoString) {
     if (!isoString) return '';
-
-    // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
-    const [datePart] = isoString.split('T');
-    const [year, month, day] = datePart.split('-');
-    return `${day}.${month}.${year}`;
+    try {
+        const dateObj = new Date(isoString);
+        return dateObj.toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    } catch (e) {
+        return isoString;
+    }
 }
 
 // Hilfsfunktion: Datum und Uhrzeit formatieren (dd.mm.yyyy HH:mm)
 function formatDateTime(localIsoString) {
     if (!localIsoString) return 'kein Termin';
-
-    // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
-    const [datePart, timePart] = localIsoString.split('T');
-    const [year, month, day] = datePart.split('-');
-    const [hour, minute] = timePart.split(':');
-    return `${day}.${month}.${year} ${hour}:${minute}`;
+    try {
+        const dateObj = new Date(localIsoString);
+        const datum = dateObj.toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        const uhrzeit = dateObj.toLocaleTimeString('de-DE', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        return `${datum} ${uhrzeit}`;
+    } catch (e) {
+        console.error('Ungültiges Datum:', localIsoString);
+        return localIsoString;
+    }
 }
 
 // Zeigt oder versteckt die Eingabefelder für benutzerdefinierten Zeitraum

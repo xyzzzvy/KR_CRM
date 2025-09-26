@@ -68,18 +68,33 @@ export async function getLeadsByPartner(gpnr) {
     }
 }
 
+async function toISODateTime(dateString) {
+    // Erwartetes Format: DD.MM.YYYY, HH:MM:SS
+    if (!dateString) return null;
+
+    const [datePart, timePart] = dateString.split(', ');
+    const [day, month, year] = datePart.split('.');
+    const [hours, minutes, seconds] = timePart.split(':');
+
+    const pad = n => n.toString().padStart(2, '0');
+
+    return `${year}-${pad(month)}-${pad(day)}T${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
 export async function addLead({ vorname, nachname, telefon, plz, ort, strasse, kampagne = 'BK', partner = null, status = 'offen', terminisiert = null }) {
     const name = `${vorname} ${nachname}`.trim();
     const adresse = `${strasse}, ${plz} ${ort}`.trim();
     const datum = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const bl = getBundeslandFromPLZ(plz);
 
+    const fixeddate=await toISODateTime(terminisiert);
+
     try {
         const [result] = await pool.query(
             `INSERT INTO leads 
             (datum, kampagne, name, telefon, bl, plz, partner, status, adresse, terminisiert)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [datum, kampagne, name, telefon, bl, plz, partner, status, adresse, terminisiert]
+            [datum, kampagne, name, telefon, bl, plz, partner, status, adresse, fixeddate]
         );
         return result.insertId;
     } catch (err) {
