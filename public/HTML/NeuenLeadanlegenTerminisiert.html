@@ -143,6 +143,37 @@
       opacity: 1;
     }
 
+    /* === Datetime-local Input Styling === */
+    form input[type="datetime-local"] {
+        width: 100%;
+        padding: 0.7rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    form input[type="datetime-local"]:focus {
+        border-color: #007BFF;
+        outline: none;
+        box-shadow: 0 0 4px #007BFF;
+    }
+
+    /* Optional: adjust placeholder text color (for browsers that show it) */
+    form input[type="datetime-local"]::-webkit-datetime-edit-text,
+    form input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+    form input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+    form input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+    form input[type="datetime-local"]::-webkit-datetime-edit-hour-field {
+        color: #555;
+    }
+
+    select {
+        margin: 0;
+    }
+
+
     /* === Animationen === */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -226,13 +257,28 @@
         </div>
       </div>
 
+        <div class="form-group two-columns">
+            <div>
+                <label for="termin">Termin</label>
+                <input type="datetime-local" id="termin" name="termin">
+            </div>
+            <div>
+                <label for="termin-art">Termin Typ</label>
+                <select id="termin-art" name="termin-art">
+                    <option value="" hidden selected>Termin Typ...</option>
+                    <option value="vg-fixiert">VG fixiert</option>
+                    <option value="qc-fixiert">QC fixiert</option>
+                </select>
+            </div>
+        </div>
+
       <button type="submit">Nutzer anlegen</button>
     </form>
   </section>
 </div>
 
 <div id="toast" class="toast">Nutzer erfolgreich angelegt!</div>
-<script src="../JS/NeuenLeadAnlegen.js"></script>
+<script src="../JS/NeuenLeadAnlegenTerminisiert.js"></script>
 <script src="../JS/telefonparty_alert.js"></script>
 <script src="../JS/telefonparty_logic.js"></script>
 </body>

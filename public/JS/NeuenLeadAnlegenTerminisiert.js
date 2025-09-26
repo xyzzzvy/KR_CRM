@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const formData = Object.fromEntries(new FormData(form));
         let partner = localStorage.getItem('affiliate');
 
+        let select = document.getElementById("termin-art");
+        let status = select.options[select.selectedIndex].text;
+
+        const input = document.getElementById('termin').value;
+        const dateObj = new Date(input);
+        const datetime = dateObj.toISOString();
+
         // Payload für dein Backend
         const data = {
             anrede: formData.anrede || null,
@@ -46,8 +53,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             strasse: formData.strasse?.trim(),
             kampagne: null,
             partner: gpnr,
-            status: "offen",
-            terminisiert: new Date();
+            status: status,
+            terminisiert: datetime
         };
 
         // Einfache Validierung
