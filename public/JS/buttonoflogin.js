@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 
-    const btn2 =document.getElementById("login_password");
+    const btn2 =document.getElementById("passs");
     btn2.addEventListener("click", () => {
         window.alert("Melden Sie sich an Frau Soliman");
     });
