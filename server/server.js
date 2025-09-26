@@ -30,7 +30,7 @@ import {
 
 
 import {
-    ManageWebSocket, StartWebSocket, StopWebSocket
+     StartWebSocket, StopWebSocket
 } from './websocket2.js';
 
 //endregion
@@ -716,7 +716,7 @@ app.post('/api/websocket/stoppen',authenticateToken, authorizeAdmin, async (req,
         }
         await StopWebSocket();
 
-        res.json({success:true, message:'Websocket erstellt'});
+        res.json({success:true, message:'Websocket geschlossen'});
 
     }
     catch (err){
