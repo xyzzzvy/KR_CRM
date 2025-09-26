@@ -352,30 +352,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function formatTerminDatum(datumString) {
-        try {
-            const dateObj = new Date(datumString);
-            return dateObj.toLocaleDateString('de-DE', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        } catch (e) {
-            console.error('Ungültiges Datum:', datumString);
-            return datumString;
-        }
+        const [datePart] = datumString.split('T');
+        const [year, month, day] = datePart.split('-');
+        return `${day}.${month}.${year}`;
     }
 
     function formatTerminUhrzeit(datumString) {
-        try {
-            const dateObj = new Date(datumString);
-            return dateObj.toLocaleTimeString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        } catch (e) {
-            console.error('Ungültige Uhrzeit:', datumString);
-            return '';
-        }
+        const [_, timePart] = datumString.split('T');
+        const [hour, minute] = timePart.split(':');
+        return `${hour}:${minute}`;
     }
 
     function formatDatumKurz(datum) {

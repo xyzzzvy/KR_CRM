@@ -418,6 +418,8 @@ function formatDateTime(localIsoString) {
     return `${day}.${month}.${year} ${hour}:${minute}`;
 }
 
+
+
 // Zeigt oder versteckt die Eingabefelder für benutzerdefinierten Zeitraum
 function toggleCustomDateInputs() {
     const selected = dateFilterSelect.value;
