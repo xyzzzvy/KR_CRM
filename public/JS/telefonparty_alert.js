@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 position: 'fixed',
                 top: '2rem',
                 right: '2rem',
-                backgroundColor: '#007BFF',
+                backgroundColor: '#ff0000',
                 color: '#fff',
                 padding: '1rem 2rem',
                 borderRadius: '8px',
