@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn2 =document.getElementById("passs");
     btn2.addEventListener("click", () => {
-        window.alert("Melden Sie sich an Frau Soliman");
+        window.alert("Melden Sie sich an Direktor Soliman");
     });
 
 
