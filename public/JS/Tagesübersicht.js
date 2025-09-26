@@ -45,6 +45,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
+    // Hilfsfunktion: Datum ohne Zeitzonen-Umrechnung parsen
+    function parseDateWithoutTimezone(dateString) {
+        if (!dateString) return null;
+        const [datePart, timePart] = dateString.split('T');
+        const [year, month, day] = datePart.split('-');
+        const [hour, minute, second] = timePart ? timePart.split(':') : ['00', '00', '00'];
+        return new Date(year, month - 1, day, hour, minute, second);
+    }
+
     // Lädt alle terminierte Leads (eigene + Mitarbeiter)
     async function ladeAlleTerminierteLeads() {
         try {
@@ -180,8 +189,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             filteredData = filteredData.filter(lead => {
                 if (!lead.terminisiert) return false;
 
-                // Termin-Datum mit Uhrzeit erstellen
-                const terminDatum = new Date(lead.terminisiert);
+                // Termin-Datum ohne Zeitzonen-Umrechnung parsen
+                const terminDatum = parseDateWithoutTimezone(lead.terminisiert);
                 return terminDatum >= start && terminDatum <= end;
             });
         }
@@ -269,7 +278,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         return gefilterteLeads.filter(termin => {
             if (!termin.terminisiert) return false;
 
-            const terminDatum = new Date(termin.terminisiert);
+            // Datum ohne Zeitzonen-Umrechnung parsen
+            const terminDatum = parseDateWithoutTimezone(termin.terminisiert);
             return terminDatum >= startDate && terminDatum <= endDate;
         });
     }
@@ -289,8 +299,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Termine nach Uhrzeit sortieren
         termine.sort((a, b) => {
-            const dateA = new Date(a.terminisiert);
-            const dateB = new Date(b.terminisiert);
+            const dateA = parseDateWithoutTimezone(a.terminisiert);
+            const dateB = parseDateWithoutTimezone(b.terminisiert);
             return dateA - dateB;
         });
 
@@ -324,6 +334,30 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
+    function formatTerminDatum(datumString) {
+        try {
+            // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+            const [datePart] = datumString.split('T');
+            const [year, month, day] = datePart.split('-');
+            return `${day}.${month}.${year}`;
+        } catch (e) {
+            console.error('Ungültiges Datum:', datumString);
+            return datumString;
+        }
+    }
+
+    function formatTerminUhrzeit(datumString) {
+        try {
+            // Direkt aus dem ISO-String parsen (ohne Zeitzonen-Konvertierung)
+            const [datePart, timePart] = datumString.split('T');
+            const [hour, minute] = timePart.split(':');
+            return `${hour}:${minute}`;
+        } catch (e) {
+            console.error('Ungültige Uhrzeit:', datumString);
+            return '';
+        }
+    }
+
     async function createTerminElement(termin) {
         const element = document.createElement('div');
         element.className = 'termin-card';
@@ -349,33 +383,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         `;
 
         return element;
-    }
-
-    function formatTerminDatum(datumString) {
-        try {
-            const dateObj = new Date(datumString);
-            return dateObj.toLocaleDateString('de-DE', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        } catch (e) {
-            console.error('Ungültiges Datum:', datumString);
-            return datumString;
-        }
-    }
-
-    function formatTerminUhrzeit(datumString) {
-        try {
-            const dateObj = new Date(datumString);
-            return dateObj.toLocaleTimeString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        } catch (e) {
-            console.error('Ungültige Uhrzeit:', datumString);
-            return '';
-        }
     }
 
     function formatDatumKurz(datum) {
