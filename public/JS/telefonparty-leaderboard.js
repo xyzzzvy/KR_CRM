@@ -53,7 +53,7 @@ async function renderLeaderboard(rawData) {
         summeDiv.classList.add('green-text');
         summeDiv.textContent = `Neue Termine: ${user.summe_termine}`;
 
-        // Append everything to the entry
+
         entry.appendChild(rankDiv);
         entry.appendChild(nameDiv);
         entry.appendChild(qcAltDiv);
@@ -62,7 +62,6 @@ async function renderLeaderboard(rawData) {
         entry.appendChild(vgNeuDiv);
         entry.appendChild(summeDiv);
 
-        // Add the entry to the leaderboard
         leaderboard.appendChild(entry);
     });
 
