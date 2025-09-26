@@ -86,7 +86,7 @@ async function websockethandler(wss) {
             }
         });
 
-        
+
         ws.on('close', async () => {
             const user = liveUsers.find(u => u.ws === ws);
             if (!user) return;

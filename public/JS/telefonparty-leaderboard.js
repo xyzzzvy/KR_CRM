@@ -3,12 +3,12 @@ async function renderLeaderboard(rawData) {
     const leaderboard = document.getElementById('leaderboard');
     leaderboard.innerHTML = `
     <div class="leaderboard-entry header-entry">
-        <div>RANK</div>
+        <div class="entry-value">RANK</div>
         <div class="entry-value">NAME</div>
-        <div class="entry-value">QC NEU</div>
         <div class="entry-value">QC ALT</div>
-        <div class="entry-value">VG NEU</div>
         <div class="entry-value">VG ALT</div>
+        <div class="entry-value">QC NEU</div>
+        <div class="entry-value">VG NEU</div>
         <div class="entry-value">NEUE TERMINE</div>
     </div>
     `;
@@ -23,7 +23,7 @@ async function renderLeaderboard(rawData) {
         entry.classList.add('leaderboard-entry');
 
         const rankDiv = document.createElement('div');
-        rankDiv.classList.add('rank');
+        rankDiv.classList.add('entry-value');
         rankDiv.textContent = index + 1;
 
         const nameDiv = document.createElement('div');
@@ -34,13 +34,15 @@ async function renderLeaderboard(rawData) {
         qcNeuDiv.classList.add('entry-value');
         qcNeuDiv.textContent = `QC Neu: ${user.qc_neu}`;
 
-        const qcAltDiv = document.createElement('div');
-        qcAltDiv.classList.add('entry-value');
-        qcAltDiv.textContent = `QC Alt: ${user.qc_alt}`;
 
         const vgNeuDiv = document.createElement('div');
         vgNeuDiv.classList.add('entry-value');
         vgNeuDiv.textContent = `VG Neu: ${user.vg_neu}`;
+
+        const qcAltDiv = document.createElement('div');
+        qcAltDiv.classList.add('entry-value');
+        qcAltDiv.textContent = `QC Alt: ${user.qc_alt}`;
+
 
         const vgAltDiv = document.createElement('div');
         vgAltDiv.classList.add('entry-value');
@@ -54,10 +56,10 @@ async function renderLeaderboard(rawData) {
         // Append everything to the entry
         entry.appendChild(rankDiv);
         entry.appendChild(nameDiv);
-        entry.appendChild(qcNeuDiv);
         entry.appendChild(qcAltDiv);
-        entry.appendChild(vgNeuDiv);
         entry.appendChild(vgAltDiv);
+        entry.appendChild(qcNeuDiv);
+        entry.appendChild(vgNeuDiv);
         entry.appendChild(summeDiv);
 
         // Add the entry to the leaderboard
@@ -75,7 +77,7 @@ async function prepareData(rawData) {
         qc_alt: user.terminealtQC,
         vg_neu: user.termineneuVG,
         vg_alt: user.terminealtVG,
-        summe_termine: (user.user.termineneuQC - user.terminealtQC) + (user.termineneuVG - user.terminealtVG)
+        summe_termine: (user.termineneuQC+user.termineneuVG)
     }));
 
     users.sort((a, b) => b.points - a.points);
