@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 4000);
                 form.reset();
+                window.location.href="Tagesübersicht.html"
             } else {
                 alert('Fehler: ' + (result.error || 'Unbekannter Fehler'));
             }
