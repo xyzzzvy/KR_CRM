@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 
+    const btn2 =document.getElementById("login_password");
+    btn2.addEventListener("click", () => {
+        window.alert("Melden Sie sich an Frau Soliman");
+    });
+
+
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
