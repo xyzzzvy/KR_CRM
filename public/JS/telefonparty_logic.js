@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let reconnectInterval = 2000;
 
     function connectWebSocket(gpnr, name) {
-        window.socket = new WebSocket("ws://dreamteam.academy:8080");
+        window.socket = new WebSocket("wss://dreamteam.academy/ws/");
 
         window.socket.onopen = () => {
             console.log("🔗 Connected to WS");
