@@ -154,6 +154,35 @@ export async function getLeadsByPartnerNext8DaysQC(gpnr) {
         throw err;
     }
 }
+export async function getLeadsByPartnerNext8DaysVG(gpnr) {
+    try {
+        const [results] = await pool.query(
+            `SELECT * FROM leads
+             WHERE partner = ?
+               AND terminisiert >= NOW()
+               AND terminisiert < DATE_ADD(NOW(), INTERVAL 8 DAY)
+               AND status LIKE 'VG fixiert'
+             ORDER BY datum ASC`,
+            [gpnr]
+        );
+
+        return results.map(row => ({
+            id: row.id,
+            datum: row.datum,
+            kampagne: row.kampagne,
+            name: row.name,
+            telefon: row.telefon,
+            bl: row.bl,
+            plz: row.plz,
+            partner: row.partner,
+            status: row.status,
+            adresse: row.adresse
+        }));
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Leads der nächsten 8 Tage:', err.message);
+        throw err;
+    }
+}
 
 export async function assignLeads(leadIds, gpnr) {
     if (!leadIds.length) return 0;

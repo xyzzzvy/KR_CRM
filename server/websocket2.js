@@ -7,6 +7,7 @@ import {
     registerUser,
     updateLeadsStatus,
     getLeadsByPartnerNext8DaysQC,
+    getLeadsByPartnerNext8DaysVG,
     assignLeads,
     getAllUsers,
     addLead,
@@ -46,7 +47,8 @@ export async function ManageWebSocket(start, ende) {
 async function websockethandler(wss) {
 
     async function broadcastUsers() {
-        const data = JSON.stringify({ type: "updateUsers", users: liveUsers.map(u => ({ name: u.name, termineneu: u.termineneu })) });
+        const data = JSON.stringify({ type: "updateUsers",
+            users: liveUsers.map(u => ({ name: u.name, termineneuQC:u.termineneuQC, termineneuVG:u.termineneuVG, terminealtQC:u.terminealtQC, terminealtVG:u.terminealtVG })) });
         for (const u of liveUsers) {
             if (u.ws && u.ws.readyState === WebSocket.OPEN)
                 await u.ws.send(data);
@@ -65,7 +67,8 @@ async function websockethandler(wss) {
                     user.disconnectTimeout = null;
                 } else {
                     let val=(await getLeadsByPartnerNext8DaysQC(data.id)).length
-                    user = { id: data.id, name: data.name, termineneu: 0, terminealt: val, ws, disconnectTimeout: null };
+                    let val2=(await getLeadsByPartnerNext8DaysVG(data.id)).length
+                    user = { id: data.id, name: data.name, termineneuQC: 0, termineneuVG:0, terminealtQC: val, terminealtVG : val2, ws, disconnectTimeout: null };
                     liveUsers.push(user);
                 }
                 await broadcastUsers();
@@ -75,12 +78,15 @@ async function websockethandler(wss) {
                 const user = liveUsers.find(u => u.id === data.id);
                 if (user) {
                     let val=(await getLeadsByPartnerNext8DaysQC(data.id)).length
-                    user.termineneu = val - user.terminealt;
+                    let val2=(await getLeadsByPartnerNext8DaysVG(data.id)).length
+                    user.termineneuQC = val - user.terminealtQC;
+                    user.termineneuVG=val2 - user.terminealtVG;
                     await broadcastUsers();
                 }
             }
         });
 
+        
         ws.on('close', async () => {
             const user = liveUsers.find(u => u.ws === ws);
             if (!user) return;
