@@ -5,13 +5,13 @@
 }
 
 body {
-    background-color: #1b1b1b;
+    background-color: #ffffff; /* light background */
     font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: #fff;
+    color: #0b0b1a; /* dark text */
 }
 
 .form-container {
@@ -23,7 +23,7 @@ body {
 }
 
 .registerForm {
-    background: rgba(0, 0, 0, 0.8);
+    background: #ffffff; /* match login-box */
     padding: 40px 50px;
     border-radius: 15px;
     width: 100%;
@@ -36,7 +36,7 @@ body {
 .title {
     font-size: 32px;
     font-weight: bold;
-    color: #4A90E2;
+    color: #227abe; /* match .title in login CSS */
     margin-bottom: 2vh;
     white-space: nowrap;
     overflow: visible;
@@ -54,7 +54,7 @@ body {
 .form-row label {
     font-size: 14px;
     margin-bottom: 5px;
-    color: #fff;
+    color: #0b0b1a; /* dark text */
 }
 
 .form-row input[type="text"],
@@ -64,17 +64,17 @@ body {
 .form-row input[type="password"] {
     padding: 12px;
     font-size: 16px;
-    border: 2px solid #555;
+    border: 2px solid #0b0b1a; /* match login inputs */
     border-radius: 10px;
-    background-color: #333;
-    color: #fff;
+    background-color: #ffffff; /* light background */
+    color: #0b0b1a; /* dark text */
     outline: none;
     transition: all 0.3s ease;
 }
 
 .form-row input:focus {
-    border-color: #4A90E2;
-    background-color: #444;
+    border-color: #227abe; /* highlight in blue like login */
+    background-color: #f5f5f5;
 }
 
 .checkbox-row {

@@ -4,31 +4,37 @@
 	<meta charset="UTF-8">
 	<title>Telefonparty</title>
 	<style>
-		#party-join-btn {
-			display: flex;
-		}
-
 		body {
-			display: flex;
+			font-size: 32px;
+            display: flex;
 			flex-direction: column;
 			justify-content: center;
+            gap: 5%;
 			align-items: center;
 			height: 100vh;
 		}
 
-		.button {
-			font-size:32px;
+		button {
 			padding: 30px 60px;
+            width: 50%;
+            height: 20%;
 		}
-	</style>
 
+        @media (max-width: 900px) {
+            button {
+                font-size: 2rem !important;
+                width: 70%;
+                height: 30%;
+            }
+        }
+	</style>
 	<link rel="stylesheet" href="../css/main.css"/>
 </head>
 
 
 <body>
-<button class="button" id="party-join-btn" >Telefonparty beitreten</button>
-<button class="button" id="party" style="margin-top: 10px" >Leaderboard</button>
+<button class="button" id="party-join-btn" style="font-size: 3rem;">Telefonparty beitreten</button>
+<button class="button" id="leaderboard-button" style="font-size: 3rem;">Leaderboard</button>
 <script>
 	document.getElementById("party-join-btn").addEventListener("click", () => {
 
