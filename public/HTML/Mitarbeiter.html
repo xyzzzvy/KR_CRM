@@ -153,11 +153,10 @@
             div.className = "card";
             div.innerHTML = `
                 <h3>${user.vorname} ${user.nachname} ${user.gpnr}</h3>
-                <p><strong>Rolle:</strong> ${user.role}</p>
                 <p><strong>Telefon:</strong> ${user.telefon || "-"}</p>
                 <p><strong>E-Mail:</strong> ${user.email}</p>
                 <p><strong>Führungskraft:</strong> ${user.fuehrungskraft || "–"}</p>
-                <button class="view-button" onclick="viewUser('${user.gpnr}')">Ansicht</button>
+                <button class="view-button" onclick="viewUser('${user.gpnr}')">Leads Ansicht</button>
             `;
             box.appendChild(div);
         });
