@@ -25,24 +25,18 @@ let liveUsers = [];
 
 let wss = null;
 
-export async function ManageWebSocket(start, ende) {
-    const checkInterval = setInterval(async () => {
-        const now = new Date();
-
-        if (!wss && now >= start) {
-            wss = new WebSocketServer({ port: 8080 });
-            await websockethandler(wss);
-            console.log('WebSocket-Server gestartet:', now);
-        }
-
-        if (wss && now >= ende) {
-            wss.close(() => {
-                console.log('WebSocket-Server gestoppt:', now);
-            });
-            clearInterval(checkInterval);
-        }
-    }, 1000);
+export async function StartWebSocket() {
+    wss = new WebSocketServer({ port: 8080 });
+    await websockethandler(wss);
+    console.log('WebSocket-Server gestartet:');
 }
+
+export async function StopWebSocket() {
+    wss.close(() => {
+        console.log('WebSocket-Server gestoppt');
+    });
+}
+
 
 async function websockethandler(wss) {
 

@@ -30,7 +30,7 @@ import {
 
 
 import {
-    ManageWebSocket
+    ManageWebSocket, StartWebSocket, StopWebSocket
 } from './websocket2.js';
 
 //endregion
@@ -527,7 +527,57 @@ app.post('/api/leads/addnew', authenticateToken,async (req, res) => {
     }
 });
 
+app.post('/api/leads/addnewTerminisiert', authenticateToken,async (req, res) => {
+    try {
 
+
+        let {
+            vorname,
+            nachname,
+            telefon,
+            plz,
+            ort,
+            strasse,
+            kampagne,
+            user,
+            status,
+            terminisiert
+        } = req.body;
+
+
+
+        //ok
+        strasse+=""+" "+ort;
+        const nutzer=req.user.gpnr;
+
+        // PLZ auf 4 Stellen formatieren
+        const plzStr = String(plz).padStart(4, "0");
+
+        // Ort durch BL ersetzen
+        let bl= plzToBl[plzStr.charAt(0)] || "unbekannt";
+
+        // Telefonnummer bereinigen
+        const cleanTelefon = String(telefon).replace(/[^\d+]/g, '') || "0";
+
+        const leadId = await addLead({
+            vorname,
+            nachname,
+            telefon: cleanTelefon,
+            plz: plzStr,
+            ort:bl, // <- hier steht nun das Bundesland
+            strasse,
+            kampagne: "Empfehlung",
+            partner: nutzer || 0,
+            status: status || "offen",
+            terminisiert: terminisiert || null
+        });
+
+        res.status(201).json({ success: true, leadId });
+    } catch (err) {
+        console.error('❌ Fehler beim Anlegen des Leads:', err.message);
+        res.status(500).json({ error: 'Lead konnte nicht angelegt werden' });
+    }
+});
 //endregion
 
 //-- ORDER--
@@ -632,8 +682,7 @@ app.get('/api/users/by-gpnr', authenticateToken, async (req, res) => {
 //#region
 app.post('/api/websocket/erstellen',authenticateToken, authorizeAdmin, async (req, res) => {
     try{
-        const {start, ende} = req.body;
-        const requester = req.user; // kommt aus dem JWT (z.B. { gpnr, role })
+        const requester = req.user;
 
         if (!requester || !requester.gpnr) {
             return res.status(401).json({ error: 'Ungültiger Token oder Benutzer nicht authentifiziert' });
@@ -642,8 +691,8 @@ app.post('/api/websocket/erstellen',authenticateToken, authorizeAdmin, async (re
         if (requester.role !== 'Admin') {
             return res.status(403).json({ error: 'Zugriff verweigert' });
         }
+        await StartWebSocket();
 
-        await ManageWebSocket(new Date(start), new Date(ende));
         res.json({success:true, message:'Websocket erstellt'});
 
     }
@@ -653,6 +702,28 @@ app.post('/api/websocket/erstellen',authenticateToken, authorizeAdmin, async (re
     }
 })
 
+
+app.post('/api/websocket/stoppen',authenticateToken, authorizeAdmin, async (req, res) => {
+    try{
+        const requester = req.user;
+
+        if (!requester || !requester.gpnr) {
+            return res.status(401).json({ error: 'Ungültiger Token oder Benutzer nicht authentifiziert' });
+        }
+
+        if (requester.role !== 'Admin') {
+            return res.status(403).json({ error: 'Zugriff verweigert' });
+        }
+        await StopWebSocket();
+
+        res.json({success:true, message:'Websocket erstellt'});
+
+    }
+    catch (err){
+        console.error('Fehler beim Erstellen des Websockets:', err.message);
+        res.status(500).json({ error: 'Interner Serverfehler' });
+    }
+})
 
 app.get('/api/websocket/credits',authenticateToken, async (req, res) => {
     try{

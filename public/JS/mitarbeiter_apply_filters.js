@@ -161,7 +161,6 @@ async function fetchLeads() {
         leads = await response.json();
         renderLeads(leads.map((lead, index) => ({ lead, originalIndex: index })));
         updatedLeads = [];
-        saveHint.style.display = 'none';
     } catch (error) {
         console.error('Fehler beim Laden der Leads:', error);
         tbody.innerHTML = '<tr><td colspan="9">Fehler beim Laden der Leads</td></tr>';

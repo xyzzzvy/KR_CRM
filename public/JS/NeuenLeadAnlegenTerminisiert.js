@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             strasse: formData.strasse?.trim(),
             kampagne: null,
             partner: gpnr,
-            status: "offen"
+            status: "offen",
+            terminisiert: new Date();
         };
 
         // Einfache Validierung
