@@ -12,7 +12,6 @@ const mitarbeiterGpnr = params.get("gpnr");
 
 const btnansichtmain = document.getElementById('orig');
 const mit = document.getElementById('mit');
-const logoutButton = document.getElementById('logout');
 
 // Datum Filter Referenzen
 const dateFilterSelect = document.getElementById("dateFilter");
@@ -44,10 +43,7 @@ mit.addEventListener('click', () => {
     window.location.href = "Mitarbeiter.html";
 });
 
-logoutButton.addEventListener('click', () => {
-    const apiBase = window.location.origin;
-    window.location.href = apiBase + "/";
-});
+
 
 btnansichtmain.addEventListener('click', (e) => {
     e.preventDefault();
