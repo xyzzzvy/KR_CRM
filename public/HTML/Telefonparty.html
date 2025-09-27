@@ -155,33 +155,16 @@
     </style>
 </head>
 <body>
-
+<div class="main-container">
+    <div class="content-box">
+        <div class="title">Telefonparty</div>
+        <button class="button" id="party-join-btn">Telefonparty beitreten</button>
+        <button class="button" id="leaderboard-button">Leaderboard</button>
+    </div>
+</div>
 
 <script>
-    window.socket = new WebSocket("wss://dreamteam.academy/ws/");
 
-    // Funktion, um HTML anzuhängen
-    function appendHTML(htmlString) {
-        const wrapper = document.createElement("div");
-        wrapper.innerHTML = htmlString;
-        document.body.appendChild(wrapper.firstElementChild);
-    }
-
-    if (window.socket && window.socket.readyState === WebSocket.OPEN) {
-        console.log("✅ WebSocket ist offen");
-
-        const html = `
-      <div class="main-container">
-        <div class="content-box">
-          <div class="title">Telefonparty</div>
-          <button class="button" id="party-join-btn">Telefonparty beitreten</button>
-          <button class="button" id="leaderboard-button">Leaderboard</button>
-        </div>
-      </div>
-    `;
-        appendHTML(html);
-
-        // Eventlistener **nach dem Einfügen**
         document.getElementById("party-join-btn").addEventListener("click", () => {
             sessionStorage.setItem('telefonparty', true);
             window.location.href = "User.html";
@@ -190,19 +173,6 @@
         document.getElementById("leaderboard-button").addEventListener("click", () => {
             window.location.href = "telefonparty-leaderboard.html";
         });
-
-    } else {
-        console.log("❌ WebSocket ist nicht offen (State: " + (window.socket?.readyState ?? "kein Socket") + ")");
-
-        const html = `
-      <div class="main-container">
-        <div class="content-box">
-          <div class="title">GERADE KEINE Telefonparty</div>
-        </div>
-      </div>
-    `;
-        appendHTML(html);
-    }
 
 
 </script>
