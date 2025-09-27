@@ -32,21 +32,21 @@ async function renderLeaderboard(rawData) {
 
         const qcNeuDiv = document.createElement('div');
         qcNeuDiv.classList.add('entry-value');
-        qcNeuDiv.textContent = `QC Neu: ${user.qc_neu}`;
+        qcNeuDiv.textContent = `${user.qc_neu}`;
 
 
         const vgNeuDiv = document.createElement('div');
         vgNeuDiv.classList.add('entry-value');
-        vgNeuDiv.textContent = `VG Neu: ${user.vg_neu}`;
+        vgNeuDiv.textContent = `${user.vg_neu}`;
 
         const qcAltDiv = document.createElement('div');
         qcAltDiv.classList.add('entry-value');
-        qcAltDiv.textContent = `QC Alt: ${user.qc_alt}`;
+        qcAltDiv.textContent = `${user.qc_alt}`;
 
 
         const vgAltDiv = document.createElement('div');
         vgAltDiv.classList.add('entry-value');
-        vgAltDiv.textContent = `VG Alt: ${user.vg_alt}`;
+        vgAltDiv.textContent = `${user.vg_alt}`;
 
         const summeDiv = document.createElement('div');
         summeDiv.classList.add('entry-value');
