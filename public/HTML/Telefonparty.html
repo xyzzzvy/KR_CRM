@@ -155,45 +155,15 @@
     </style>
 </head>
 <body>
-
+<div class="main-container">
+    <div class="content-box">
+        <div class="title">Telefonparty</div>
+        <button class="button" id="party-join-btn">Telefonparty beitreten</button>
+        <button class="button" id="leaderboard-button">Leaderboard</button>
+    </div>
+</div>
 
 <script>
-    window.socket = new WebSocket("wss://dreamteam.academy/ws/");
-
-    // Funktion, um HTML anzuhängen
-    function appendHTML(htmlString) {
-        const wrapper = document.createElement("div");
-        wrapper.innerHTML = htmlString;
-        document.body.appendChild(wrapper.firstElementChild);
-    }
-
-    // Standardanzeige für nicht offene Verbindung
-        const htmlOffline = `
-      <div class="main-container">
-        <div class="content-box">
-          <div class="title">GERADE KEINE Telefonparty</div>
-        </div>
-      </div>
-    `;
-    appendHTML(htmlOffline);
-
-    // Event, wenn WebSocket geöffnet ist
-    window.socket.addEventListener("open", () => {
-        console.log("✅ WebSocket ist offen");
-
-        // Vorherige Offline-Anzeige entfernen
-        document.body.innerHTML = "";
-
-        const htmlOnline = `
-      <div class="main-container">
-        <div class="content-box">
-          <div class="title">Telefonparty</div>
-          <button class="button" id="party-join-btn">Telefonparty beitreten</button>
-          <button class="button" id="leaderboard-button">Leaderboard</button>
-        </div>
-      </div>
-    `;
-        appendHTML(htmlOnline);
 
         document.getElementById("party-join-btn").addEventListener("click", () => {
             sessionStorage.setItem('telefonparty', true);
@@ -203,7 +173,6 @@
         document.getElementById("leaderboard-button").addEventListener("click", () => {
             window.location.href = "telefonparty-leaderboard.html";
         });
-    });
 
 
 </script>
