@@ -189,8 +189,14 @@
 
             } else {
                 console.log("❌ WebSocket ist nicht offen (State: " + (window.socket?.readyState ?? "kein Socket") + ")");
+                const html = `
+                <div class="main-container">
+                  <div class="content-box">
+                    <div class="title">GERADE KEINE Telefonparty</div>
+                  </div>
+                </div>
+              `;
 
-                window.alert("KEINE TELEFONPARTY VERFÜGBAR");
 
 
 
