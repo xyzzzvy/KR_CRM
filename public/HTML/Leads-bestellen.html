@@ -240,12 +240,6 @@
     const kampagne = e.target.kampagne.value;
     const note = e.target.note.value.trim();
 
-    const plzPattern = /^\d{4}-\d{4}$/;
-    if (!plzPattern.test(plzRange)) {
-      messageDiv.textContent = 'Bitte eine gültige PLZ Range im Format "1000-2000" eingeben.';
-      messageDiv.classList.add('error');
-      return;
-    }
 
     if (!leadsCount || leadsCount < 1) {
       messageDiv.textContent = 'Bitte eine gültige Anzahl Leads eingeben.';
@@ -293,7 +287,6 @@
   });
 
   window.addEventListener('DOMContentLoaded', () => {
-    loadUserData();
     loadCampaigns();
   });
 </script>
