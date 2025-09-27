@@ -473,7 +473,6 @@ footer {
     background-color: #f9faff;
 }
 
-
 .user-header {
     display: flex;
     align-items: center; /* vertikal mittig ausrichten */
@@ -494,7 +493,7 @@ footer {
 
 
 .return-button {
-    background: #fff;
-    border: 2px solid #0066cc;
-    color: #0066cc;
+    background: #fff !important;
+    border: 2px solid #0066cc !important;
+    color: #0066cc !important;
 }

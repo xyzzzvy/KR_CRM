@@ -5,177 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Leads bestellen & Userinfo</title>
   <link rel="icon" href="../Bilder/604D768F-C20B-4A34-94AD-4A90B744184F.png" type="image/png">
-  <style>
-    /* Grund-Reset */
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f9f9f9;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      color: #333;
-    }
-
-    h1, h2 {
-      text-align: center;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    /* Userdaten Container */
-    #userDataContainer {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
-      padding: 20px;
-      margin-bottom: 30px;
-    }
-    #userDataContainer ul {
-      list-style: none;
-      padding-left: 0;
-      margin: 0;
-    }
-    #userDataContainer li {
-      padding: 8px 0;
-      border-bottom: 1px solid #eee;
-      font-weight: 500;
-    }
-
-    form {
-      background: white;
-      padding: 25px 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 16px rgb(0 0 0 / 0.1);
-      max-width: 600px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px 30px;
-    }
-
-    form h2 {
-      grid-column: 1 / -1;
-      margin-top: 0;
-      font-size: 1.8rem;
-      color: #222;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #555;
-    }
-
-    input[type="number"],
-    input[type="text"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1.8px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-      transition: border-color 0.3s ease;
-      font-family: inherit;
-      resize: vertical;
-    }
-    input[type="number"]:focus,
-    input[type="text"]:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #007BFF;
-      outline: none;
-      box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
-    }
-
-    /* Full width elements (note and button) */
-    textarea {
-      grid-column: 1 / -1;
-      min-height: 100px;
-    }
-
-    button {
-      grid-column: 1 / -1;
-      padding: 14px 20px;
-      font-size: 1.15rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      background-color: #007BFF;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.25s ease;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    /* Nachricht */
-    #message {
-      margin-top: 25px;
-      text-align: center;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: green;
-    }
-    #message.error {
-      color: #d93025;
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      form {
-        grid-template-columns: 1fr;
-      }
-      textarea, button {
-        grid-column: 1;
-      }
-    }
-
-  </style>
+    <link rel="stylesheet" href="../css/div-structure.css" />
 </head>
 <body>
 
-<h1>BK Lead 8€ + Formular gehört dir</h1>
+<div class="container-wrapper">
+    <div class="container-component">
+        <h1>BK Lead 8€ + Formular gehört dir</h1>
+    </div>
+    <div class="container-component">
+        <form id="leadOrderForm" novalidate>
+            <h2>Leads bestellen</h2>
 
+            <div class="form-row">
+                <label for="leadsCount">Anzahl Leads:</label>
+                <input type="number" id="leadsCount" name="leadsCount" min="1" max="1000" required placeholder="z.B. 10" />
+            </div>
 
-<form id="leadOrderForm" novalidate>
-  <h2>Leads bestellen</h2>
+            <div class="form-row">
+                <label for="bl">Bundesland (BL):</label>
+                <input type="text" id="bl" name="bl" required placeholder="z.B. Niederösterreich" />
+            </div>
 
-  <div>
-    <label for="leadsCount">Anzahl Leads:</label>
-    <input type="number" id="leadsCount" name="leadsCount" min="1" max="1000" required placeholder="z.B. 10" />
-  </div>
+            <div class="form-row">
+                <label for="plzRange">PLZ Range (z.B. 1190-1220, Optional):</label>
+                <input type="text" id="plzRange" name="plzRange" placeholder="1200-1210" />
+            </div>
 
-  <div>
-    <label for="bl">Bundesland (BL):</label>
-    <input type="text" id="bl" name="bl" required placeholder="z.B. Niederösterreich" />
-  </div>
+            <div class="form-row">
+                <label for="kampagne">Kampagne:</label>
+                <select id="kampagne" name="kampagne">
+                    <option value="">Lade Kampagnen...</option>
+                </select>
+            </div>
 
-  <div>
-    <label for="plzRange">PLZ Range (z.B. 1190-1220, Optional):</label>
-    <input type="text" id="plzRange" name="plzRange" placeholder="1200-1210" />
-  </div>
+            <div class="form-row">
+                <label for="note">Notiz:</label>
+                <textarea id="note" name="note" rows="4" placeholder="Optional: Notiz eingeben..."></textarea>
+            </div>
 
-  <div>
-    <label for="kampagne">Kampagne:</label>
-    <select id="kampagne" name="kampagne" required>
-      <option value="">Lade Kampagnen...</option>
-    </select>
-  </div>
-
-  <div style="grid-column: 1 / -1;">
-    <label for="note">Notiz:</label>
-    <textarea id="note" name="note" rows="4" placeholder="Optional: Notiz eingeben..."></textarea>
-  </div>
-
-  <button type="submit">Leads bestellen</button>
-</form>
+            <button type="submit">Leads bestellen</button>
+        </form>
+    </div>
+</div>
 
 <div id="message" class="message"></div>
 
@@ -297,7 +169,7 @@
     loadCampaigns();
   });
 </script>
-<script src="../JS/Anticheat.js"></script>
+<!--<script src="../JS/Anticheat.js"></script>-->
 <script src="../JS/telefonparty_alert.js"></script>
 <script src="../JS/telefonparty_logic.js"></script>
 

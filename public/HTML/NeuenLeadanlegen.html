@@ -4,231 +4,77 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nutzer anlegen</title>
-  <link rel="stylesheet" href="../css/main.css" />
-
-
-  <style>
-
-    /* === Grundlayout === */
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #e0f0ff, #f5faff);
-      color: #1a1a1a;
-    }
-
-    /* === Container === */
-    .main-container {
-      display: flex;
-      justify-content: center;
-      padding: 3rem 2rem;
-      max-width: 900px;
-      margin: auto;
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    /* === Formularbox === */
-    .form-section {
-      flex: 1;
-      background-color: #ffffff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      max-width: 550px;
-      animation: slideInLeft 0.8s ease;
-    }
-
-    /* === Logo / Überschrift === */
-    .logo {
-      color: #007BFF;
-      font-size: 2rem;
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 1.5rem;
-    }
-
-    /* === Formularfelder === */
-    form label {
-      display: block;
-      margin-top: 1rem;
-      margin-bottom: 0.4rem;
-      font-weight: 500;
-    }
-
-    form input[type="text"],
-    form input[type="email"],
-    form input[type="tel"],
-    form input[type="date"],
-    form select {
-      width: 100%;
-      padding: 0.7rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      transition: border-color 0.3s ease;
-      box-sizing: border-box;
-      font-size: 1rem;
-    }
-
-    form input:focus,
-    form select:focus {
-      border-color: #007BFF;
-      outline: none;
-      box-shadow: 0 0 4px #007BFF;
-    }
-
-    /* Anrede Select Styling */
-    form select#anrede {
-      appearance: none;
-      background-color: white;
-      background-image: url("data:image/svg+xml;utf8,<svg fill='%23007BFF' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-      background-repeat: no-repeat;
-      background-position: right 0.75rem center;
-      background-size: 1rem;
-    }
-
-    /* === Layout Gruppen === */
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .two-columns,
-    .three-columns {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .two-columns > div,
-    .three-columns > div {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* === Submit-Button === */
-    button[type="submit"] {
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 0.9rem;
-      width: 100%;
-      border-radius: 6px;
-      margin-top: 1.5rem;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-    }
-
-    button[type="submit"]:hover {
-      background-color: #0056b3;
-    }
-
-    /* === Toast-Benachrichtigung === */
-    .toast {
-      visibility: hidden;
-      position: fixed;
-      top: 2rem;
-      right: 2rem;
-      background-color: #007BFF;
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      z-index: 1000;
-    }
-
-    .toast.show {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    /* === Animationen === */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideInLeft {
-      from { transform: translateX(-50px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    /* === Responsive Anpassung === */
-    @media (max-width: 768px) {
-      .two-columns, .three-columns {
-        flex-direction: column;
-      }
-    }
-
-  </style>
+    <link rel="stylesheet" href="../css/div-structure.css" />
 </head>
 <body>
-<div class="main-container">
-  <section class="form-section">
-    <div class="logo">Lead anlegen</div>
-    <form id="userForm">
-      <div class="form-group two-columns">
-        <div>
-          <label for="anrede">Anrede (optional)</label>
-          <select id="anrede" name="anrede">
-            <option value="" disabled selected>Bitte wählen</option>
-            <option value="Herr">Herr</option>
-            <option value="Frau">Frau</option>
-            <option value="Divers">Divers</option>
-          </select>
-        </div>
-        <div>
-          <label for="titel">Titel (optional)</label>
-          <input type="text" id="titel" name="titel">
-        </div>
-      </div>
 
-      <div class="form-group two-columns">
-        <div>
-          <label for="vorname">Vorname</label>
-          <input type="text" id="vorname" name="vorname" required>
-        </div>
-        <div>
-          <label for="nachname">Nachname (optional)</label>
-          <input type="text" id="nachname" name="nachname">
-        </div>
-      </div>
+<div class="container-wrapper">
+    <div class="container-component">
+        <h1>Lead anlegen</h1>
+    </div>
+    <div class="container-component">
+        <form id="userForm">
+            <div class="container-horizontal-items">
+                <div class="form-row">
+                    <label for="anrede">Anrede (optional)</label>
+                    <select id="anrede" name="anrede">
+                        <option value="" disabled selected>Bitte wählen</option>
+                        <option value="Herr">Herr</option>
+                        <option value="Frau">Frau</option>
+                        <option value="Divers">Divers</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="titel">Titel (optional)</label>
+                    <input type="text" id="titel" name="titel">
+                </div>
+            </div>
 
-      <div class="form-group">
-        <label for="geburtsdatum">Geburtsdatum (optional)</label>
-        <input type="date" id="geburtsdatum" name="geburtsdatum">
-      </div>
+            <div class="container-horizontal-items">
+                <div class="form-row">
+                    <label for="vorname">Vorname</label>
+                    <input type="text" id="vorname" name="vorname" required>
+                </div>
+                <div class="form-row">
+                    <label for="nachname">Nachname (optional)</label>
+                    <input type="text" id="nachname" name="nachname">
+                </div>
+            </div>
 
-      <div class="form-group two-columns">
-        <div>
-          <label for="email">E-Mail (optional)</label>
-          <input type="email" id="email" name="email">
-        </div>
-        <div>
-          <label for="telefon">Telefon</label>
-          <input type="tel" id="telefon" name="telefon" required>
-        </div>
-      </div>
+            <div class="form-row">
+                <label for="geburtsdatum">Geburtsdatum (optional)</label>
+                <input type="date" id="geburtsdatum" name="geburtsdatum">
+            </div>
 
-      <div class="form-group three-columns">
-        <div>
-          <label for="plz">PLZ (optional)</label>
-          <input type="text" id="plz" name="plz">
-        </div>
-        <div>
-          <label for="ort">Ort (optional)</label>
-          <input type="text" id="ort" name="ort">
-        </div>
-        <div>
-          <label for="strasse">Straße (optional)</label>
-          <input type="text" id="strasse" name="strasse">
-        </div>
-      </div>
+            <div class="container-horizontal-items">
+                <div class="form-row">
+                    <label for="email">E-Mail (optional)</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="form-row">
+                    <label for="telefon">Telefon</label>
+                    <input type="tel" id="telefon" name="telefon" required>
+                </div>
+            </div>
 
-      <button type="submit">Nutzer anlegen</button>
-    </form>
-  </section>
+            <div class="container-horizontal-items">
+                <div class="form-row">
+                    <label for="plz">PLZ (optional)</label>
+                    <input type="text" id="plz" name="plz">
+                </div>
+                <div class="form-row">
+                    <label for="ort">Ort (optional)</label>
+                    <input type="text" id="ort" name="ort">
+                </div>
+                <div class="form-row">
+                    <label for="strasse">Straße (optional)</label>
+                    <input type="text" id="strasse" name="strasse">
+                </div>
+            </div>
+
+            <button type="submit">Nutzer anlegen</button>
+        </form>
+    </div>
 </div>
 
 <div id="toast" class="toast">Nutzer erfolgreich angelegt!</div>
