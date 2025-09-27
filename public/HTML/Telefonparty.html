@@ -167,10 +167,24 @@
         document.body.appendChild(wrapper.firstElementChild);
     }
 
-    if (window.socket && window.socket.readyState === WebSocket.OPEN) {
+    // Standardanzeige für nicht offene Verbindung
+        const htmlOffline = `
+      <div class="main-container">
+        <div class="content-box">
+          <div class="title">GERADE KEINE Telefonparty</div>
+        </div>
+      </div>
+    `;
+    appendHTML(htmlOffline);
+
+    // Event, wenn WebSocket geöffnet ist
+    window.socket.addEventListener("open", () => {
         console.log("✅ WebSocket ist offen");
 
-        const html = `
+        // Vorherige Offline-Anzeige entfernen
+        document.body.innerHTML = "";
+
+        const htmlOnline = `
       <div class="main-container">
         <div class="content-box">
           <div class="title">Telefonparty</div>
@@ -179,9 +193,8 @@
         </div>
       </div>
     `;
-        appendHTML(html);
+        appendHTML(htmlOnline);
 
-        // Eventlistener **nach dem Einfügen**
         document.getElementById("party-join-btn").addEventListener("click", () => {
             sessionStorage.setItem('telefonparty', true);
             window.location.href = "User.html";
@@ -190,19 +203,7 @@
         document.getElementById("leaderboard-button").addEventListener("click", () => {
             window.location.href = "telefonparty-leaderboard.html";
         });
-
-    } else {
-        console.log("❌ WebSocket ist nicht offen (State: " + (window.socket?.readyState ?? "kein Socket") + ")");
-
-        const html = `
-      <div class="main-container">
-        <div class="content-box">
-          <div class="title">GERADE KEINE Telefonparty</div>
-        </div>
-      </div>
-    `;
-        appendHTML(html);
-    }
+    });
 
 
 </script>
