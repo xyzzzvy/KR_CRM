@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         anticheatInterval = setInterval(check, 1000);
     }
 
-    //Anticheat();
+    Anticheat();
 
     const encodedPassword = "QW50aWNoZWF0SGFzaGltMTIz";
     Object.defineProperty(window, '__anticheatRefreshWithPassword', {
