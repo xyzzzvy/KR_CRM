@@ -51,7 +51,7 @@ async function renderLeaderboard(rawData) {
         const summeDiv = document.createElement('div');
         summeDiv.classList.add('entry-value');
         summeDiv.classList.add('green-text');
-        summeDiv.textContent = `Neue Termine: ${user.summe_termine}`;
+        summeDiv.textContent = `${user.summe_termine}`;
 
 
         entry.appendChild(rankDiv);
@@ -79,7 +79,7 @@ async function prepareData(rawData) {
         summe_termine: (user.termineneuQC+user.termineneuVG)
     }));
 
-    users.sort((a, b) => b.points - a.points);
+    users.sort((a, b) => b.summe_termine - a.summe_termine);
 
     return users;
 }
