@@ -165,15 +165,27 @@
 
 <script>
     // Keep original JS logic
-    document.getElementById("party-join-btn").addEventListener("click", () => {
-        sessionStorage.setItem('telefonparty', true);
-        window.location.reload();
-        window.location.href = "User.html";
-    });
+    window.socket = new WebSocket("wss://dreamteam.academy/ws/");
 
-    document.getElementById("leaderboard-button").addEventListener("click", () => {
-        window.location.href = "telefonparty-leaderboard.html";
-    });
+            if (window.socket && window.socket.readyState === WebSocket.OPEN) {
+                console.log("✅ WebSocket ist offen");
+                document.getElementById("party-join-btn").addEventListener("click", () => {
+                    sessionStorage.setItem('telefonparty', true);
+                    window.location.reload();
+                    window.location.href = "User.html";
+                });
+
+                document.getElementById("leaderboard-button").addEventListener("click", () => {
+                    window.location.href = "telefonparty-leaderboard.html";
+                });
+                window.location.reload();
+            } else {
+                console.log("❌ WebSocket ist nicht offen (State: " + (window.socket?.readyState ?? "kein Socket") + ")");
+
+                window.alert("KEINE TELEFONPARTY VERFÜGBAR");
+            }
+
+
 </script>
 
 <script src="../JS/telefonparty_alert.js"></script>
