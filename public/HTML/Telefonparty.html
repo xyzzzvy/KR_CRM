@@ -155,13 +155,7 @@
     </style>
 </head>
 <body>
-<div class="main-container">
-    <div class="content-box">
-        <div class="title">Telefonparty</div>
-        <button class="button" id="party-join-btn">Telefonparty beitreten</button>
-        <button class="button" id="leaderboard-button">Leaderboard</button>
-    </div>
-</div>
+
 
 <script>
     // Keep original JS logic
@@ -179,10 +173,27 @@
                     window.location.href = "telefonparty-leaderboard.html";
                 });
                 window.location.reload();
+
+                const html = `
+                <div class="main-container">
+                  <div class="content-box">
+                    <div class="title">Telefonparty</div>
+                    <button class="button" id="party-join-btn">Telefonparty beitreten</button>
+                    <button class="button" id="leaderboard-button">Leaderboard</button>
+                  </div>
+                </div>
+              `;
+
+
+                document.body.appendChild(html);
+
             } else {
                 console.log("❌ WebSocket ist nicht offen (State: " + (window.socket?.readyState ?? "kein Socket") + ")");
 
                 window.alert("KEINE TELEFONPARTY VERFÜGBAR");
+
+
+
             }
 
 
