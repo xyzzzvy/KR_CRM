@@ -93,7 +93,7 @@ async function websockethandler(wss) {
                 } catch (err) {
                     console.error('Fehler beim Entfernen des Users:', err);
                 }
-            }, 10 * 60 * 1000);
+            }, 120 * 60 * 1000);
 
             user.ws = null;
         });
