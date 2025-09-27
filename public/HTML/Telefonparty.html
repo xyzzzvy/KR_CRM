@@ -158,7 +158,6 @@
 
 
 <script>
-    // Keep original JS logic
     window.socket = new WebSocket("wss://dreamteam.academy/ws/");
 
             if (window.socket && window.socket.readyState === WebSocket.OPEN) {
@@ -172,7 +171,7 @@
                 document.getElementById("leaderboard-button").addEventListener("click", () => {
                     window.location.href = "telefonparty-leaderboard.html";
                 });
-                window.location.reload();
+
 
                 const html = `
                 <div class="main-container">
@@ -192,14 +191,14 @@
                 const html = `
                 <div class="main-container">
                   <div class="content-box">
-                    <div class="title">GERADE KEINE Telefonparty</div>
+                    <div class="title">Telefonparty</div>
+                    <button class="button" id="party-join-btn">Telefonparty beitreten</button>
+                    <button class="button" id="leaderboard-button">Leaderboard</button>
                   </div>
                 </div>
               `;
 
-
                 document.body.appendChild(html);
-
             }
 
 
