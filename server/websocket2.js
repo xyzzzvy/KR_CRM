@@ -26,6 +26,7 @@ let liveUsers = [];
 let wss = null;
 
 export async function StartWebSocket() {
+    if(wss!==null) return;
     wss = new WebSocketServer({ port: 8080 });
     await websockethandler(wss);
     console.log('WebSocket-Server gestartet:');
