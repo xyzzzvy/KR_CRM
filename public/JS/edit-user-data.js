@@ -60,6 +60,7 @@ async function updateUserData(userData) {
         }
 
         let result = await response.json();
+        window.alert("Erfolgreich aktualisiert.");
         window.location.reload();
         console.log(result);
     } catch (error) {
