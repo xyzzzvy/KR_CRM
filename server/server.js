@@ -25,7 +25,9 @@ import {
     updateOrderStatus,
     getAllUntergebene,
     getAllLeadOrdersBy,
-    end
+    end,
+    getUserInfoAndPass,
+    updateUserInfo
 } from './database2.js';
 
 
@@ -175,6 +177,28 @@ app.get('/api/leads', authenticateToken, authorizeAdmin, async (req, res) => {
     }
 });
 
+
+// Update Userdaten
+app.put('/api/userdataupdate', authenticateToken, async (req, res) => {
+    try {
+        const gpnr = req.user.gpnr;
+        const data = req.body;
+
+        const success = await updateUserInfo(gpnr, data);
+
+        if (!success) {
+            return res.status(404).json({ error: 'User nicht gefunden oder keine Änderung' });
+        }
+
+        res.json({ message: 'Userdaten erfolgreich aktualisiert' });
+    } catch (err) {
+        console.error('Fehler beim Updaten der Userdaten:', err);
+        res.status(500).json({ error: 'Serverfehler' });
+    }
+});
+
+
+
 // Route, um User-Daten basierend auf dem eingeloggten User (gpnr) zurückzugeben
 app.get('/api/userdata', authenticateToken, async (req, res) => {
     try {
@@ -190,6 +214,19 @@ app.get('/api/userdata', authenticateToken, async (req, res) => {
     }
 });
 
+app.get('/api/userdataAndPass', authenticateToken, async (req, res) => {
+    try {
+        const gpnr = req.user.gpnr; // aus JWT
+        const user = await getUserInfoAndPass(gpnr);
+        if (!user) {
+            return res.status(404).json({ error: 'User nicht gefunden' });
+        }
+        res.json(user);
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Userdaten:', err);
+        res.status(500).json({ error: 'Serverfehler' });
+    }
+});
 
 
 //alle user
