@@ -27,7 +27,7 @@
     </div>
 
     <div class="container-component">
-        <form>
+        <form id="updateUserDataForm">
             <div class="container-horizontal-items">
                 <div class="form-row">
                     <label for="email">Neue Email</label>
@@ -72,33 +72,8 @@
 </div>
 
 </body>
-<script>
-    // User-Daten laden und anzeigen
-    async function loadUserData() {
-      const container = document.getElementById('userDataContainer');
-      try {
-        const res = await fetch('/api/userdata', { credentials: 'include' });
-        if (!res.ok) throw new Error('Fehler beim Laden der Benutzerdaten');
-        const user = await res.json();
 
-        let html = '<ul>';
-        for (const [key, value] of Object.entries(user)) {
-          html += `<li><strong>${key}:</strong> ${value ?? '-'}</li>`;
-        }
-        html += '</ul>';
-
-        container.innerHTML = html;
-      } catch (err) {
-        container.innerHTML = `<p class="error">Benutzerdaten konnten nicht geladen werden.</p>`;
-        console.error(err);
-      }
-    }
-
-    window.onload = () => {
-        loadUserData();
-    }
-</script>
-
+<script src="../JS/edit-user-data.js"></script>
 <script src="../JS/Anticheat.js"></script>
 <script src="../JS/telefonparty_alert.js"></script>
 <script src="../JS/telefonparty_logic.js"></script>
