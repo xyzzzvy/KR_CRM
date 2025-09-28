@@ -241,6 +241,57 @@ export async function getUserInfo(gpnr) {
     }
 }
 
+
+
+export async function getUserInfoAndPass(gpnr) {
+    try {
+        const [results] = await pool.query(
+            "SELECT gpnr, vorname, nachname, role, telefon, email, fuehrungskraft,passwort FROM mitarbeiter WHERE gpnr = ?",
+            [gpnr]
+        );
+        return results.length ? results[0] : null;
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Mitarbeiter-Info:', err.message);
+        throw err;
+    }
+}
+
+
+export async function updateUserInfo(gpnr, data) {
+    try {
+        const {
+            vorname,
+            nachname,
+            role,
+            telefon,
+            email,
+            fuehrungskraft,
+            passwort
+        } = data;
+
+        const [result] = await pool.query(
+            `UPDATE mitarbeiter 
+             SET vorname = ?, 
+                 nachname = ?, 
+                 role = ?, 
+                 telefon = ?, 
+                 email = ?, 
+                 fuehrungskraft = ?, 
+                 passwort = ?
+             WHERE gpnr = ?`,
+            [vorname, nachname, role, telefon, email, fuehrungskraft, passwort, gpnr]
+        );
+
+        return result.affectedRows > 0; // true wenn ein Datensatz aktualisiert wurde
+    } catch (err) {
+        console.error('Fehler beim Updaten der Mitarbeiter-Info:', err.message);
+        throw err;
+    }
+}
+
+
+
+
 export async function getAllUntergebene(fkGpnr) {
     const sql = `
         WITH RECURSIVE Untergebene AS (
