@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reg=document.getElementById('anlegen');
     const addnewleadbut=document.getElementById('addLead');
     const telparty=document.getElementById('telparty');
-
+    const daten=document.getElementById('Daten');
 
 
 
@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!window.updatedLeads) {
         window.updatedLeads = [];
     }
-
+    daten.addEventListener('click', () => {
+        window.location.href="edit-user-data.html"
+    })
 
     addnewleadbut.addEventListener('click', () => {
         window.location.href="NeuenLeadanlegen.html"
