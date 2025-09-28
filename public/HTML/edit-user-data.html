@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/div-structure.css">
+    <title>Nutzerdaten bearbeiten</title>
+    <link rel="icon" href="../Bilder/604D768F-C20B-4A34-94AD-4A90B744184F.png" type="image/png">
+
+</head>
+<body>
+
+<div class="container-wrapper">
+    <div class="container-component">
+        <h1>Nutzerdaten bearbeiten</h1>
+    </div>
+    <div class="container-component">
+        <form>
+            <div class="container-horizontal-items">
+                <div class="form-row">
+                    <label for="email">Neue Email</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="form-row">
+                    <label for="confirm-email">Neue Email bestätigen</label>
+                    <input type="email" id="confirm-email" name="confirm-email">
+                </div>
+            </div>
+            <div class="container-horizontal-items">
+                <div class="form-row">
+                    <label for="telefon">Neue Telefonnummer</label>
+                    <input type="tel" id="telefon" name="telefon">
+                </div>
+                <div class="form-row">
+                    <label for="confirm-telefon">Neue Telefonnummer bestätigen</label>
+                    <input type="tel" id="confirm-telefon" name="confirm-telefon">
+                </div>
+            </div>
+            <div class="container-horizontal-items">
+                <div class="form-row">
+                    <label for="password">Neues Passwort</label>
+                    <input type="password" id="password" name="password">
+                </div>
+                <div class="form-row">
+                    <label for="confirm-password">Neues Passwort bestätigen</label>
+                    <input type="password" id="confirm-password" name="confirm-password">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="password-old">Jetziges Passwort</label>
+                <input type="password" id="password-old" name="password-old" required>
+            </div>
+            <div class="container-component">
+                <button type="submit">Daten aktualisieren</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+<script src="../JS/Anticheat.js"></script>
+<script src="../JS/telefonparty_alert.js"></script>
+<script src="../JS/telefonparty_logic.js"></script>
+</html>
