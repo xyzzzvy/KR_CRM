@@ -11,6 +11,7 @@ async function loadUserData() {
 
         let html = '<ul>';
         for (const [key, value] of Object.entries(userData)) {
+            if(key==="passwort") continue;
             html += `<li><strong>${key}:</strong> ${value ?? '-'}</li>`;
         }
         html += '</ul>';
