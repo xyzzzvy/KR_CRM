@@ -34,6 +34,14 @@ form.addEventListener("submit", (e) => {
     updateUserData(data);
 })
 
+function showToast() {
+    const toast = document.getElementById("toast");
+    toast.style.display = "block";   // show the toast
+    setTimeout(() => {
+        toast.style.display = "none"; // hide it after 3 seconds
+    }, 3000);
+}
+
 async function updateUserData(userData) {
     try {
         const response = await fetch('/api/userdataupdate', {
@@ -80,6 +88,8 @@ function getUpdatedUserData() {
     if (userData.passwort !== oldPassword) {
         window.alert("Aktuelles Passwort wurde falsch eingegeben.")
     }
+
+
 
     return {
         vorname: userData.vorname,
