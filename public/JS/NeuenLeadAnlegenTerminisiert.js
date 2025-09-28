@@ -81,6 +81,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 4000);
                 form.reset();
+                if (window.socket && window.socket.readyState === WebSocket.OPEN) {
+                    window.socket.send(JSON.stringify({ type: "update", id: gpnr }));
+                } else {
+                    console.warn("Socket nicht verbunden");
+                }
                 window.location.href="Tagesübersicht.html"
             } else {
                 alert('Fehler: ' + (result.error || 'Unbekannter Fehler'));

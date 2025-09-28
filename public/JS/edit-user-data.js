@@ -5,7 +5,7 @@ let userData;
 async function loadUserData() {
     const container = document.getElementById('userDataContainer');
     try {
-        const res = await fetch('/api/userdata', { credentials: 'include' });
+        const res = await fetch('/api/userdataAndPass', { credentials: 'include' });
         if (!res.ok) throw new Error('Fehler beim Laden der Benutzerdaten');
         userData = await res.json();
 
