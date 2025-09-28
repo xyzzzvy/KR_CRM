@@ -51,6 +51,7 @@ async function updateUserData(userData) {
         }
 
         let result = await response.json();
+        window.location.reload();
         console.log(result);
     } catch (error) {
         console.error(error.message);
@@ -76,7 +77,7 @@ function getUpdatedUserData() {
     if (password && password !== confirmPassword) {
         window.alert("Die Passwörter stimmen nicht überein.");
     }
-    if (userData.password !== oldPassword) {
+    if (userData.passwort !== oldPassword) {
         window.alert("Aktuelles Passwort wurde falsch eingegeben.")
     }
 
