@@ -35,7 +35,8 @@
             <div class="form-row">
                 <label for="kampagne">Kampagne:</label>
                 <select id="kampagne" name="kampagne">
-                    <option value="">Lade Kampagnen...</option>
+                    <option value="BK">BK</option>
+                    <option value="SK">Strom</option>
                 </select>
             </div>
 
@@ -75,6 +76,7 @@
    */
 
   // Kampagnen laden und Dropdown füllen
+  /*
   async function loadCampaigns() {
     const select = document.getElementById('kampagne');
     try {
@@ -99,6 +101,7 @@
     }
   }
 
+*/
   // Formular abschicken
   document.getElementById('leadOrderForm').addEventListener('submit', async (e) => {
     e.preventDefault();
