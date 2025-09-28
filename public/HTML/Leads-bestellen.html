@@ -27,10 +27,6 @@
                 <input type="text" id="bl" name="bl" required placeholder="z.B. Niederösterreich" />
             </div>
 
-            <div class="form-row">
-                <label for="plzRange">PLZ Range (z.B. 1190-1220, Optional):</label>
-                <input type="text" id="plzRange" name="plzRange" placeholder="1200-1210" />
-            </div>
 
             <div class="form-row">
                 <label for="kampagne">Kampagne:</label>
@@ -42,7 +38,7 @@
 
             <div class="form-row">
                 <label for="note">Notiz:</label>
-                <textarea id="note" name="note" rows="4" placeholder="Optional: Notiz eingeben..."></textarea>
+                <textarea id="note" name="note" rows="4" placeholder="Postleizahl oder Sonderwünsche"></textarea>
             </div>
 
             <button type="submit">Leads bestellen</button>
@@ -111,7 +107,6 @@
 
     const leadsCount = Number(e.target.leadsCount.value);
     const bl = e.target.bl.value.trim();
-    const plzRange = e.target.plzRange.value.trim();
     const kampagne = e.target.kampagne.value;
     const note = e.target.note.value.trim();
 
@@ -141,7 +136,7 @@
           gpnr:sessionStorage.getItem('pr'),
           anzahl: leadsCount,
           bundesland: bl,
-          plzRange: plzRange,
+          plzRange: '0000',
           kampagne,
           note
         })
@@ -161,9 +156,6 @@
     }
   });
 
-  window.addEventListener('DOMContentLoaded', () => {
-    loadCampaigns();
-  });
 </script>
 <!--<script src="../JS/Anticheat.js"></script>-->
 <script src="../JS/telefonparty_alert.js"></script>
