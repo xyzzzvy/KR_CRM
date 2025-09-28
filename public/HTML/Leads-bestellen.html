@@ -147,7 +147,7 @@
         throw new Error(errData.error || 'Fehler bei der Bestellung');
       }
 
-      messageDiv.textContent = 'Leads-Bestellung erfolgreich abgeschickt!';
+      window.alert("Bestellung erfolgreich!");
       e.target.reset();
     } catch (err) {
       messageDiv.textContent = err.message;
