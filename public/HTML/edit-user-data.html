@@ -9,11 +9,23 @@
 
 </head>
 <body>
+<div class="container-vertical-items">
 
+<div class="container-wrapper">
+    <div class="container-component">
+        <h1>Aktuelle Nutzerdaten</h1>
+    </div>
+    <div class="container-component">
+        <div id="userDataContainer">
+
+        </div>
+    </div>
+</div>
 <div class="container-wrapper">
     <div class="container-component">
         <h1>Nutzerdaten bearbeiten</h1>
     </div>
+
     <div class="container-component">
         <form>
             <div class="container-horizontal-items">
@@ -47,7 +59,7 @@
                 </div>
             </div>
             <div class="form-row">
-                <label for="password-old">Jetziges Passwort</label>
+                <label for="password-old">Aktuelles Passwort</label>
                 <input type="password" id="password-old" name="password-old" required>
             </div>
             <div class="container-component">
@@ -57,7 +69,36 @@
     </div>
 </div>
 
+</div>
+
 </body>
+<script>
+    // User-Daten laden und anzeigen
+    async function loadUserData() {
+      const container = document.getElementById('userDataContainer');
+      try {
+        const res = await fetch('/api/userdata', { credentials: 'include' });
+        if (!res.ok) throw new Error('Fehler beim Laden der Benutzerdaten');
+        const user = await res.json();
+
+        let html = '<ul>';
+        for (const [key, value] of Object.entries(user)) {
+          html += `<li><strong>${key}:</strong> ${value ?? '-'}</li>`;
+        }
+        html += '</ul>';
+
+        container.innerHTML = html;
+      } catch (err) {
+        container.innerHTML = `<p class="error">Benutzerdaten konnten nicht geladen werden.</p>`;
+        console.error(err);
+      }
+    }
+
+    window.onload = () => {
+        loadUserData();
+    }
+</script>
+
 <script src="../JS/Anticheat.js"></script>
 <script src="../JS/telefonparty_alert.js"></script>
 <script src="../JS/telefonparty_logic.js"></script>
