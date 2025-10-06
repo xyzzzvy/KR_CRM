@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Telefonparty</title>
@@ -13,23 +13,50 @@
     <div class="container-component">
         <button id="party-join-btn">Telefonparty beitreten</button>
     </div>
-    <div class="container-component">
+    <!-- Leaderboard-Button zunächst versteckt -->
+    <div class="container-component" id="leaderboard-container" style="display: none;">
         <button id="leaderboard-button">Leaderboard</button>
     </div>
 </div>
 
 <script>
+    async function fetchCredits() {
+        try {
+            const response = await fetch("/api/websocket/credits", {
+                method: "GET",
+                credentials: "include",
+            });
+            const data = await response.json();
+            if (data.success) {
+                console.log("GPNR:", data.gpnr, "Name:", data.name);
+                return { gpnr: data.gpnr, name: data.name };
+            } else {
+                console.error("Fehler:", data.error);
+                return {};
+            }
+        } catch (err) {
+            console.error("Fetch-Fehler:", err);
+            return {};
+        }
+    }
+
+    (async () => {
+        const { gpnr ,name} = await fetchCredits();
 
         document.getElementById("party-join-btn").addEventListener("click", () => {
             sessionStorage.setItem('telefonparty', true);
             window.location.href = "User.html";
         });
 
-        document.getElementById("leaderboard-button").addEventListener("click", () => {
-            window.location.href = "telefonparty-leaderboard.html";
-        });
+        if (gpnr === 1002 || gpnr === 1005) {
+            const leaderboardContainer = document.getElementById("leaderboard-container");
+            leaderboardContainer.style.display = "block";
 
-
+            document.getElementById("leaderboard-button").addEventListener("click", () => {
+                window.location.href = "telefonparty-leaderboard.html";
+            });
+        }
+    })();
 </script>
 
 <script src="../JS/telefonparty_alert.js"></script>

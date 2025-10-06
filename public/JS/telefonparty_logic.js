@@ -1,13 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
     if (!sessionStorage.getItem("telefonparty")) {
-        // Noch nichts zu tun
         return;
     }
 
     if (sessionStorage.getItem("telefonparty") !== "true") {
     }
 
-    // Socket global verfügbar machen (auch in DevTools)
     window.socket = null;
 
     async function fetchCredits() {
