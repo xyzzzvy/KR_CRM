@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+
             if (widthThreshold || heightThreshold) {
                 devtools.isOpen = true;
 

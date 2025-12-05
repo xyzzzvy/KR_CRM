@@ -4,8 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lead-Manager</title>
-  <link rel="stylesheet" href="../css/main.css"/>
-  <link rel="icon" href="../Bilder/604D768F-C20B-4A34-94AD-4A90B744184F.png" type="image/png">
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -13,15 +15,22 @@
   <div class="container">
     <h1 id="namenexplizit">User</h1>
     <div class="buttons-container">
-      <button class="button" id="sicht">Kalender</button>
-      <button class="button" id="addLead">Lead anlegen</button>
-      <button class="button" id="bestellen">Leads bestellen</button>
-      <button class="button" id="bestellhistory">Bestellverlauf</button>
-      <button class="button" id="mit">Mitarbeiter</button>
-      <button class="button" id="anlegen">Mitarbeiter anlegen</button>
-      <button class="button" id="telparty">Telefonparty</button>
-      <button class="button" id="Daten">Userdaten bearbeiten</button>
-      <button class="button return-button" id="logout">Logout</button>
+      <button class="button" id="sicht">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Kalender
+      </button>
+      <button class="button" id="addLead">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Lead anlegen
+      </button>
+      <button class="button" id="Daten">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Userdaten
+      </button>
+      <button class="button return-button" id="logout">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
     </div>
   </div>
 </header>
@@ -30,18 +39,18 @@
 
   <div class="leads-filter">
     <div class="form-group">
-      <label for="filterCampaign">Kampagne:</label>
+      <label for="filterCampaign">Kampagne</label>
       <select id="filterCampaign">
       </select>
     </div>
 
     <div class="form-group">
-      <label for="filterPLZ">PLZ:</label>
-      <input id="filterPLZ" type="number"/>
+      <label for="filterPLZ">PLZ</label>
+      <input id="filterPLZ" type="number" placeholder="z.B. 1010"/>
     </div>
 
     <div class="form-group">
-      <label for="Status">Status:</label>
+      <label for="Status">Status</label>
       <select id="Status">
         <option value="alle">alle</option>
         <option value="offen">offen</option>
@@ -57,14 +66,14 @@
     </div>
 
     <div class="form-group">
-      <label for="BL">BL:</label>
+      <label for="BL">Bundesland</label>
       <select id="BL">
         <option value="">Alle</option>
         <option value="W">Wien</option>
         <option value="B">Burgenland</option>
-        <option value="NÖ">Niederösterreich</option> <!-- statt N -->
-        <option value="OÖ">Oberösterreich</option> <!-- statt OE -->
-        <option value="S">Salzburg</option>   <!-- statt SZ -->
+        <option value="NÖ">Niederösterreich</option>
+        <option value="OÖ">Oberösterreich</option>
+        <option value="S">Salzburg</option>
         <option value="ST">Steiermark</option>
         <option value="T">Tirol</option>
         <option value="V">Voralberg</option>
@@ -73,13 +82,13 @@
     </div>
 
     <div class="form-group">
-      <label for="nameFilter">Name oder Nummer enthalten:</label>
+      <label for="nameFilter">Name / Nummer</label>
       <input type="text" id="nameFilter" placeholder="Max oder 671">
     </div>
 
 
     <div class="form-group">
-      <label for="dateFilter">Datum:</label>
+      <label for="dateFilter">Datum</label>
       <select id="dateFilter" onchange="toggleCustomDateInputs()">
         <option value="">Alle</option>
         <option value="24h">Letzte 24 Stunden</option>
@@ -91,16 +100,16 @@
     </div>
 
     <div class="form-group" id="customDateInputs" style="display: none;">
-      <label for="customStart">Von:</label>
+      <label for="customStart">Von</label>
       <input type="date" id="customStart" />
-      <label for="customEnd">Bis:</label>
+      <label for="customEnd">Bis</label>
       <input type="date" id="customEnd" />
     </div>
 
 
 
     <div class="form-group">
-      <label for="terminisiertFilter">Terminisiert am:</label>
+      <label for="terminisiertFilter">Terminisiert am</label>
       <select id="terminisiertFilter" onchange="toggleCustomTerminDateInputs()">
         <option value="">Alle</option>
         <option value="24h">Letzte 24 Stunden</option>
@@ -112,16 +121,19 @@
     </div>
 
     <div class="form-group" id="customTerminDateInputs" style="display: none;">
-      <label for="customTerminStart">Von:</label>
+      <label for="customTerminStart">Von</label>
       <input type="date" id="customTerminStart" />
-      <label for="customTerminEnd">Bis:</label>
+      <label for="customTerminEnd">Bis</label>
       <input type="date" id="customTerminEnd" />
     </div>
 
 
     <div class="form-group filter-button-wrapper">
       <label>&nbsp;</label>
-      <button id="applyFilter" class="button">Filtern</button>
+      <button id="applyFilter" class="button button-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        Filtern
+      </button>
     </div>
 
 
@@ -130,15 +142,17 @@
 
   <section class="leads-box-wrapper">
     <div class="leads-count">
-      <p><strong>Aktuell verfügbare Leads:</strong> <span id="remainingLeads">0</span></p>
-      <div id="saveHint" style="display:none; color: red; font-weight: bold; margin-bottom: 10px;">
-        <button id="savebutton">Bitte speichern</button>
+      <p><span class="count-label">Verfügbare Leads:</span> <span id="remainingLeads">0</span></p>
+      <div id="saveHint" style="display:none;">
+        <button id="savebutton" class="save-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Speichern
+        </button>
       </div>
     </div>
 
     <div class="leads-table-wrapper">
       <table class="leads-table">
-
         <thead>
         <tr>
           <th>ID</th>
@@ -153,7 +167,6 @@
         </tr>
         </thead>
         <tbody id="leadsTableBody">
-        <!-- Dynamisch befüllt durch leads.js -->
         </tbody>
       </table>
     </div>
@@ -163,11 +176,13 @@
 
 <footer>
   <div class="container buttons-container">
-    <button class="button" id="support">Support</button>
+    <button class="button button-ghost" id="support">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Support
+    </button>
   </div>
 </footer>
 
-<script src="../JS/Anticheat.js"></script>
 <script src="../JS/Kamps.js"></script>
 <script src="../JS/apply_filters.js"></script>
 <script src="../JS/savebuttonlogic.js"></script>
