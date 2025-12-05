@@ -25,26 +25,26 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href="NeuenLeadanlegen.html"
     })
 
-    telparty.addEventListener('click', () => {
-        window.location.href="Telefonparty.html"
-    })
+    //telparty.addEventListener('click', () => {
+      //  window.location.href="Telefonparty.html"
+   // })
 
-    reg.addEventListener('click', () => {
-        window.location.href = "register-page.html";
-    });
+    //reg.addEventListener('click', () => {
+     //   window.location.href = "register-page.html";
+    //});
 
 
-    historybutton.addEventListener('click', () => {
-        window.location.href = "Bestellübersicht.html";
-    });
+    //historybutton.addEventListener('click', () => {
+       // window.location.href = "Bestellübersicht.html";
+    //});
 
     sicht.addEventListener('click', () => {
         window.location.href="Tagesübersicht.html";
     })
 
-    mit.addEventListener('click', () => {
-        window.location.href = "Mitarbeiter.html";
-    });
+   // mit.addEventListener('click', () => {
+     //   window.location.href = "Mitarbeiter.html";
+    //});
 
     // Logout-Event (wie gehabt)
     logoutButton.addEventListener('click', () => {
@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = apiBase + "/";
     });
 
-    bestellen.addEventListener('click', () => {
-        const apiBase = window.location.origin;
-        window.location.href = "Leads-bestellen.html";
-    });
+   // bestellen.addEventListener('click', () => {
+      //  const apiBase = window.location.origin;
+     //   window.location.href = "Leads-bestellen.html";
+   // });
 
     // Toast erstellen & anhängen (einmalig)
     const toast = document.createElement('div');
