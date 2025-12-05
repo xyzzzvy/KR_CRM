@@ -72,25 +72,26 @@ function showDatePickerToast(leadId, existingDateTime = "") {
     toast.style.top = "50%";
     toast.style.left = "50%";
     toast.style.transform = "translate(-50%, -50%)";
-    toast.style.background = "#fff";
-    toast.style.padding = "15px 20px";
-    toast.style.border = "1px solid #ccc";
-    toast.style.borderRadius = "6px";
-    toast.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
+    toast.style.background = "#1a1a2e";
+    toast.style.padding = "24px 28px";
+    toast.style.border = "1px solid rgba(255,255,255,0.1)";
+    toast.style.borderRadius = "12px";
+    toast.style.boxShadow = "0 20px 40px rgba(0,0,0,0.4)";
     toast.style.zIndex = "10001";
+    toast.style.color = "#e0e0e0";
     toast.innerHTML = `
-        <h4 style="margin-top:0;margin-bottom:10px;">Termin für Lead #${leadId} setzen</h4>
-        <div style="margin-bottom:10px;">
-            <label style="display:block;margin-bottom:5px;">Datum:</label>
-            <input type="date" id="toastDateInput" value="${existingDate}" style="width:100%; padding:5px;">
+        <h4 style="margin-top:0;margin-bottom:16px;color:#fff;font-size:16px;">Termin für Lead #${leadId} setzen</h4>
+        <div style="margin-bottom:12px;">
+            <label style="display:block;margin-bottom:6px;color:#a0a0a0;font-size:13px;">Datum:</label>
+            <input type="date" id="toastDateInput" value="${existingDate}" style="width:100%; padding:10px 12px; background:#0f0f1a; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; font-size:14px;">
         </div>
-        <div style="margin-bottom:15px;">
-            <label style="display:block;margin-bottom:5px;">Uhrzeit:</label>
-            <input type="time" id="toastTimeInput" value="${existingTime}" style="width:100%; padding:5px;">
+        <div style="margin-bottom:20px;">
+            <label style="display:block;margin-bottom:6px;color:#a0a0a0;font-size:13px;">Uhrzeit:</label>
+            <input type="time" id="toastTimeInput" value="${existingTime}" style="width:100%; padding:10px 12px; background:#0f0f1a; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; font-size:14px;">
         </div>
-        <div style="text-align:right;">
-            <button id="toastCancelBtn">Abbrechen</button>
-            <button id="toastSaveBtn" style="margin-left:5px;">Speichern</button>
+        <div style="text-align:right; display:flex; gap:10px; justify-content:flex-end;">
+            <button id="toastCancelBtn" style="padding:10px 18px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:6px; color:#a0a0a0; cursor:pointer; font-size:14px;">Abbrechen</button>
+            <button id="toastSaveBtn" style="padding:10px 18px; background:linear-gradient(135deg, #6366f1, #8b5cf6); border:none; border-radius:6px; color:#fff; cursor:pointer; font-size:14px; font-weight:500;">Speichern</button>
         </div>
     `;
     document.body.appendChild(toast);
